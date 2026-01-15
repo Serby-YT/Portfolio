@@ -1,0 +1,12 @@
+# Images & assets
+assets/
+photos/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.mp4
+
+# System
+.DS_Store
+Thumbs.db
