@@ -12,9 +12,8 @@ async function loadGallery() {
 
     let photos = [];
     let currentIndex = -1;
-    let preloadedImages = new Map(); // Cache for preloaded images
+    let preloadedImages = new Map();
 
-    // Preload next and previous images for instant navigation
     function preloadAdjacentImages(index) {
         if (index < 0 || index >= photos.length) return;
         
@@ -39,7 +38,6 @@ async function loadGallery() {
         const src = p.full;
         const alt = p.alt || "";
 
-        // Show loading state briefly if image not cached
         if (!preloadedImages.has(currentIndex)) {
             lightboxImg.classList.add('loading');
         }
@@ -47,7 +45,6 @@ async function loadGallery() {
         lightboxImg.src = src;
         lightboxImg.alt = alt;
         
-        // Remove loading state when image loads
         lightboxImg.onload = () => {
             lightboxImg.classList.remove('loading');
         };
@@ -56,7 +53,6 @@ async function loadGallery() {
         lightbox.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
 
-        // Preload adjacent images for faster navigation
         preloadAdjacentImages(currentIndex);
     }
 
@@ -85,7 +81,6 @@ async function loadGallery() {
         openLightbox(prevIndex);
     }
 
-    // Bind handlers (only once)
     if (closeBtn && !closeBtn.dataset.bound) {
         closeBtn.dataset.bound = "1";
         closeBtn.addEventListener("click", closeLightbox);
@@ -119,10 +114,9 @@ async function loadGallery() {
         if (hint) hint.style.display = "none";
         container.innerHTML = "";
 
-        // Create gallery with progressive loading
         photos.forEach((p, index) => {
             const thumb = p.thumb || p.full;
-            const alt = p.alt || "";
+            const alt = p.alt || p.title || "";
 
             const card = document.createElement("div");
             card.className = "card";
@@ -133,19 +127,40 @@ async function loadGallery() {
             const img = new Image();
             img.alt = alt;
             
-            // Progressive image loading with fade-in
-            img.onload = () => {
+            // CRITICAL FIX: Force minimum height to prevent slivers
+            // This ensures the card has space even before image loads
+            card.style.minHeight = "200px";
+            
+            img.onload = function() {
+                // Remove min-height once image loads successfully
+                card.style.minHeight = "";
                 card.classList.add('loaded');
+                
+                // Debug log for problematic images
+                if (this.naturalHeight < 10 || this.naturalWidth < 10) {
+                    console.warn(`Suspicious dimensions for ${thumb}:`, this.naturalWidth, 'x', this.naturalHeight);
+                }
             };
             
-            img.onerror = () => {
-                card.classList.add('loaded'); // Still remove skeleton on error
+            img.onerror = function() {
+                card.style.minHeight = "";
+                card.classList.add('loaded');
                 console.error(`Failed to load image: ${thumb}`);
+                // Show error placeholder
+                card.innerHTML = `<div style="padding:40px;text-align:center;color:rgba(255,255,255,0.3);">Image failed to load<br><small>${thumb}</small></div>`;
             };
 
-            // Use native lazy loading for better performance
-            img.loading = "lazy";
+            // Important: Don't use lazy loading for above-the-fold images
+            // Only lazy load images after the first 6
+            if (index < 6) {
+                img.loading = "eager";
+            } else {
+                img.loading = "lazy";
+            }
+            
             img.decoding = "async";
+            
+            // Set src AFTER onload/onerror handlers are attached
             img.src = thumb;
 
             card.appendChild(img);
@@ -161,7 +176,7 @@ async function loadGallery() {
             container.appendChild(card);
         });
 
-        // Preload first few full-size images for faster initial lightbox opening
+        // Preload first few full-size images
         for (let i = 0; i < Math.min(3, photos.length); i++) {
             const img = new Image();
             img.src = photos[i].full;
