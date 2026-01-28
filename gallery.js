@@ -12,6 +12,25 @@ async function loadGallery() {
 
     let photos = [];
     let currentIndex = -1;
+    let preloadedImages = new Map(); // Cache for preloaded images
+
+    // Preload next and previous images for instant navigation
+    function preloadAdjacentImages(index) {
+        if (index < 0 || index >= photos.length) return;
+        
+        const toPreload = [
+            index - 1 >= 0 ? index - 1 : photos.length - 1,
+            index + 1 < photos.length ? index + 1 : 0
+        ];
+
+        toPreload.forEach(i => {
+            if (!preloadedImages.has(i)) {
+                const img = new Image();
+                img.src = photos[i].full;
+                preloadedImages.set(i, img);
+            }
+        });
+    }
 
     function openLightbox(index) {
         if (index < 0 || index >= photos.length) return;
@@ -20,17 +39,32 @@ async function loadGallery() {
         const src = p.full;
         const alt = p.alt || "";
 
+        // Show loading state briefly if image not cached
+        if (!preloadedImages.has(currentIndex)) {
+            lightboxImg.classList.add('loading');
+        }
+
         lightboxImg.src = src;
         lightboxImg.alt = alt;
+        
+        // Remove loading state when image loads
+        lightboxImg.onload = () => {
+            lightboxImg.classList.remove('loading');
+        };
+
         lightbox.classList.add("open");
         lightbox.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
+
+        // Preload adjacent images for faster navigation
+        preloadAdjacentImages(currentIndex);
     }
 
     function closeLightbox() {
         lightbox.classList.remove("open");
         lightbox.setAttribute("aria-hidden", "true");
         lightboxImg.src = "";
+        lightboxImg.classList.remove('loading');
         document.body.style.overflow = "";
         currentIndex = -1;
     }
@@ -39,7 +73,7 @@ async function loadGallery() {
         if (e) e.stopPropagation();
         if (currentIndex === -1) return;
         let nextIndex = currentIndex + 1;
-        if (nextIndex >= photos.length) nextIndex = 0; // Loop to first
+        if (nextIndex >= photos.length) nextIndex = 0;
         openLightbox(nextIndex);
     }
 
@@ -47,11 +81,11 @@ async function loadGallery() {
         if (e) e.stopPropagation();
         if (currentIndex === -1) return;
         let prevIndex = currentIndex - 1;
-        if (prevIndex < 0) prevIndex = photos.length - 1; // Loop to last
+        if (prevIndex < 0) prevIndex = photos.length - 1;
         openLightbox(prevIndex);
     }
 
-    // Bind handlers
+    // Bind handlers (only once)
     if (closeBtn && !closeBtn.dataset.bound) {
         closeBtn.dataset.bound = "1";
         closeBtn.addEventListener("click", closeLightbox);
@@ -85,6 +119,7 @@ async function loadGallery() {
         if (hint) hint.style.display = "none";
         container.innerHTML = "";
 
+        // Create gallery with progressive loading
         photos.forEach((p, index) => {
             const thumb = p.thumb || p.full;
             const alt = p.alt || "";
@@ -95,11 +130,23 @@ async function loadGallery() {
             card.setAttribute("tabindex", "0");
             card.setAttribute("aria-label", `Deschide fotografia: ${alt}`);
 
-            const img = document.createElement("img");
-            img.src = thumb;
+            const img = new Image();
             img.alt = alt;
+            
+            // Progressive image loading with fade-in
+            img.onload = () => {
+                card.classList.add('loaded');
+            };
+            
+            img.onerror = () => {
+                card.classList.add('loaded'); // Still remove skeleton on error
+                console.error(`Failed to load image: ${thumb}`);
+            };
+
+            // Use native lazy loading for better performance
             img.loading = "lazy";
             img.decoding = "async";
+            img.src = thumb;
 
             card.appendChild(img);
 
@@ -113,6 +160,14 @@ async function loadGallery() {
 
             container.appendChild(card);
         });
+
+        // Preload first few full-size images for faster initial lightbox opening
+        for (let i = 0; i < Math.min(3, photos.length); i++) {
+            const img = new Image();
+            img.src = photos[i].full;
+            preloadedImages.set(i, img);
+        }
+
     } catch (err) {
         console.error(err);
         if (hint) {
