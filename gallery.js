@@ -127,27 +127,13 @@ async function loadGallery() {
             const img = new Image();
             img.alt = alt;
             
-            // CRITICAL FIX: Force minimum height to prevent slivers
-            // This ensures the card has space even before image loads
-            card.style.minHeight = "200px";
-            
             img.onload = function() {
-                // Remove min-height once image loads successfully
-                card.style.minHeight = "";
                 card.classList.add('loaded');
-                
-                // Debug log for problematic images
-                if (this.naturalHeight < 10 || this.naturalWidth < 10) {
-                    console.warn(`Suspicious dimensions for ${thumb}:`, this.naturalWidth, 'x', this.naturalHeight);
-                }
             };
             
             img.onerror = function() {
-                card.style.minHeight = "";
                 card.classList.add('loaded');
                 console.error(`Failed to load image: ${thumb}`);
-                // Show error placeholder
-                card.innerHTML = `<div style="padding:40px;text-align:center;color:rgba(255,255,255,0.3);">Image failed to load<br><small>${thumb}</small></div>`;
             };
 
             // Important: Don't use lazy loading for above-the-fold images
