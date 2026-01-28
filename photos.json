@@ -1,1 +1,139 @@
-[{"full": "/portfolio/webp/IMG_0006.webp", "thumb": "/portfolio/thumbs/IMG_0006.webp", "alt": "IMG 0006"}, {"full": "/portfolio/webp/IMG_0434-2.webp", "thumb": "/portfolio/thumbs/IMG_0434-2.webp", "alt": "IMG 0434 2"}, {"full": "/portfolio/webp/IMG_0763-2.webp", "thumb": "/portfolio/thumbs/IMG_0763-2.webp", "alt": "IMG 0763 2"}, {"full": "/portfolio/webp/IMG_0814.webp", "thumb": "/portfolio/thumbs/IMG_0814.webp", "alt": "IMG 0814"}, {"full": "/portfolio/webp/IMG_0857.webp", "thumb": "/portfolio/thumbs/IMG_0857.webp", "alt": "IMG 0857"}, {"full": "/portfolio/webp/IMG_1542.webp", "thumb": "/portfolio/thumbs/IMG_1542.webp", "alt": "IMG 1542"}, {"full": "/portfolio/webp/IMG_1657.webp", "thumb": "/portfolio/thumbs/IMG_1657.webp", "alt": "IMG 1657"}, {"full": "/portfolio/webp/IMG_1664.webp", "thumb": "/portfolio/thumbs/IMG_1664.webp", "alt": "IMG 1664"}, {"full": "/portfolio/webp/IMG_2022-2.webp", "thumb": "/portfolio/thumbs/IMG_2022-2.webp", "alt": "IMG 2022 2"}, {"full": "/portfolio/webp/IMG_2200.webp", "thumb": "/portfolio/thumbs/IMG_2200.webp", "alt": "IMG 2200"}, {"full": "/portfolio/webp/IMG_2444.webp", "thumb": "/portfolio/thumbs/IMG_2444.webp", "alt": "IMG 2444"}, {"full": "/portfolio/webp/IMG_2588.webp", "thumb": "/portfolio/thumbs/IMG_2588.webp", "alt": "IMG 2588"}, {"full": "/portfolio/webp/IMG_2714.webp", "thumb": "/portfolio/thumbs/IMG_2714.webp", "alt": "IMG 2714"}, {"full": "/portfolio/webp/IMG_2723.webp", "thumb": "/portfolio/thumbs/IMG_2723.webp", "alt": "IMG 2723"}, {"full": "/portfolio/webp/IMG_2817.webp", "thumb": "/portfolio/thumbs/IMG_2817.webp", "alt": "IMG 2817"}, {"full": "/portfolio/webp/IMG_3155.webp", "thumb": "/portfolio/thumbs/IMG_3155.webp", "alt": "IMG 3155"}, {"full": "/portfolio/webp/IMG_3323.webp", "thumb": "/portfolio/thumbs/IMG_3323.webp", "alt": "IMG 3323"}, {"full": "/portfolio/webp/IMG_3770.webp", "thumb": "/portfolio/thumbs/IMG_3770.webp", "alt": "IMG 3770"}, {"full": "/portfolio/webp/IMG_4648.webp", "thumb": "/portfolio/thumbs/IMG_4648.webp", "alt": "IMG 4648"}, {"full": "/portfolio/webp/IMG_7949.webp", "thumb": "/portfolio/thumbs/IMG_7949.webp", "alt": "IMG 7949"}, {"full": "/portfolio/webp/IMG_8905.webp", "thumb": "/portfolio/thumbs/IMG_8905.webp", "alt": "IMG 8905"}, {"full": "/portfolio/webp/IMG_9090.webp", "thumb": "/portfolio/thumbs/IMG_9090.webp", "alt": "IMG 9090"}, {"full": "/portfolio/webp/IMG_9794.webp", "thumb": "/portfolio/thumbs/IMG_9794.webp", "alt": "IMG 9794"}, {"full": "/portfolio/webp/IMG_9990.webp", "thumb": "/portfolio/thumbs/IMG_9990.webp", "alt": "IMG 9990"}, {"full": "/portfolio/webp/_MG_6510-2.webp", "thumb": "/portfolio/thumbs/_MG_6510-2.webp", "alt": " MG 6510 2"}, {"full": "/portfolio/webp/_MG_8471.webp", "thumb": "/portfolio/thumbs/_MG_8471.webp", "alt": " MG 8471"}]
+[
+  {
+    "thumb": "/portfolio/thumbs/IMG_0006.webp",
+    "full": "/portfolio/webp/IMG_0006.webp",
+    "title": "IMG_0006"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_0464.webp",
+    "full": "/portfolio/webp/IMG_0464.webp",
+    "title": "IMG_0464"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_0814.webp",
+    "full": "/portfolio/webp/IMG_0814.webp",
+    "title": "IMG_0814"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_1496.webp",
+    "full": "/portfolio/webp/IMG_1496.webp",
+    "title": "IMG_1496"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_1616.webp",
+    "full": "/portfolio/webp/IMG_1616.webp",
+    "title": "IMG_1616"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_1657.webp",
+    "full": "/portfolio/webp/IMG_1657.webp",
+    "title": "IMG_1657"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_1664.webp",
+    "full": "/portfolio/webp/IMG_1664.webp",
+    "title": "IMG_1664"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_1785.webp",
+    "full": "/portfolio/webp/IMG_1785.webp",
+    "title": "IMG_1785"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2053-2.webp",
+    "full": "/portfolio/webp/IMG_2053-2.webp",
+    "title": "IMG_2053-2"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2163.webp",
+    "full": "/portfolio/webp/IMG_2163.webp",
+    "title": "IMG_2163"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2413.webp",
+    "full": "/portfolio/webp/IMG_2413.webp",
+    "title": "IMG_2413"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2444.webp",
+    "full": "/portfolio/webp/IMG_2444.webp",
+    "title": "IMG_2444"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2588.webp",
+    "full": "/portfolio/webp/IMG_2588.webp",
+    "title": "IMG_2588"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2817.webp",
+    "full": "/portfolio/webp/IMG_2817.webp",
+    "title": "IMG_2817"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_2971-2.webp",
+    "full": "/portfolio/webp/IMG_2971-2.webp",
+    "title": "IMG_2971-2"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_3155.webp",
+    "full": "/portfolio/webp/IMG_3155.webp",
+    "title": "IMG_3155"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_4648.webp",
+    "full": "/portfolio/webp/IMG_4648.webp",
+    "title": "IMG_4648"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_7236.webp",
+    "full": "/portfolio/webp/IMG_7236.webp",
+    "title": "IMG_7236"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/IMG_9794.webp",
+    "full": "/portfolio/webp/IMG_9794.webp",
+    "title": "IMG_9794"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/produse-087.webp",
+    "full": "/portfolio/webp/produse-087.webp",
+    "title": "produse-087"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/SRB_6406.webp",
+    "full": "/portfolio/webp/SRB_6406.webp",
+    "title": "SRB_6406"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/SRB_7168.webp",
+    "full": "/portfolio/webp/SRB_7168.webp",
+    "title": "SRB_7168"
+  }
+,
+  {
+    "thumb": "/portfolio/thumbs/SRB_7796.webp",
+    "full": "/portfolio/webp/SRB_7796.webp",
+    "title": "SRB_7796"
+  }
+]
