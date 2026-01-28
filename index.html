@@ -356,27 +356,16 @@
             }
         }
 
-        /* Gallery - Masonry/Puzzle Layout with Original Aspect Ratios */
+        /* Gallery - Smart Photo Wall with Variable Sizes */
         #gallery {
-            column-count: 1;
-            column-gap: 18px;
-        }
-
-        @media (min-width: 720px) {
-            #gallery {
-                column-count: 2;
-            }
-        }
-
-        @media (min-width: 1100px) {
-            #gallery {
-                column-count: 3;
-            }
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
         }
 
         .card {
-            break-inside: avoid;
-            margin-bottom: 18px;
+            flex: 0 0 auto;
             border-radius: 14px;
             overflow: hidden;
             border: 1px solid var(--border);
@@ -384,8 +373,27 @@
             cursor: pointer;
             position: relative;
             transition: transform .3s ease;
-            display: inline-block;
-            width: 100%;
+            /* Size will be set dynamically by JS based on image aspect ratio */
+        }
+
+        /* Different size classes for variety */
+        .card.size-small {
+            max-width: 280px;
+        }
+
+        .card.size-medium {
+            max-width: 380px;
+        }
+
+        .card.size-large {
+            max-width: 480px;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                max-width: 100% !important;
+                width: 100%;
+            }
         }
 
         .card:hover {
@@ -397,7 +405,6 @@
             height: auto;
             display: block;
             transition: opacity .3s ease;
-            vertical-align: bottom;
         }
 
         .card:not(.loaded) img {

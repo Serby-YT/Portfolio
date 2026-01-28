@@ -129,15 +129,30 @@ async function loadGallery() {
             
             img.onload = function() {
                 card.classList.add('loaded');
+                
+                // Calculate aspect ratio and assign size class
+                const aspectRatio = this.naturalWidth / this.naturalHeight;
+                
+                // Vary sizes for visual interest
+                if (aspectRatio > 1.3) {
+                    // Wide landscape
+                    card.classList.add('size-large');
+                } else if (aspectRatio < 0.75) {
+                    // Tall portrait
+                    card.classList.add('size-small');
+                } else {
+                    // Square-ish or moderate
+                    card.classList.add(index % 2 === 0 ? 'size-medium' : 'size-small');
+                }
             };
             
             img.onerror = function() {
                 card.classList.add('loaded');
+                card.classList.add('size-medium');
                 console.error(`Failed to load image: ${thumb}`);
             };
 
-            // Important: Don't use lazy loading for above-the-fold images
-            // Only lazy load images after the first 6
+            // Load first 6 eagerly, rest lazy
             if (index < 6) {
                 img.loading = "eager";
             } else {
@@ -145,8 +160,6 @@ async function loadGallery() {
             }
             
             img.decoding = "async";
-            
-            // Set src AFTER onload/onerror handlers are attached
             img.src = thumb;
 
             card.appendChild(img);
