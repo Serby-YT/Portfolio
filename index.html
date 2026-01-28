@@ -626,24 +626,18 @@
             color: var(--accent);
             flex: 0 0 auto;
             overflow: hidden;
-        }
-
-        .pill .icon img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            display: block;
+            background-size: 32px;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* Make SVG icons visible on dark background */
+            filter: brightness(1.8) contrast(1.2);
         }
 
         @media (max-width: 640px) {
             .pill .icon {
                 width: 48px;
                 height: 48px;
-            }
-
-            .pill .icon img {
-                width: 28px;
-                height: 28px;
+                background-size: 28px;
             }
         }
 
