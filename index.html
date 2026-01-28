@@ -356,17 +356,29 @@
             }
         }
 
-        /* Gallery - Smart Photo Wall with Variable Sizes */
+        /* Gallery - Clean Masonry Layout with Equal Spacing */
         #gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            justify-content: center;
-            align-items: flex-start;
+            column-count: 1;
+            column-gap: 18px;
+        }
+
+        @media (min-width: 640px) {
+            #gallery {
+                column-count: 2;
+                column-gap: 20px;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            #gallery {
+                column-count: 3;
+                column-gap: 22px;
+            }
         }
 
         .card {
-            flex: 0 0 auto;
+            break-inside: avoid;
+            margin-bottom: 18px;
             border-radius: 14px;
             overflow: hidden;
             border: 1px solid var(--border);
@@ -374,40 +386,19 @@
             cursor: pointer;
             position: relative;
             transition: transform .3s ease;
-            /* Size will be set dynamically by JS based on image aspect ratio */
+            display: inline-block;
+            width: 100%;
         }
 
-        /* Different size classes for variety */
-        .card.size-small {
-            max-width: 250px;
-        }
-
-        .card.size-medium {
-            max-width: 340px;
-        }
-
-        .card.size-large {
-            max-width: 450px;
-        }
-
-        @media (max-width: 1100px) {
-            .card.size-small {
-                max-width: 220px;
-            }
-            
-            .card.size-medium {
-                max-width: 300px;
-            }
-            
-            .card.size-large {
-                max-width: 380px;
-            }
-        }
-
-        @media (max-width: 640px) {
+        @media (min-width: 640px) {
             .card {
-                max-width: 100% !important;
-                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .card {
+                margin-bottom: 22px;
             }
         }
 
@@ -420,6 +411,7 @@
             height: auto;
             display: block;
             transition: opacity .3s ease;
+            vertical-align: bottom;
         }
 
         .card:not(.loaded) img {
