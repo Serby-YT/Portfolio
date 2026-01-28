@@ -625,6 +625,26 @@
             font-weight: 900;
             color: var(--accent);
             flex: 0 0 auto;
+            overflow: hidden;
+        }
+
+        .pill .icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+
+        @media (max-width: 640px) {
+            .pill .icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .pill .icon img {
+                width: 28px;
+                height: 28px;
+            }
         }
 
         .pill:hover .icon {
@@ -777,7 +797,7 @@
                     <a class="pill" href="https://www.instagram.com/serby.photo/" target="_blank"
                         rel="noopener noreferrer">
                         <div class="icon">
-                            <img src="/assets/instagram.svg" alt="Instagram" style="width: 32px; height: 32px; object-fit: contain;">
+                            <img src="/assets/instagram.svg" alt="Instagram">
                         </div>
                         <div>
                             <strong>@serby.photo</strong>
@@ -788,7 +808,7 @@
                     <a class="pill" href="https://www.facebook.com/profile.php?id=61552740026814" target="_blank"
                         rel="noopener noreferrer">
                         <div class="icon">
-                            <img src="/assets/facebook.svg" alt="Facebook" style="width: 32px; height: 32px; object-fit: contain;">
+                            <img src="/assets/facebook.svg" alt="Facebook">
                         </div>
                         <div>
                             <strong>SerbanPhoto</strong>
@@ -798,7 +818,7 @@
 
                     <button class="pill" id="copyEmailBtn" type="button">
                         <div class="icon">
-                            <img src="/assets/email.svg" alt="Email" style="width: 32px; height: 32px; object-fit: contain;">
+                            <img src="/assets/email.svg" alt="Email">
                         </div>
                         <div>
                             <strong id="emailText">contact.serban.photo@gmail.com</strong>
@@ -808,7 +828,7 @@
 
                     <a class="pill" href="tel:0763630193">
                         <div class="icon">
-                            <img src="/assets/vascap.svg" alt="Telefon" style="width: 32px; height: 32px; object-fit: contain;">
+                            <img src="/assets/vascap.svg" alt="Telefon">
                         </div>
                         <div>
                             <strong>0763 630 193</strong>
