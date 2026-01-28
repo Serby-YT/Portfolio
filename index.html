@@ -356,27 +356,27 @@
             }
         }
 
-        /* Gallery - Dynamic Masonry with Preserved Aspect Ratios */
+        /* Gallery - Masonry/Puzzle Layout with Original Aspect Ratios */
         #gallery {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 18px;
-            grid-auto-rows: auto;
+            column-count: 1;
+            column-gap: 18px;
         }
 
         @media (min-width: 720px) {
             #gallery {
-                grid-template-columns: repeat(2, 1fr);
+                column-count: 2;
             }
         }
 
         @media (min-width: 1100px) {
             #gallery {
-                grid-template-columns: repeat(3, 1fr);
+                column-count: 3;
             }
         }
 
         .card {
+            break-inside: avoid;
+            margin-bottom: 18px;
             border-radius: 14px;
             overflow: hidden;
             border: 1px solid var(--border);
@@ -384,8 +384,8 @@
             cursor: pointer;
             position: relative;
             transition: transform .3s ease;
-            display: flex;
-            flex-direction: column;
+            display: inline-block;
+            width: 100%;
         }
 
         .card:hover {
@@ -397,7 +397,7 @@
             height: auto;
             display: block;
             transition: opacity .3s ease;
-            flex-shrink: 0;
+            vertical-align: bottom;
         }
 
         .card:not(.loaded) img {
