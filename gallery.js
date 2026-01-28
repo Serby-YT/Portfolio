@@ -115,7 +115,9 @@ async function loadGallery() {
         container.innerHTML = "";
 
         photos.forEach((p, index) => {
-            const thumb = p.thumb || p.full;
+            // Use FULL image for gallery display to preserve aspect ratios
+            // Thumbnails are often cropped to squares
+            const displaySrc = p.full;
             const alt = p.alt || p.title || "";
 
             const card = document.createElement("div");
@@ -149,7 +151,7 @@ async function loadGallery() {
             img.onerror = function() {
                 card.classList.add('loaded');
                 card.classList.add('size-medium');
-                console.error(`Failed to load image: ${thumb}`);
+                console.error(`Failed to load image: ${displaySrc}`);
             };
 
             // Load first 6 eagerly, rest lazy
@@ -160,7 +162,7 @@ async function loadGallery() {
             }
             
             img.decoding = "async";
-            img.src = thumb;
+            img.src = displaySrc;
 
             card.appendChild(img);
 

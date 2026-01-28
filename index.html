@@ -362,6 +362,7 @@
             flex-wrap: wrap;
             gap: 18px;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .card {
@@ -378,15 +379,29 @@
 
         /* Different size classes for variety */
         .card.size-small {
-            max-width: 280px;
+            max-width: 250px;
         }
 
         .card.size-medium {
-            max-width: 380px;
+            max-width: 340px;
         }
 
         .card.size-large {
-            max-width: 480px;
+            max-width: 450px;
+        }
+
+        @media (max-width: 1100px) {
+            .card.size-small {
+                max-width: 220px;
+            }
+            
+            .card.size-medium {
+                max-width: 300px;
+            }
+            
+            .card.size-large {
+                max-width: 380px;
+            }
         }
 
         @media (max-width: 640px) {
