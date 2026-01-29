@@ -115,8 +115,9 @@ async function loadGallery() {
         container.innerHTML = "";
 
         photos.forEach((p, index) => {
-            // Use FULL image for gallery display to preserve aspect ratios
-            const displaySrc = p.full;
+            // Use thumbnails for gallery display - they're optimized for fast loading
+            // Full images are used in lightbox
+            const displaySrc = p.thumb || p.full;
             const alt = p.alt || p.title || "";
 
             const card = document.createElement("div");
@@ -134,13 +135,15 @@ async function loadGallery() {
             
             img.onerror = function() {
                 card.classList.add('loaded');
-                console.error(`Failed to load gallery image: ${displaySrc}`);
-                // Hide card if image fails to load
-                card.style.display = 'none';
+                console.warn(`Image not found: ${displaySrc}`);
+                // Try loading the full image if thumbnail fails
+                if (displaySrc !== p.full) {
+                    img.src = p.full;
+                }
             };
 
-            // Load first 9 eagerly for better initial render
-            if (index < 9) {
+            // Load first 12 eagerly for better initial render
+            if (index < 12) {
                 img.loading = "eager";
             } else {
                 img.loading = "lazy";
