@@ -620,24 +620,32 @@
             border-radius: 999px;
             display: grid;
             place-items: center;
-            background: rgba(192, 154, 107, .18);
+            background: rgba(245, 245, 220, 0.15);
             border: 1px solid rgba(192, 154, 107, .25);
             font-weight: 900;
             color: var(--accent);
             flex: 0 0 auto;
             overflow: hidden;
-            background-size: 32px;
-            background-position: center;
-            background-repeat: no-repeat;
-            /* Make SVG icons visible on dark background */
-            filter: brightness(1.8) contrast(1.2);
+        }
+
+        .pill .icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+            /* Make SVG icons highly visible on dark background */
+            filter: brightness(3.5) saturate(1.3) contrast(1.1);
         }
 
         @media (max-width: 640px) {
             .pill .icon {
                 width: 48px;
                 height: 48px;
-                background-size: 28px;
+            }
+
+            .pill .icon img {
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -790,7 +798,9 @@
                 <div class="contact-grid">
                     <a class="pill" href="https://www.instagram.com/serby.photo/" target="_blank"
                         rel="noopener noreferrer">
-                        <div class="icon" style="background-image: url('/assets/instagram.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat;"></div>
+                        <div class="icon">
+                            <img src="assets/instagram.svg" alt="Instagram" onerror="console.error('Instagram icon failed to load'); this.style.display='none';">
+                        </div>
                         <div>
                             <strong>@serby.photo</strong>
                             <div style="opacity:.7;font-size:12px;">Instagram</div>
@@ -799,7 +809,9 @@
 
                     <a class="pill" href="https://www.facebook.com/profile.php?id=61552740026814" target="_blank"
                         rel="noopener noreferrer">
-                        <div class="icon" style="background-image: url('/assets/facebook.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat;"></div>
+                        <div class="icon">
+                            <img src="assets/facebook.svg" alt="Facebook" onerror="console.error('Facebook icon failed to load'); this.style.display='none';">
+                        </div>
                         <div>
                             <strong>SerbanPhoto</strong>
                             <div style="opacity:.7;font-size:12px;">Facebook</div>
@@ -807,7 +819,9 @@
                     </a>
 
                     <button class="pill" id="copyEmailBtn" type="button">
-                        <div class="icon" style="background-image: url('/assets/email.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat;"></div>
+                        <div class="icon">
+                            <img src="assets/email.svg" alt="Email" onerror="console.error('Email icon failed to load'); this.style.display='none';">
+                        </div>
                         <div>
                             <strong id="emailText">contact.serban.photo@gmail.com</strong>
                             <div style="opacity:.7;font-size:12px;">Click pentru copiere</div>
@@ -815,7 +829,9 @@
                     </button>
 
                     <a class="pill" href="tel:0763630193">
-                        <div class="icon" style="background-image: url('/assets/vascap.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat;"></div>
+                        <div class="icon">
+                            <img src="assets/vascap.svg" alt="Telefon" onerror="console.error('Phone icon failed to load'); this.style.display='none';">
+                        </div>
                         <div>
                             <strong>0763 630 193</strong>
                             <div style="opacity:.7;font-size:12px;">Telefon</div>

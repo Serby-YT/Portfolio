@@ -134,7 +134,9 @@ async function loadGallery() {
             
             img.onerror = function() {
                 card.classList.add('loaded');
-                console.error(`Failed to load image: ${displaySrc}`);
+                console.error(`Failed to load gallery image: ${displaySrc}`);
+                // Hide card if image fails to load
+                card.style.display = 'none';
             };
 
             // Load first 9 eagerly for better initial render
