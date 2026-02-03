@@ -1,7 +1,10 @@
-async function loadGallery() {
+// Ultra-simple, stable gallery - no glitches
+(function() {
+    let photos = [];
+    let currentIndex = -1;
+
     const container = document.getElementById("gallery");
     const hint = document.getElementById("galleryHint");
-
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightboxImg");
     const closeBtn = document.getElementById("closeBtn");
@@ -10,57 +13,17 @@ async function loadGallery() {
 
     if (!container) return;
 
-    let photos = [];
-    let currentIndex = -1;
-    let preloadedImages = new Map();
-
-    function preloadAdjacentImages(index) {
-        if (index < 0 || index >= photos.length) return;
-        
-        const toPreload = [
-            index - 1 >= 0 ? index - 1 : photos.length - 1,
-            index + 1 < photos.length ? index + 1 : 0
-        ];
-
-        toPreload.forEach(i => {
-            if (!preloadedImages.has(i)) {
-                const img = new Image();
-                img.src = photos[i].full;
-                preloadedImages.set(i, img);
-            }
-        });
-    }
-
+    // Lightbox functions
     function openLightbox(index) {
-        if (index < 0 || index >= photos.length) return;
         currentIndex = index;
-        const p = photos[currentIndex];
-        const src = p.full;
-        const alt = p.alt || "";
-
-        if (!preloadedImages.has(currentIndex)) {
-            lightboxImg.classList.add('loading');
-        }
-
-        lightboxImg.src = src;
-        lightboxImg.alt = alt;
-        
-        lightboxImg.onload = () => {
-            lightboxImg.classList.remove('loading');
-        };
-
+        lightboxImg.src = photos[index].full;
         lightbox.classList.add("open");
-        lightbox.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
-
-        preloadAdjacentImages(currentIndex);
     }
 
     function closeLightbox() {
         lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
         lightboxImg.src = "";
-        lightboxImg.classList.remove('loading');
         document.body.style.overflow = "";
         currentIndex = -1;
     }
@@ -68,129 +31,79 @@ async function loadGallery() {
     function showNext(e) {
         if (e) e.stopPropagation();
         if (currentIndex === -1) return;
-        let nextIndex = currentIndex + 1;
-        if (nextIndex >= photos.length) nextIndex = 0;
-        openLightbox(nextIndex);
+        currentIndex = (currentIndex + 1) % photos.length;
+        lightboxImg.src = photos[currentIndex].full;
     }
 
     function showPrev(e) {
         if (e) e.stopPropagation();
         if (currentIndex === -1) return;
-        let prevIndex = currentIndex - 1;
-        if (prevIndex < 0) prevIndex = photos.length - 1;
-        openLightbox(prevIndex);
+        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+        lightboxImg.src = photos[currentIndex].full;
     }
 
-    if (closeBtn && !closeBtn.dataset.bound) {
-        closeBtn.dataset.bound = "1";
-        closeBtn.addEventListener("click", closeLightbox);
+    // Bind events
+    closeBtn.addEventListener("click", closeLightbox);
+    prevBtn.addEventListener("click", showPrev);
+    nextBtn.addEventListener("click", showNext);
+    lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
 
-        if (prevBtn) prevBtn.addEventListener("click", showPrev);
-        if (nextBtn) nextBtn.addEventListener("click", showNext);
+    document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("open")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") showNext();
+        if (e.key === "ArrowLeft") showPrev();
+    });
 
-        lightbox.addEventListener("click", (e) => {
-            if (e.target === lightbox) closeLightbox();
-        });
+    // Load gallery
+    async function loadGallery() {
+        try {
+            const res = await fetch("/photos.json");
+            photos = await res.json();
 
-        document.addEventListener("keydown", (e) => {
-            if (!lightbox.classList.contains("open")) return;
-            if (e.key === "Escape") closeLightbox();
-            if (e.key === "ArrowRight") showNext();
-            if (e.key === "ArrowLeft") showPrev();
-        });
-    }
-
-    try {
-        const res = await fetch(`/photos.json?v=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load photos.json (${res.status})`);
-
-        photos = await res.json();
-
-        if (!Array.isArray(photos) || photos.length === 0) {
-            if (hint) hint.style.display = "";
-            return;
-        }
-
-        if (hint) hint.style.display = "none";
-        container.innerHTML = "";
-
-        // Load all images first to prevent layout shift
-        const imagePromises = photos.map((p, index) => {
-            return new Promise((resolve) => {
-                const testImg = new Image();
-                const src = p.thumb || p.full;
-                
-                testImg.onload = () => {
-                    resolve({ index, src, width: testImg.naturalWidth, height: testImg.naturalHeight, success: true });
-                };
-                
-                testImg.onerror = () => {
-                    // Try full image if thumb fails
-                    const fullImg = new Image();
-                    fullImg.onload = () => {
-                        resolve({ index, src: p.full, width: fullImg.naturalWidth, height: fullImg.naturalHeight, success: true });
-                    };
-                    fullImg.onerror = () => {
-                        resolve({ index, src: null, success: false });
-                    };
-                    fullImg.src = p.full;
-                };
-                
-                testImg.src = src;
-            });
-        });
-
-        const loadedImages = await Promise.all(imagePromises);
-
-        // Now create cards with known dimensions
-        loadedImages.forEach((imgData) => {
-            if (!imgData.success) {
-                console.warn(`Failed to load image at index ${imgData.index}`);
+            if (!photos || photos.length === 0) {
+                hint.textContent = "Nu s-au găsit fotografii.";
                 return;
             }
 
-            const p = photos[imgData.index];
-            const alt = p.alt || p.title || "";
+            hint.style.display = "none";
 
-            const card = document.createElement("div");
-            card.className = "card loaded"; // Already loaded, no animation needed
-            card.setAttribute("role", "button");
-            card.setAttribute("tabindex", "0");
-            card.setAttribute("aria-label", `Deschide fotografia: ${alt}`);
+            // Create all cards at once - simple and stable
+            photos.forEach((photo, index) => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.setAttribute("role", "button");
+                card.setAttribute("tabindex", "0");
 
-            const img = document.createElement("img");
-            img.src = imgData.src;
-            img.alt = alt;
-            img.loading = "eager"; // All images loaded, no lazy loading
-            img.decoding = "sync"; // Synchronous to prevent layout shift
+                const img = document.createElement("img");
+                img.src = photo.full; // Use full images directly - simpler
+                img.alt = photo.title || "";
+                img.loading = "lazy";
 
-            card.appendChild(img);
+                card.appendChild(img);
+                card.addEventListener("click", () => openLightbox(index));
+                card.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openLightbox(index);
+                    }
+                });
 
-            card.addEventListener("click", () => openLightbox(imgData.index));
-            card.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    openLightbox(imgData.index);
-                }
+                container.appendChild(card);
             });
 
-            container.appendChild(card);
-        });
-
-        // Preload first few full-size images for lightbox
-        for (let i = 0; i < Math.min(3, photos.length); i++) {
-            const img = new Image();
-            img.src = photos[i].full;
-            preloadedImages.set(i, img);
-        }
-
-    } catch (err) {
-        console.error(err);
-        if (hint) {
-            hint.style.display = "";
-            hint.textContent = "Galeria nu s-a încărcat. Verifică photos.json și căile fișierelor.";
+        } catch (err) {
+            console.error("Gallery error:", err);
+            hint.textContent = "Eroare la încărcarea galeriei.";
         }
     }
-}
 
-document.addEventListener("DOMContentLoaded", loadGallery);
+    // Start loading when DOM is ready
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadGallery);
+    } else {
+        loadGallery();
+    }
+})();
