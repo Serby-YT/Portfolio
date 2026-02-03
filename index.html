@@ -247,20 +247,6 @@
             color: rgba(255, 255, 255, .42);
         }
 
-        /* Gallery - Simple Grid */
-        #gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        @media (max-width: 640px) {
-            #gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .card {
             border-radius: 14px;
             overflow: hidden;
@@ -501,24 +487,6 @@
 
 
 
-/* Optional: subtle loading shimmer */
-#gallery.masonry .card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12), rgba(255,255,255,0.05));
-  transform: translateX(-60%);
-  animation: shimmer 1.2s infinite;
-  opacity: 0;
-  pointer-events: none;
-}
-#gallery.masonry .card.loading::before { opacity: 1; }
-@keyframes shimmer {
-  0% { transform: translateX(-60%); }
-  100% { transform: translateX(60%); }
-}
-
-/* Improve scroll performance */
 #gallery.masonry .card { content-visibility: auto; contain-intrinsic-size: 300px 300px; }
 
 
@@ -570,6 +538,10 @@
 
 /* If you prefer zero letterboxing (cropped but always fills), switch contain -> cover */
 
+
+/* Force columns layout even if older rules exist */
+#gallery.columns{ display: block; }
+
 </style>
 </head>
 
@@ -606,7 +578,7 @@
                     <p>Explorări vizuale și momente capturate</p>
                 </div>
 
-                <div id="gallery" class="columns" class="columns"></div>
+                <div id="gallery" class="columns"></div>
                 <div class="hint" id="galleryHint">Se încarcă fotografiile…</div>
             </div>
         </section>
