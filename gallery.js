@@ -114,58 +114,70 @@ async function loadGallery() {
         if (hint) hint.style.display = "none";
         container.innerHTML = "";
 
-        photos.forEach((p, index) => {
-            // Use thumbnails for gallery display - they're optimized for fast loading
-            // Full images are used in lightbox
-            const displaySrc = p.thumb || p.full;
+        // Load all images first to prevent layout shift
+        const imagePromises = photos.map((p, index) => {
+            return new Promise((resolve) => {
+                const testImg = new Image();
+                const src = p.thumb || p.full;
+                
+                testImg.onload = () => {
+                    resolve({ index, src, width: testImg.naturalWidth, height: testImg.naturalHeight, success: true });
+                };
+                
+                testImg.onerror = () => {
+                    // Try full image if thumb fails
+                    const fullImg = new Image();
+                    fullImg.onload = () => {
+                        resolve({ index, src: p.full, width: fullImg.naturalWidth, height: fullImg.naturalHeight, success: true });
+                    };
+                    fullImg.onerror = () => {
+                        resolve({ index, src: null, success: false });
+                    };
+                    fullImg.src = p.full;
+                };
+                
+                testImg.src = src;
+            });
+        });
+
+        const loadedImages = await Promise.all(imagePromises);
+
+        // Now create cards with known dimensions
+        loadedImages.forEach((imgData) => {
+            if (!imgData.success) {
+                console.warn(`Failed to load image at index ${imgData.index}`);
+                return;
+            }
+
+            const p = photos[imgData.index];
             const alt = p.alt || p.title || "";
 
             const card = document.createElement("div");
-            card.className = "card";
+            card.className = "card loaded"; // Already loaded, no animation needed
             card.setAttribute("role", "button");
             card.setAttribute("tabindex", "0");
             card.setAttribute("aria-label", `Deschide fotografia: ${alt}`);
 
-            const img = new Image();
+            const img = document.createElement("img");
+            img.src = imgData.src;
             img.alt = alt;
-            
-            img.onload = function() {
-                card.classList.add('loaded');
-            };
-            
-            img.onerror = function() {
-                card.classList.add('loaded');
-                console.warn(`Image not found: ${displaySrc}`);
-                // Try loading the full image if thumbnail fails
-                if (displaySrc !== p.full) {
-                    img.src = p.full;
-                }
-            };
-
-            // Load first 12 eagerly for better initial render
-            if (index < 12) {
-                img.loading = "eager";
-            } else {
-                img.loading = "lazy";
-            }
-            
-            img.decoding = "async";
-            img.src = displaySrc;
+            img.loading = "eager"; // All images loaded, no lazy loading
+            img.decoding = "sync"; // Synchronous to prevent layout shift
 
             card.appendChild(img);
 
-            card.addEventListener("click", () => openLightbox(index));
+            card.addEventListener("click", () => openLightbox(imgData.index));
             card.addEventListener("keydown", (e) => {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    openLightbox(index);
+                    openLightbox(imgData.index);
                 }
             });
 
             container.appendChild(card);
         });
 
-        // Preload first few full-size images
+        // Preload first few full-size images for lightbox
         for (let i = 0; i < Math.min(3, photos.length); i++) {
             const img = new Image();
             img.src = photos[i].full;
