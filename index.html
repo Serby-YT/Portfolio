@@ -552,6 +552,24 @@
 /* Optional: make it feel snappier on scroll */
 #gallery.columns .card{ content-visibility:auto; contain-intrinsic-size: 300px 240px; }
 
+
+
+
+/* ===== Fix: keep original orientation (no forced portrait) ===== */
+#gallery.columns .card{
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+#gallery.columns .card img{
+  height: auto !important;
+  width: 100% !important;
+  aspect-ratio: auto !important;
+  object-fit: contain; /* no crop */
+}
+
+/* If you prefer zero letterboxing (cropped but always fills), switch contain -> cover */
+
 </style>
 </head>
 
