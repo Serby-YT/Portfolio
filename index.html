@@ -543,27 +543,33 @@
 #gallery.columns{ display: block; }
 
 
-/* ===== Mobile hero title FIX v2 (hard override) ===== */
+/* ===== Mobile hero title FIX v3 (keeps outline visible) ===== */
 @media (max-width: 768px){
   .hero .hero-content h1{
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;                 /* space between lines */
-    line-height: 1;            /* neutralize tight line-height */
+    line-height: 1;            /* override tight desktop line-height */
     margin: 0 0 22px;
     font-size: clamp(34px, 10.5vw, 56px);
   }
-  .hero .hero-content h1 br{ display:none; } /* we handle spacing via flex+gap */
+
+  /* If the HTML uses <br>, don't let it mess with spacing */
+  .hero .hero-content h1 br{ display:none; }
+
+  /* IMPORTANT: base .outline has color: transparent; so stroke must NOT use currentColor */
   .hero .hero-content h1 .outline{
     display:block;
-    font-size: 0.95em;         /* slightly smaller outline line on mobile */
-    -webkit-text-stroke: 1.2px currentColor;
+    font-size: 0.95em;
+    color: transparent;
+    -webkit-text-stroke: 1.2px var(--text);
   }
 }
+
 @media (max-width: 360px){
   .hero .hero-content h1{ font-size: clamp(30px, 12vw, 48px); gap: 8px; }
-  .hero .hero-content h1 .outline{ -webkit-text-stroke: 1px currentColor; }
+  .hero .hero-content h1 .outline{ -webkit-text-stroke: 1px var(--text); }
 }
 
 </style>
