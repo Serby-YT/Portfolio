@@ -503,10 +503,11 @@
 /* ===== Masonry / puzzle gallery (dynamic sizes, no cropping) ===== */
 #gallery.masonry {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  grid-auto-rows: 10px;              /* controls "granularity" of the puzzle */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-auto-rows: 8px;              /* finer packing */
   gap: 16px;
   align-items: start;
+  grid-auto-flow: dense;            /* try to fill holes */
 }
 
 #gallery.masonry .card {
@@ -665,63 +666,65 @@
 
 <script>
 (function () {
-  const grid = document.getElementById('gallery');
+  const grid = document.getElementById("gallery");
   if (!grid) return;
 
-  const ROW_HEIGHT = 10; // must match CSS grid-auto-rows
+  const ROW_HEIGHT = 8;  // must match CSS grid-auto-rows
   const GAP = 16;        // must match CSS gap
 
-  function setSpan(card) {
-    const img = card.querySelector('img');
-    if (!img || !img.complete) return;
+  function resizeCard(card) {
+    const img = card.querySelector("img");
+    if (!img) return;
 
-    // Use rendered height (natural aspect preserved)
-    const cardHeight = img.getBoundingClientRect().height;
-    const span = Math.ceil((cardHeight + GAP) / ROW_HEIGHT);
-    card.style.gridRowEnd = "span " + span;
+    if (!img.naturalWidth || !img.naturalHeight) return;
+
+    const cardWidth = card.clientWidth;
+    if (!cardWidth) return;
+
+    const renderedHeight = img.naturalHeight * (cardWidth / img.naturalWidth);
+    const rowSpan = Math.ceil((renderedHeight + GAP) / ROW_HEIGHT);
+    card.style.gridRowEnd = "span " + rowSpan;
   }
 
-  function relayout() {
-    const cards = grid.querySelectorAll('.card');
-    cards.forEach(setSpan);
+  function resizeAll() {
+    const cards = grid.querySelectorAll(".card");
+    cards.forEach(resizeCard);
   }
 
-  // Watch for images being added by gallery.js
-  const obs = new MutationObserver((mutations) => {
+  const observer = new MutationObserver((mutations) => {
     for (const m of mutations) {
       for (const node of m.addedNodes) {
         if (node.nodeType !== 1) continue;
-        if (node.classList && node.classList.contains('card')) {
-          node.classList.add('loading');
-          const img = node.querySelector('img');
-          if (img) {
-            const done = () => {
-              node.classList.remove('loading');
-              setSpan(node);
-            };
-            img.addEventListener('load', done, { once: true });
-            img.addEventListener('error', () => node.classList.remove('loading'), { once: true });
-            // If it already loaded instantly
-            if (img.complete) done();
-          }
-        }
+        if (!node.classList || !node.classList.contains("card")) continue;
+
+        const img = node.querySelector("img");
+        if (!img) continue;
+
+        node.classList.add("loading");
+
+        const onDone = () => {
+          node.classList.remove("loading");
+          resizeCard(node);
+          requestAnimationFrame(resizeAll);
+        };
+
+        img.addEventListener("load", onDone, { once: true });
+        img.addEventListener("error", () => node.classList.remove("loading"), { once: true });
+
+        if (img.complete && img.naturalWidth) onDone();
       }
     }
-    // After batch insert
-    requestAnimationFrame(relayout);
   });
 
-  obs.observe(grid, { childList: true });
+  observer.observe(grid, { childList: true });
 
-  // Relayout on resize (debounced)
   let t = null;
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     clearTimeout(t);
-    t = setTimeout(relayout, 150);
+    t = setTimeout(() => requestAnimationFrame(resizeAll), 120);
   });
 
-  // Initial call (in case content already exists)
-  window.addEventListener('load', () => requestAnimationFrame(relayout));
+  window.addEventListener("load", () => requestAnimationFrame(resizeAll));
 })();
 </script>
 
