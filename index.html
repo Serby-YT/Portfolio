@@ -500,29 +500,6 @@
     
 
 
-/* ===== Masonry / puzzle gallery (dynamic sizes, no cropping) ===== */
-#gallery.masonry {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  grid-auto-rows: 8px;              /* finer packing */
-  gap: 16px;
-  align-items: start;
-  grid-auto-flow: dense;            /* try to fill holes */
-}
-
-#gallery.masonry .card {
-  overflow: hidden;
-  border-radius: 14px;
-  position: relative;
-  /* keep your existing card look if any, but avoid forcing height */
-}
-
-#gallery.masonry .card img {
-  width: 100%;
-  height: auto;                     /* original aspect ratio */
-  display: block;
-  object-fit: contain;              /* no crop */
-}
 
 /* Optional: subtle loading shimmer */
 #gallery.masonry .card::before {
@@ -543,6 +520,37 @@
 
 /* Improve scroll performance */
 #gallery.masonry .card { content-visibility: auto; contain-intrinsic-size: 300px 300px; }
+
+
+
+
+/* ===== Puzzle gallery using CSS columns (tight packing, no gaps) ===== */
+#gallery.columns{
+  column-width: 300px;     /* target tile width */
+  column-gap: 16px;
+  padding: 0;
+}
+
+#gallery.columns .card{
+  display: inline-block;   /* important for columns */
+  width: 100%;
+  margin: 0 0 16px;
+  break-inside: avoid;     /* keep card intact */
+  -webkit-column-break-inside: avoid;
+  overflow: hidden;
+  border-radius: 14px;
+  position: relative;
+}
+
+#gallery.columns .card img{
+  width: 100%;
+  height: auto;            /* original aspect ratio */
+  display: block;
+  object-fit: contain;     /* no crop */
+}
+
+/* Optional: make it feel snappier on scroll */
+#gallery.columns .card{ content-visibility:auto; contain-intrinsic-size: 300px 240px; }
 
 </style>
 </head>
@@ -580,7 +588,7 @@
                     <p>Explorări vizuale și momente capturate</p>
                 </div>
 
-                <div id="gallery" class="masonry"></div>
+                <div id="gallery" class="columns" class="columns"></div>
                 <div class="hint" id="galleryHint">Se încarcă fotografiile…</div>
             </div>
         </section>
@@ -665,66 +673,25 @@
     </script>
 
 <script>
-(function () {
-  const grid = document.getElementById("gallery");
-  if (!grid) return;
-
-  const ROW_HEIGHT = 8;  // must match CSS grid-auto-rows
-  const GAP = 16;        // must match CSS gap
-
-  function resizeCard(card) {
-    const img = card.querySelector("img");
-    if (!img) return;
-
-    if (!img.naturalWidth || !img.naturalHeight) return;
-
-    const cardWidth = card.clientWidth;
-    if (!cardWidth) return;
-
-    const renderedHeight = img.naturalHeight * (cardWidth / img.naturalWidth);
-    const rowSpan = Math.ceil((renderedHeight + GAP) / ROW_HEIGHT);
-    card.style.gridRowEnd = "span " + rowSpan;
-  }
-
-  function resizeAll() {
-    const cards = grid.querySelectorAll(".card");
-    cards.forEach(resizeCard);
-  }
-
-  const observer = new MutationObserver((mutations) => {
-    for (const m of mutations) {
-      for (const node of m.addedNodes) {
-        if (node.nodeType !== 1) continue;
-        if (!node.classList || !node.classList.contains("card")) continue;
-
-        const img = node.querySelector("img");
-        if (!img) continue;
-
-        node.classList.add("loading");
-
-        const onDone = () => {
-          node.classList.remove("loading");
-          resizeCard(node);
-          requestAnimationFrame(resizeAll);
-        };
-
-        img.addEventListener("load", onDone, { once: true });
-        img.addEventListener("error", () => node.classList.remove("loading"), { once: true });
-
-        if (img.complete && img.naturalWidth) onDone();
+(function(){
+  const grid = document.getElementById('gallery');
+  if(!grid) return;
+  const obs = new MutationObserver((muts)=>{
+    for(const m of muts){
+      for(const node of m.addedNodes){
+        if(node.nodeType!==1) continue;
+        if(!node.classList || !node.classList.contains('card')) continue;
+        node.classList.add('loading');
+        const img = node.querySelector('img');
+        if(!img) continue;
+        const done=()=>node.classList.remove('loading');
+        img.addEventListener('load', done, {once:true});
+        img.addEventListener('error', done, {once:true});
+        if(img.complete) done();
       }
     }
   });
-
-  observer.observe(grid, { childList: true });
-
-  let t = null;
-  window.addEventListener("resize", () => {
-    clearTimeout(t);
-    t = setTimeout(() => requestAnimationFrame(resizeAll), 120);
-  });
-
-  window.addEventListener("load", () => requestAnimationFrame(resizeAll));
+  obs.observe(grid,{childList:true});
 })();
 </script>
 
