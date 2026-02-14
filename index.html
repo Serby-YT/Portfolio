@@ -2,719 +2,500 @@
 <html lang="ro">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SerbanPhoto</title>
-    <meta name="description" content="Portofoliu foto SerbanPhoto" />
-
-    <style>
-        :root {
-            --bg: #4a0404;
-            --bg2: #300202;
-            --text: #F5F5DC;
-            --accent: #c09a6b;
-            --card: rgba(0, 0, 0, .25);
-            --border: rgba(255, 255, 255, .08);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            padding: 18px 0;
-            transition: all .25s ease;
-            background: transparent;
-        }
-
-        .nav.scrolled {
-            background: rgba(48, 2, 2, .95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 0;
-        }
-
-        .nav-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-
-        .logo {
-            width: 56px;
-            height: 56px;
-            border-radius: 999px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .brand-title strong {
-            text-transform: uppercase;
-            letter-spacing: .02em;
-            font-weight: 900;
-            color: #fff;
-            font-size: 18px;
-        }
-
-        .brand-title strong span {
-            color: var(--accent);
-        }
-
-        .brand-title small {
-            text-transform: uppercase;
-            letter-spacing: .35em;
-            font-size: 9px;
-            color: rgba(255, 255, 255, .4);
-            margin-top: 4px;
-            display: block;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 26px;
-            font-size: 11px;
-            letter-spacing: .22em;
-            text-transform: uppercase;
-            font-weight: 800;
-            color: rgba(255, 255, 255, .82);
-        }
-
-        .nav-links a {
-            position: relative;
-            padding: 6px 0;
-        }
-
-        .nav-links a::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 2px;
-            width: 0;
-            background: var(--accent);
-            transition: width .2s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            background: #000;
-            position: relative;
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            padding-top: 84px;
-        }
-
-        .hero::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 160px;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0), var(--bg));
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: .55;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            padding: 0 18px;
-            max-width: 900px;
-        }
-
-        .hero h1 {
-            margin: 0 0 26px;
-            font-weight: 950;
-            color: #fff;
-            letter-spacing: -0.04em;
-            line-height: .88;
-            font-size: clamp(44px, 7vw, 110px);
-        }
-
-        .hero h1 .outline {
-            color: transparent;
-            -webkit-text-stroke: 1.5px var(--text);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px 34px;
-            border-radius: 999px;
-            border: 2px solid var(--text);
-            font-weight: 900;
-            letter-spacing: .22em;
-            text-transform: uppercase;
-            font-size: 11px;
-            background: var(--text);
-            color: var(--bg);
-            transition: transform .18s ease;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: scale(1.04);
-        }
-
-        /* Sections */
-        section {
-            scroll-margin-top: 90px;
-        }
-
-        .section {
-            padding: 110px 0;
-        }
-
-        .section-head {
-            text-align: center;
-            margin-bottom: 46px;
-        }
-
-        .section-head h2 {
-            margin: 0;
-            font-weight: 950;
-            text-transform: uppercase;
-            letter-spacing: .28em;
-            font-style: italic;
-            color: #fff;
-            font-size: clamp(28px, 4vw, 60px);
-        }
-
-        .section-head p {
-            margin: 14px 0 0;
-            text-transform: uppercase;
-            letter-spacing: .42em;
-            font-size: 10px;
-            color: rgba(255, 255, 255, .42);
-        }
-
-        .card {
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            background: var(--card);
-            cursor: pointer;
-            transition: transform .3s ease;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
-
-        .card img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, .18);
-            opacity: 0;
-            transition: opacity .25s ease;
-            pointer-events: none;
-        }
-
-        .card:hover::after {
-            opacity: 1;
-        }
-
-        .hint {
-            text-align: center;
-            margin-top: 18px;
-            color: rgba(255, 255, 255, .45);
-            font-size: 14px;
-        }
-
-        /* Lightbox */
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            z-index: 999;
-        }
-
-        .lightbox.open {
-            display: flex;
-        }
-
-        .lightbox img {
-            max-width: 95vw;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        .close {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 46px;
-            height: 46px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, .18);
-            background: rgba(255, 255, 255, .06);
-            color: rgba(255, 255, 255, .85);
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            font-size: 22px;
-            z-index: 1002;
-            transition: background .2s ease;
-        }
-
-        .close:hover {
-            background: rgba(255, 255, 255, .15);
-        }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            border: 1px solid rgba(255, 255, 255, .18);
-            background: rgba(255, 255, 255, .06);
-            color: rgba(255, 255, 255, .85);
-            border-radius: 50%;
-            cursor: pointer;
-            display: grid;
-            place-items: center;
-            font-size: 20px;
-            z-index: 1001;
-            transition: background .15s ease;
-            user-select: none;
-        }
-
-        .lightbox-nav:hover {
-            background: rgba(255, 255, 255, .15);
-        }
-
-        .lightbox-nav.prev {
-            left: 20px;
-        }
-
-        .lightbox-nav.next {
-            right: 20px;
-        }
-
-        /* Contact */
-        .contact {
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            max-width: 820px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 900px) {
-            .contact-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .pill {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 18px;
-            border-radius: 22px;
-            border: 1px solid var(--border);
-            background: rgba(0, 0, 0, .25);
-            transition: background .25s ease, color .25s ease, transform .18s ease;
-            color: rgba(255, 255, 255, .82);
-        }
-
-        .pill:hover {
-            background: var(--text);
-            color: var(--bg);
-            transform: translateY(-1px);
-        }
-
-        button.pill {
-            width: 100%;
-            appearance: none;
-            border: 1px solid var(--border);
-            background: rgba(0, 0, 0, .25);
-            color: rgba(255, 255, 255, .82);
-            font: inherit;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .pill .icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            background: rgba(192, 154, 107, .18);
-            border: 1px solid rgba(192, 154, 107, .25);
-            font-weight: 900;
-            color: var(--accent);
-            flex-shrink: 0;
-        }
-
-        .pill:hover .icon {
-            background: rgba(74, 4, 4, .1);
-            color: var(--bg);
-            border-color: rgba(74, 4, 4, .12);
-        }
-
-        .pill strong {
-            font-size: 18px;
-        }
-
-        footer {
-            padding: 60px 0;
-            text-align: center;
-            color: rgba(255, 255, 255, .28);
-            font-size: 11px;
-            letter-spacing: .18em;
-            text-transform: uppercase;
-            border-top: 1px solid var(--border);
-            background: #000;
-        }
-
-        /* Mobile */
-        @media (max-width: 640px) {
-            .container {
-                padding: 0 14px;
-            }
-
-            .logo {
-                width: 48px;
-                height: 48px;
-                border-radius: 8px;
-                border: none;
-            }
-
-            .brand-title small {
-                display: none;
-            }
-
-            .nav-links {
-                gap: 14px;
-                font-size: 10px;
-            }
-
-            .section {
-                padding: 80px 0;
-            }
-
-            .pill {
-                padding: 14px;
-            }
-
-            .pill .icon {
-                width: 48px;
-                height: 48px;
-                font-size: 18px;
-            }
-        }
-    
-
-
-
-#gallery.masonry .card { content-visibility: auto; contain-intrinsic-size: 300px 300px; }
-
-
-
-
-/* ===== Puzzle gallery using CSS columns (tight packing, no gaps) ===== */
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SerbanPhoto</title>
+<meta name="description" content="Portofoliu foto SerbanPhoto" />
+
+<style>
+
+:root{
+  --bg:#4a0404;
+  --bg2:#300202;
+  --text:#F5F5DC;
+  --accent:#c09a6b;
+  --card:rgba(0,0,0,.25);
+  --border:rgba(255,255,255,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+
+a{color:inherit;text-decoration:none}
+
+.container{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 20px;
+}
+
+/* NAV */
+
+.nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:50;
+  padding:18px 0;
+  transition:.25s;
+}
+
+.nav.scrolled{
+  background:rgba(48,2,2,.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:10px 0;
+}
+
+.nav-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:56px;
+  height:56px;
+  border-radius:999px;
+  object-fit:cover;
+}
+
+.brand-title strong{
+  text-transform:uppercase;
+  font-weight:900;
+  color:#fff;
+  font-size:18px;
+}
+
+.brand-title strong span{
+  color:var(--accent);
+}
+
+.brand-title small{
+  text-transform:uppercase;
+  letter-spacing:.35em;
+  font-size:9px;
+  color:rgba(255,255,255,.4);
+}
+
+.nav-links{
+  display:flex;
+  gap:26px;
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+
+/* HERO CINEMATIC */
+
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  padding-top:84px;
+  background:#000;
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.55;
+  transform:scale(1.08);
+  animation:heroZoom 14s ease-out forwards;
+}
+
+@keyframes heroZoom{
+  to{ transform:scale(1); }
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(0,0,0,.15), rgba(0,0,0,.75)),
+    linear-gradient(to bottom, rgba(0,0,0,.1), rgba(74,4,4,.85));
+  z-index:1;
+}
+
+.hero-content{
+  position:relative;
+  z-index:3;
+  text-align:center;
+  padding:0 18px;
+}
+
+/* TITLE */
+
+.hero-title{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  margin-bottom:30px;
+  line-height:1;
+}
+
+.title-solid{
+  font-weight:950;
+  color:#fff;
+  letter-spacing:-.04em;
+  font-size:clamp(44px,7vw,110px);
+  opacity:0;
+  transform:translateY(40px);
+  animation:titleReveal 1s ease forwards;
+}
+
+.title-outline{
+  font-weight:950;
+  letter-spacing:-.04em;
+  font-size:clamp(44px,7vw,110px);
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--text);
+  position:relative;
+  opacity:0;
+  transform:translateY(40px);
+  animation:titleReveal 1s ease .25s forwards;
+}
+
+.title-outline::after{
+  content:"ESENȚEI";
+  position:absolute;
+  inset:0;
+  color:transparent;
+  -webkit-text-stroke:1.5px rgba(245,245,220,.25);
+  filter:blur(6px);
+  opacity:.6;
+  pointer-events:none;
+}
+
+@keyframes titleReveal{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* BUTTON */
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px 36px;
+  border-radius:999px;
+  border:2px solid var(--text);
+  font-weight:900;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-size:11px;
+  background:var(--text);
+  color:var(--bg);
+  position:relative;
+  overflow:hidden;
+  transition:.25s;
+}
+
+.btn:hover{
+  transform:translateY(-2px) scale(1.04);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+.btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255,255,255,.5),
+    transparent 70%
+  );
+  transform:translateX(-100%);
+}
+
+.btn:hover::before{
+  animation:shine .9s ease;
+}
+
+@keyframes shine{
+  to{ transform:translateX(100%); }
+}
+
+/* SECTIONS */
+
+.section{
+  padding:110px 0;
+}
+
+.section-head{
+  text-align:center;
+  margin-bottom:46px;
+}
+
+.section-head h2{
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.28em;
+  font-style:italic;
+  color:#fff;
+  font-size:clamp(28px,4vw,60px);
+}
+
+.section-head p{
+  margin-top:14px;
+  text-transform:uppercase;
+  letter-spacing:.42em;
+  font-size:10px;
+  color:rgba(255,255,255,.42);
+}
+
+/* GALLERY */
+
 #gallery.columns{
-  column-width: 300px;     /* target tile width */
-  column-gap: 16px;
-  padding: 0;
+  column-width:300px;
+  column-gap:16px;
 }
 
 #gallery.columns .card{
-  display: inline-block;   /* important for columns */
-  width: 100%;
-  margin: 0 0 16px;
-  break-inside: avoid;     /* keep card intact */
-  -webkit-column-break-inside: avoid;
-  overflow: hidden;
-  border-radius: 14px;
-  position: relative;
+  display:inline-block;
+  width:100%;
+  margin:0 0 16px;
+  break-inside:avoid;
+  overflow:hidden;
+  border-radius:14px;
+  border:1px solid var(--border);
 }
 
-#gallery.columns .card img{
-  width: 100%;
-  height: auto;            /* original aspect ratio */
-  display: block;
-  object-fit: contain;     /* no crop */
+#gallery.columns img{
+  width:100%;
+  height:auto;
+  display:block;
 }
 
-/* Optional: make it feel snappier on scroll */
-#gallery.columns .card{ content-visibility:auto; contain-intrinsic-size: 300px 240px; }
+/* CONTACT */
 
-
-
-
-/* ===== Fix: keep original orientation (no forced portrait) ===== */
-#gallery.columns .card{
-  height: auto !important;
-  min-height: 0 !important;
+.contact{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
 }
 
-#gallery.columns .card img{
-  height: auto !important;
-  width: 100% !important;
-  aspect-ratio: auto !important;
-  object-fit: contain; /* no crop */
+.contact-grid{
+  display:grid;
+  gap:16px;
+  max-width:820px;
+  margin:0 auto;
 }
 
-/* If you prefer zero letterboxing (cropped but always fills), switch contain -> cover */
+.pill{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.25);
+}
 
+.pill .icon{
+  width:56px;
+  height:56px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  background:rgba(192,154,107,.18);
+  color:var(--accent);
+  font-weight:900;
+}
 
-/* Force columns layout even if older rules exist */
-#gallery.columns{ display: block; }
+/* FOOTER */
 
+footer{
+  padding:60px 0;
+  text-align:center;
+  color:rgba(255,255,255,.28);
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  border-top:1px solid var(--border);
+  background:#000;
+}
 
-/* ===== Mobile hero title FIX v3 (keeps outline visible) ===== */
-@media (max-width: 768px){
-  .hero .hero-content h1{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;                 /* space between lines */
-    line-height: 1;            /* override tight desktop line-height */
-    margin: 0 0 22px;
-    font-size: clamp(34px, 10.5vw, 56px);
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .hero-title{
+    gap:10px;
   }
 
-  /* If the HTML uses <br>, don't let it mess with spacing */
-  .hero .hero-content h1 br{ display:none; }
-
-  /* IMPORTANT: base .outline has color: transparent; so stroke must NOT use currentColor */
-  .hero .hero-content h1 .outline{
-    display:block;
-    font-size: 0.95em;
-    color: transparent;
-    -webkit-text-stroke: 1.2px var(--text);
+  .title-solid,
+  .title-outline{
+    font-size:clamp(34px,10vw,56px);
   }
+
+  .title-outline{
+    -webkit-text-stroke:1.2px var(--text);
+  }
+
 }
 
-@media (max-width: 360px){
-  .hero .hero-content h1{ font-size: clamp(30px, 12vw, 48px); gap: 8px; }
-  .hero .hero-content h1 .outline{ -webkit-text-stroke: 1px var(--text); }
+@media(max-width:360px){
+  .title-outline{
+    -webkit-text-stroke:1px var(--text);
+  }
 }
 
 </style>
 </head>
 
 <body>
-    <header class="nav" id="nav">
-        <div class="container nav-inner">
-            <a class="brand" href="#acasa">
-                <img class="logo" src="/assets/logo_v4.svg" alt="SerbanPhoto Logo" />
-                <div class="brand-title">
-                    <strong>Serban<span>Photo</span></strong>
-                    <small>Professional Studio</small>
-                </div>
-            </a>
-            <nav class="nav-links">
-                <a href="#galerie">Galerie</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero" id="acasa">
-            <img class="hero-bg" src="/assets/hero.webp" alt="" />
-            <div class="hero-content">
-                <h1>CAPTURA<br><span class="outline">ESENȚEI</span></h1>
-                <a class="btn" href="#galerie">Vezi Portofoliul</a>
-            </div>
-        </section>
+<header class="nav" id="nav">
+<div class="container nav-inner">
 
-        <section class="section" id="galerie">
-            <div class="container">
-                <div class="section-head">
-                    <h2>PORTOFOLIU</h2>
-                    <p>Explorări vizuale și momente capturate</p>
-                </div>
+<a class="brand" href="#acasa">
+<img class="logo" src="/assets/logo_v4.svg" alt="SerbanPhoto Logo"/>
+<div class="brand-title">
+<strong>Serban<span>Photo</span></strong>
+<small>Professional Studio</small>
+</div>
+</a>
 
-                <div id="gallery" class="columns"></div>
-                <div class="hint" id="galleryHint">Se încarcă fotografiile…</div>
-            </div>
-        </section>
+<nav class="nav-links">
+<a href="#galerie">Galerie</a>
+<a href="#contact">Contact</a>
+</nav>
 
-        <section class="section contact" id="contact">
-            <div class="container">
-                <div class="section-head">
-                    <h2>Hai să discutăm!</h2>
-                    <p>Contact</p>
-                </div>
+</div>
+</header>
 
-                <div class="contact-grid">
-                    <a class="pill" href="https://www.instagram.com/serby.photo/" target="_blank" rel="noopener">
-                        <div class="icon">IG</div>
-                        <div>
-                            <strong>@serby.photo</strong>
-                            <div style="opacity:.7;font-size:12px;">Instagram</div>
-                        </div>
-                    </a>
+<main>
 
-                    <a class="pill" href="https://www.facebook.com/profile.php?id=61552740026814" target="_blank" rel="noopener">
-                        <div class="icon">f</div>
-                        <div>
-                            <strong>SerbanPhoto</strong>
-                            <div style="opacity:.7;font-size:12px;">Facebook</div>
-                        </div>
-                    </a>
+<section class="hero" id="acasa">
 
-                    <button class="pill" id="copyEmailBtn" type="button">
-                        <div class="icon">@</div>
-                        <div>
-                            <strong id="emailText">contact.serban.photo@gmail.com</strong>
-                            <div style="opacity:.7;font-size:12px;">Click pentru copiere</div>
-                        </div>
-                    </button>
+<img class="hero-bg" src="/assets/hero.webp" alt=""/>
+<div class="hero-overlay"></div>
 
-                    <a class="pill" href="tel:0763630193">
-                        <div class="icon">☎</div>
-                        <div>
-                            <strong>0763 630 193</strong>
-                            <div style="opacity:.7;font-size:12px;">Telefon</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
+<div class="hero-content">
 
-    <footer>
-        © 2026 SerbanPhoto Studio. Toate drepturile rezervate.
-    </footer>
+<h1 class="hero-title">
+<span class="title-solid">CAPTURA</span>
+<span class="title-outline">ESENȚEI</span>
+</h1>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <button class="close" id="closeBtn" type="button">×</button>
-        <button class="lightbox-nav prev" id="prevBtn" type="button">❮</button>
-        <img id="lightboxImg" alt="" />
-        <button class="lightbox-nav next" id="nextBtn" type="button">❯</button>
-    </div>
+<a class="btn" href="#galerie">Vezi Portofoliul</a>
 
-    <script src="/gallery.js"></script>
-    <script>
-        // Navbar scroll
-        const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 30);
-        });
+</div>
+</section>
 
-        // Copy email
-        document.getElementById('copyEmailBtn').addEventListener('click', async () => {
-            const email = "contact.serban.photo@gmail.com";
-            const emailText = document.getElementById('emailText');
-            try {
-                await navigator.clipboard.writeText(email);
-                emailText.textContent = "Copiat!";
-                setTimeout(() => emailText.textContent = email, 1500);
-            } catch {
-                emailText.textContent = "Copiat!";
-                setTimeout(() => emailText.textContent = email, 1500);
-            }
-        });
-    </script>
+<section class="section" id="galerie">
+
+<div class="container">
+
+<div class="section-head">
+<h2>PORTOFOLIU</h2>
+<p>Explorări vizuale și momente capturate</p>
+</div>
+
+<div id="gallery" class="columns"></div>
+<div style="text-align:center;margin-top:18px;color:rgba(255,255,255,.45);">
+Se încarcă fotografiile…
+</div>
+
+</div>
+</section>
+
+<section class="section contact" id="contact">
+
+<div class="container">
+
+<div class="section-head">
+<h2>Hai să discutăm!</h2>
+<p>Contact</p>
+</div>
+
+<div class="contact-grid">
+
+<a class="pill" href="https://www.instagram.com/serby.photo/" target="_blank">
+<div class="icon">IG</div>
+<div>
+<strong>@serby.photo</strong>
+<div style="opacity:.7;font-size:12px;">Instagram</div>
+</div>
+</a>
+
+<a class="pill" href="tel:0763630193">
+<div class="icon">☎</div>
+<div>
+<strong>0763 630 193</strong>
+<div style="opacity:.7;font-size:12px;">Telefon</div>
+</div>
+</a>
+
+</div>
+
+</div>
+</section>
+
+</main>
+
+<footer>
+© 2026 SerbanPhoto Studio. Toate drepturile rezervate.
+</footer>
+
+<script src="/gallery.js"></script>
 
 <script>
-(function(){
-  const grid = document.getElementById('gallery');
-  if(!grid) return;
-  const obs = new MutationObserver((muts)=>{
-    for(const m of muts){
-      for(const node of m.addedNodes){
-        if(node.nodeType!==1) continue;
-        if(!node.classList || !node.classList.contains('card')) continue;
-        node.classList.add('loading');
-        const img = node.querySelector('img');
-        if(!img) continue;
-        const done=()=>node.classList.remove('loading');
-        img.addEventListener('load', done, {once:true});
-        img.addEventListener('error', done, {once:true});
-        if(img.complete) done();
-      }
-    }
-  });
-  obs.observe(grid,{childList:true});
-})();
+
+/* NAV SCROLL */
+
+const nav=document.getElementById('nav');
+
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>30);
+});
+
+/* HERO PARALLAX */
+
+const heroBg=document.querySelector('.hero-bg');
+
+window.addEventListener('scroll',()=>{
+
+  const scrolled=window.scrollY;
+  const speed=scrolled*0.15;
+
+  if(heroBg){
+    heroBg.style.transform=`scale(1.08) translateY(${speed}px)`;
+  }
+
+});
+
 </script>
 
 </body>
-
 </html>
