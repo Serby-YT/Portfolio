@@ -3,40 +3,63 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Meta tags critice pentru stergerea cache-ului extrem de pe Safari/Chrome iOS -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Photographer | Moody Landscapes & Events</title>
     <meta name="description"
         content="Portfolio of a photographer specializing in chasing atmospheres through moody landscapes and authentic social events.">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=19">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
+    <style>
+        /* Mapăm imaginea hero.webp direct aici pentru a fi siguri că se încarcă corect */
+        .hero-background {
+            background-image: url('./assets/hero.webp?v=18') !important;
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- Custom Cursor & Noise Filter -->
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" aria-label="Close">&larr; Back to
+            Gallery</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" aria-label="Previous">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" aria-label="Next">&rarr;</button>
+        <img id="lightbox-img" src="" alt="Enlarged view">
+    </div>
+
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
     <div class="noise-overlay"></div>
 
     <nav id="main-navigation">
-        <div class="logo magnetic">Serban Anita</div>
+        <div class="logo magnetic">
+            <img class="site-icon" src="./assets/logo.svg" alt="Logo">
+            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+        </div>
         <ul class="nav-links">
             <li><a href="#home" class="magnetic">Home</a></li>
             <li><a href="#portfolio" class="magnetic">Work</a></li>
             <li><a href="#about" class="magnetic">About</a></li>
             <li><a href="#contact" class="magnetic">Contact</a></li>
         </ul>
+        <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="nav-social magnetic">
+            <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
+        </a>
     </nav>
 
     <header id="home" class="hero-section">
         <div class="hero-background"></div>
         <div class="hero-vignette"></div>
 
-        <!-- Large background marquee -->
         <div class="marquee-bg">
             <span class="marquee-text">ATMOSPHERES &middot; LANDSCAPES &middot; MOMENTS &middot; </span>
             <span class="marquee-text">ATMOSPHERES &middot; LANDSCAPES &middot; MOMENTS &middot; </span>
@@ -55,6 +78,7 @@
             </a>
         </div>
 
+        <div class="hero-bottom-gradient"></div>
         <div class="scroll-indicator">
             <p>Explore</p>
             <div class="line"></div>
@@ -68,32 +92,7 @@
                 <h2 id="portfolio-title">The Earth & The People</h2>
             </div>
 
-            <div class="gallery-grid">
-                <div class="gallery-item fade-in hover-zoom">
-                    <div class="image-wrapper parallax-img" data-speed="0.05">
-                        <img src="assets/moody_landscape_hero.png" alt="Moody mist-covered valley at dawn"
-                            loading="lazy">
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>The Earth</h3>
-                                <p>Sweeping, atmospheric horizons</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="gallery-item fade-in hover-zoom delay-1">
-                    <div class="image-wrapper parallax-img" data-speed="-0.03">
-                        <img src="assets/candid_event.png" alt="Candid laughing people at a low-light social event"
-                            loading="lazy">
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>The People</h3>
-                                <p>Candids, emotion, narrative</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="gallery-grid" id="auto-gallery">
             </div>
         </section>
 
@@ -101,8 +100,8 @@
             <div class="ambient-glow"></div>
             <div class="about-container">
                 <div class="about-image-wrapper fade-in delay-1">
-                    <div class="image-reveal parallax-img" data-speed="0.08">
-                        <img src="assets/photographer_portrait.png" alt="Portrait" loading="lazy">
+                    <div class="image-reveal">
+                        <img src="./assets/AboutMe.webp" alt="Portrait" loading="lazy">
                     </div>
                     <div class="image-backdrop"></div>
                 </div>
@@ -110,7 +109,7 @@
                 <div class="about-text fade-in delay-2">
                     <h2 class="about-title">About Me</h2>
                     <p class="lead-text">I don't just take pictures; <br> I chase atmospheres.</p>
-                    <p class="body-text">hether it's the raw, untamed beauty of a mist-cWovered valley or the fleeting
+                    <p class="body-text">Whether it's the raw, untamed beauty of a mist-covered valley or the fleeting
                         energy of a night to remember, I'm drawn to moments that make you feel something. Photography
                         isn't about perfectly staged smiles—it's about authenticity, texture, and the quiet spaces
                         between the noise.</p>
@@ -124,21 +123,29 @@
                 <h2 class="massive-text">Connect</h2>
                 <p class="contact-sub">Available for commissions anytime.</p>
 
-                <form id="contact-form" class="minimal-form">
+                <form id="contact-form" class="minimal-form" action="https://formsubmit.co/amibog2@gmail.com"
+                    method="POST">
+                    <!-- Configurare anti-spam și subiect e-mail -->
+                    <input type="hidden" name="_subject" value="Mesaj nou de pe Portfolio serban-photo.com!">
+                    <input type="text" name="_honey" style="display:none">
+
+                    <!-- Daca vrei ca dupa trimitere sa reincarce pagina acasa fara capche ciudat, poti lasa valoarea 'false' -->
+                    <input type="hidden" name="_captcha" value="true">
+
                     <div class="form-row">
                         <div class="input-group">
-                            <input type="text" id="name" required placeholder="Name">
+                            <input type="text" id="name" name="Nume" required placeholder="Name">
                             <label for="name">Name</label>
                             <div class="underline"></div>
                         </div>
                         <div class="input-group">
-                            <input type="email" id="email" required placeholder="Email">
+                            <input type="email" id="email" name="Email" required placeholder="Email">
                             <label for="email">Email</label>
                             <div class="underline"></div>
                         </div>
                     </div>
                     <div class="input-group full-width">
-                        <textarea id="message" rows="1" required placeholder="Message/Inquiry"></textarea>
+                        <textarea id="message" name="Mesaj" rows="1" required placeholder="Message/Inquiry"></textarea>
                         <label for="message">Tell me your story</label>
                         <div class="underline"></div>
                     </div>
@@ -153,17 +160,21 @@
 
     <footer>
         <div class="footer-content fade-in">
-            <div class="footer-logo">SA.</div>
-            <div class="social-links">
-                <a href="#" class="magnetic">Instagram</a>
-                <a href="#" class="magnetic">Vero</a>
-                <a href="#" class="magnetic">Email</a>
+            <div class="footer-logo">
+                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
             </div>
-            <p>&copy; 2026 Serban Anita.</p>
+
+            <p class="footer-copyright">&copy; 2026 Serban Anita.</p>
+
+            <div class="social-links">
+                <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
+                    <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
+                </a>
+            </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="./script.js?v=19"></script>
 </body>
 
 </html>
