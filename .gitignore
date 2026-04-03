@@ -10,3 +10,7 @@ photos/
 # System
 .DS_Store
 Thumbs.db
+
+assets/
+*.sh
+serban-photo_old/
