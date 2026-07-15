@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* 4. Manifest-driven Gallery (sections/tabs) & Lightbox */
     let galleryImages = []; // Store the paths currently shown, for the lightbox
     const loadGallery = async () => {
-        const container = document.querySelector('.gallery-grid');
+        const container = document.getElementById('auto-gallery');
         const tabsContainer = document.getElementById('portfolio-tabs');
         if (!container) return;
 
@@ -72,12 +72,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const sections = manifest.sections || [];
         const photos = manifest.photos || [];
+        // Photos filed only into a Collection (no section) live there exclusively —
+        // they don't spill into the main flowing portfolio unless also given a section.
+        const filesInGalleries = new Set((manifest.galleries || []).flatMap(g => g.photos));
         let activeFilter = 'All';
 
         const renderGrid = () => {
             container.innerHTML = '';
             galleryImages = [];
-            const filtered = activeFilter === 'All' ? photos : photos.filter(p => p.section === activeFilter);
+            const filtered = activeFilter === 'All'
+                ? photos.filter(p => !(!p.section && filesInGalleries.has(p.file)))
+                : photos.filter(p => p.section === activeFilter);
 
             filtered.forEach((p, i) => {
                 const largeSrc = `./assets/${p.file}`;
@@ -155,6 +160,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentLightboxIndex < 0) currentLightboxIndex = galleryImages.length - 1;
         if (currentLightboxIndex >= galleryImages.length) currentLightboxIndex = 0;
         lightboxImg.src = galleryImages[currentLightboxIndex];
+    };
+
+    // Small public hook so other pages (e.g. collections.html) can reuse this same
+    // lightbox for a different set of images without duplicating the whole engine.
+    window.SerbanLightbox = {
+        open: (images, index) => {
+            galleryImages = images;
+            openLightbox(index);
+        }
     };
 
     if (bgClose) bgClose.addEventListener('click', closeLightbox);

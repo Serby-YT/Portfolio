@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Collections | Anița Șerban Photography</title>
+    <meta name="description"
+        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
+    <link rel="canonical" href="https://serban-photo.com/collections.html">
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Anița Șerban Photography">
+    <meta property="og:title" content="Collections | Anița Șerban Photography">
+    <meta property="og:description"
+        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
+    <meta property="og:url" content="https://serban-photo.com/collections.html">
+    <meta property="og:image" content="https://serban-photo.com/assets/hero.webp">
+    <meta property="og:image:alt" content="Anița Șerban Photography">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Collections | Anița Șerban Photography">
+    <meta name="twitter:description"
+        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
+    <meta name="twitter:image" content="https://serban-photo.com/assets/hero.webp">
+
+    <link rel="stylesheet" href="styles.css?v=25">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" aria-label="Close">&larr; Back to
+            Gallery</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" aria-label="Previous">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" aria-label="Next">&rarr;</button>
+        <img id="lightbox-img" src="" alt="Enlarged view">
+    </div>
+
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <div class="noise-overlay"></div>
+
+    <nav id="main-navigation">
+        <div class="logo magnetic">
+            <img class="site-icon" src="./assets/logo.svg" alt="Logo">
+            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+        </div>
+        <div class="nav-links">
+            <ul class="nav-links-side left">
+                <li><a href="index.html#home" class="magnetic">Home</a></li>
+                <li><a href="index.html#portfolio" class="magnetic">Work</a></li>
+            </ul>
+            <a href="collections.html" class="nav-links-center magnetic">Collections</a>
+            <ul class="nav-links-side right">
+                <li><a href="index.html#about" class="magnetic">About</a></li>
+                <li><a href="index.html#contact" class="magnetic">Contact</a></li>
+            </ul>
+        </div>
+        <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="nav-social magnetic">
+            <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
+        </a>
+    </nav>
+
+    <main class="collections-page">
+        <section class="portfolio-section" id="collectionsIndexView">
+            <div class="section-intro">
+                <div class="section-badge fade-in">Explore</div>
+                <div class="section-header fade-in delay-1">
+                    <h2>Collections</h2>
+                </div>
+            </div>
+            <div class="collections-list" id="collectionsList"></div>
+        </section>
+
+        <section class="portfolio-section" id="collectionDetailView" style="display:none">
+            <div class="section-intro">
+                <a href="collections.html" class="back-link magnetic">&larr; All Collections</a>
+                <div class="section-header fade-in delay-1">
+                    <h2 id="collectionTitle"></h2>
+                </div>
+            </div>
+            <div class="gallery-grid" id="collectionGrid"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content fade-in">
+            <div class="footer-logo">
+                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+            </div>
+
+            <p class="footer-copyright">&copy; 2026 Serban Anita.</p>
+
+            <div class="social-links">
+                <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
+                    <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./script.js?v=24"></script>
+    <script src="./collections.js?v=1"></script>
+</body>
+
+</html>

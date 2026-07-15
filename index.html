@@ -31,7 +31,7 @@
         content="Portfolio of a photographer specializing in chasing atmospheres through moody landscapes and authentic social events.">
     <meta name="twitter:image" content="https://serban-photo.com/assets/hero.webp">
 
-    <link rel="stylesheet" href="styles.css?v=22">
+    <link rel="stylesheet" href="styles.css?v=25">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -65,12 +65,17 @@
             <img class="site-icon" src="./assets/logo.svg" alt="Logo">
             <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
         </div>
-        <ul class="nav-links">
-            <li><a href="#home" class="magnetic">Home</a></li>
-            <li><a href="#portfolio" class="magnetic">Work</a></li>
-            <li><a href="#about" class="magnetic">About</a></li>
-            <li><a href="#contact" class="magnetic">Contact</a></li>
-        </ul>
+        <div class="nav-links">
+            <ul class="nav-links-side left">
+                <li><a href="#home" class="magnetic">Home</a></li>
+                <li><a href="#portfolio" class="magnetic">Work</a></li>
+            </ul>
+            <a href="collections.html" class="nav-links-center magnetic">Collections</a>
+            <ul class="nav-links-side right">
+                <li><a href="#about" class="magnetic">About</a></li>
+                <li><a href="#contact" class="magnetic">Contact</a></li>
+            </ul>
+        </div>
         <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="nav-social magnetic">
             <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
         </a>
@@ -92,10 +97,16 @@
             </h1>
             <p id="hero-subtitle">Moody Landscapes & Authentic Events</p>
 
-            <a href="#portfolio" class="cta-button magnetic-btn">
-                <span class="btn-text">Discover Work</span>
-                <div class="btn-fill"></div>
-            </a>
+            <div class="hero-cta-row">
+                <a href="#portfolio" class="cta-button magnetic-btn">
+                    <span class="btn-text">Discover Work</span>
+                    <div class="btn-fill"></div>
+                </a>
+                <a href="collections.html" class="cta-button magnetic-btn">
+                    <span class="btn-text">Collections</span>
+                    <div class="btn-fill"></div>
+                </a>
+            </div>
         </div>
 
         <div class="hero-bottom-gradient"></div>
@@ -198,7 +209,7 @@
         </div>
     </footer>
 
-    <script src="./script.js?v=22"></script>
+    <script src="./script.js?v=24"></script>
 </body>
 
 </html>

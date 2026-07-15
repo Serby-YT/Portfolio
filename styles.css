@@ -209,10 +209,33 @@ h3 {
 }
 
 .nav-links {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+}
+
+/* Fixed, equal width on both sides so "Collections" sits exactly on the page's
+   center line no matter how "Home Work" compares in width to "About Contact". */
+.nav-links-side {
     list-style: none;
     display: flex;
     gap: 4rem;
     align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 14rem;
+}
+
+.nav-links-side.left {
+    justify-content: flex-end;
+}
+
+.nav-links-side.right {
+    justify-content: flex-start;
 }
 
 .nav-links a {
@@ -387,6 +410,13 @@ h3 {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.hero-cta-row {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* Magnetic Buttons */
@@ -588,6 +618,100 @@ h3 {
     opacity: 1;
     filter: grayscale(0%);
     transform: scale(1.03);
+}
+
+/* ==========================================================================
+   Collections (collections.html)
+   ========================================================================== */
+.back-link {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: var(--transition-fast);
+}
+
+.back-link:hover {
+    color: var(--color-text-primary);
+}
+
+.collections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.collections-empty {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.collection-tile {
+    position: relative;
+    display: block;
+    height: 60vh;
+    min-height: 380px;
+    max-height: 640px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+    cursor: none;
+    text-decoration: none;
+}
+
+.collection-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.92;
+    filter: grayscale(15%) brightness(0.8);
+    transition: var(--transition-smooth);
+}
+
+.collection-tile:hover img {
+    opacity: 1;
+    filter: grayscale(0%) brightness(0.92);
+    transform: scale(1.04);
+}
+
+.collection-tile-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 11, 12, 0.9) 0%, rgba(10, 11, 12, 0.15) 45%, transparent 70%);
+    pointer-events: none;
+}
+
+.collection-tile-label {
+    position: absolute;
+    left: 2.5rem;
+    right: 2.5rem;
+    bottom: 2.2rem;
+    pointer-events: none;
+}
+
+.collection-tile-name {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 2.4rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem;
+}
+
+.collection-tile-count {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
 }
 
 /* Lightbox Styles */
@@ -966,6 +1090,17 @@ footer {
 
     .logo {
         gap: 0.8rem; /* Tragem cuvintele si logoul f aproape pt economie de spatiu */
+    }
+
+    .collection-tile {
+        height: 42vh;
+        min-height: 300px;
+    }
+
+    .collection-tile-label {
+        left: 1.5rem;
+        right: 1.5rem;
+        bottom: 1.4rem;
     }
 
     #hero-title .accent {
