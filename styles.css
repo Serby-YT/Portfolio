@@ -17,10 +17,6 @@
     --nav-scrim-top: rgba(10, 11, 12, 0.8);
     --nav-scrim: rgba(10, 11, 12, 0.45);
     --nav-glass: linear-gradient(to bottom, rgba(12, 13, 15, 0.44) 0%, rgba(12, 13, 15, 0.18) 100%);
-    /* halo in spatele textului din bara: opus ca luminozitate textului, ca sa
-       ramana lizibil chiar daca prin sticla se vede un fundal apropiat la ton.
-       Tema inchisa: text deschis -> halo inchis. */
-    --nav-text-halo: rgba(8, 9, 10, 0.92);
     --lightbox-bg: rgba(10, 11, 12, 0.98);
     --stroke-faint: rgba(240, 238, 233, 0.05);
     --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.5);
@@ -56,8 +52,6 @@
     --nav-scrim-top: rgba(244, 242, 237, 0.85);
     --nav-scrim: rgba(244, 242, 237, 0.6);
     --nav-glass: linear-gradient(to bottom, rgba(246, 244, 240, 0.48) 0%, rgba(246, 244, 240, 0.22) 100%);
-    /* Tema deschisa: text inchis -> halo deschis. */
-    --nav-text-halo: rgba(247, 245, 241, 0.95);
     --lightbox-bg: rgba(244, 242, 237, 0.98);
     --stroke-faint: rgba(21, 22, 26, 0.07);
     --shadow-soft: 0 24px 70px rgba(21, 22, 26, 0.14);
@@ -236,6 +230,15 @@ h3 {
     padding: 1.2rem 4rem;
 }
 
+/* Cand sticla e in spate, textul are deja fundal: il facem simplu si contrastat
+   — negru pe tema deschisa, alb-crem pe cea inchisa. Fara umbre. */
+#main-navigation.scrolled .nav-links a,
+#main-navigation.scrolled .lang-option,
+#main-navigation.scrolled .lang-sep,
+#main-navigation.scrolled .theme-toggle {
+    color: var(--color-text-primary);
+}
+
 /* Pe landing, cat timp NU s-a derulat, bara sta peste fotografia hero (fara
    banda in spate), deci textul si pictogramele trebuie sa fie deschise — in
    ambele teme — ca sa se vada pe fotografie. La scroll, sticla apare in spate
@@ -244,10 +247,8 @@ body.landing #main-navigation:not(.scrolled) .nav-links a,
 body.landing #main-navigation:not(.scrolled) .lang-option,
 body.landing #main-navigation:not(.scrolled) .lang-sep,
 body.landing #main-navigation:not(.scrolled) .theme-toggle {
-    color: var(--on-image-dim);
-    /* umbra fina, invizibila ca "banda", care tine textul lizibil pe orice
-       fotografie hero — chiar si una deschisa la culoare */
-    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.38);
+    /* alb plin (nu 72%): fara umbra, are nevoie de contrast propriu pe fotografie */
+    color: var(--on-image);
 }
 
 body.landing #main-navigation:not(.scrolled) .nav-links a:hover,
@@ -274,10 +275,9 @@ body.landing #main-navigation:not(.scrolled) .lang-switch {
     border-color: rgba(247, 245, 241, 0.24);
 }
 
-/* watermark-ul ramane alb peste fotografie (chiar si in tema deschisa) si
-   primeste o umbra subtila ca sa se vada pe orice fotografie */
+/* watermark-ul ramane alb peste fotografie, chiar si in tema deschisa */
 body.landing #main-navigation:not(.scrolled) .site-watermark {
-    filter: drop-shadow(0 1px 8px rgba(0, 0, 0, 0.4));
+    filter: none;
 }
 
 .logo {
@@ -357,8 +357,6 @@ body.landing #main-navigation:not(.scrolled) .site-watermark {
     letter-spacing: 2.5px;
     color: var(--color-text-secondary);
     position: relative;
-    /* halo de contrast: tine textul lizibil prin sticla, pe orice fundal */
-    text-shadow: 0 0 7px var(--nav-text-halo);
     /* fiecare link e o capsula; doar cel activ e umplut (ca la referinta) */
     padding: 0.55rem 1.1rem;
     border-radius: 999px;
@@ -378,7 +376,6 @@ body.landing #main-navigation:not(.scrolled) .site-watermark {
     color: var(--color-text-primary);
     background: var(--hairline-strong);
     border-color: var(--glass-border);
-    box-shadow: inset 0 1px 0 var(--glass-inner);
 }
 
 /* ==========================================================================
@@ -1216,17 +1213,7 @@ footer {
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--color-text-secondary);
-    text-shadow: 0 0 7px var(--nav-text-halo);
     transition: color 0.35s var(--ease-out-expo);
-}
-
-.lang-sep {
-    text-shadow: 0 0 7px var(--nav-text-halo);
-}
-
-/* pictograma temei (SVG) primeste acelasi halo, prin filtru */
-.theme-toggle svg {
-    filter: drop-shadow(0 0 5px var(--nav-text-halo));
 }
 
 .lang-option:hover {
