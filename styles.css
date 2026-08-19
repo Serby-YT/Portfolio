@@ -73,8 +73,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    cursor: none;
-    /* Hide default cursor to use custom */
 }
 
 html {
@@ -102,47 +100,8 @@ body {
     max-width: 100%;
 }
 
-/* Base custom cursors */
-.cursor {
-    width: 6px;
-    height: 6px;
-    background: var(--color-text-primary);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.2s var(--ease-out-expo), background 0.2s;
-}
-
-.cursor-follower {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--hairline-strong);
-    border-radius: 50%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo), background 0.3s var(--ease-out-expo);
-}
-
-/* Cursor states */
-.cursor-follower.active {
-    width: 60px;
-    height: 60px;
-    background: var(--glass-bg);
-    border-color: transparent;
-    backdrop-filter: blur(2px);
-}
-
-.cursor.active {
-    background: transparent;
-}
+/* Cursorul personalizat (punct + cerc) a fost scos la cererea utilizatorului —
+   folosim cursorul normal al sistemului. */
 
 /* Film grain */
 .noise-overlay {
@@ -649,7 +608,6 @@ h3 {
     margin-bottom: 6px;
     overflow: hidden;
     background: #000;
-    cursor: none;
 }
 
 .gallery-item .image-wrapper {
@@ -718,7 +676,6 @@ h3 {
     border-radius: 4px;
     overflow: hidden;
     background: #000;
-    cursor: none;
     text-decoration: none;
 }
 
@@ -1060,7 +1017,6 @@ h3 {
     align-self: flex-start;
     margin-top: 2rem;
     background: transparent;
-    cursor: none;
 }
 
 /* ==========================================================================
@@ -1412,11 +1368,11 @@ footer {
     color: var(--color-text-secondary);
 }
 
-/* Tablet/small-laptop band: the full-size logo + evenly-centered nav text
-   only fit comfortably above ~1400px. Below that (iPads, common 1280/1366
-   laptop widths) the watermark and nav links start overlapping, so shrink
-   both proportionally instead of hiding the nav outright like mobile does. */
-@media (min-width: 901px) and (max-width: 1400px) {
+/* Banda tablete / laptopuri: logo-ul la dimensiune completa plus nav-ul centrat
+   incap comod doar peste ~1600px (de cand am adaugat si comutatorul de tema in
+   dreapta). Sub asta — iPad-uri, 1280/1366/1440 — micsoram proportional logo-ul
+   si nav-ul, in loc sa ascundem nav-ul cum facem pe telefon. */
+@media (min-width: 901px) and (max-width: 1599px) {
     #main-navigation,
     #main-navigation.scrolled {
         padding-left: 2.5rem;
@@ -1616,14 +1572,7 @@ footer {
         gap: 3rem;
     }
 
-    .cursor,
-    .cursor-follower {
-        display: none;
-    }
 
-    * {
-        cursor: auto;
-    }
 }
 /* ==========================================================================
    Adaptari pentru tema deschisa
@@ -1803,38 +1752,65 @@ footer {
 /* ==========================================================================
    Placi de categorie (fotografiile clicabile de pe landing)
    ========================================================================== */
+/* Sectiunea de categorii are aer deasupra, ca sa nu para lipita de hero,
+   si un titlu care invita la explorare inainte de fotografii. */
 .category-section {
-    padding: 0 5% 11rem;
+    padding: 9rem 5% 11rem;
+}
+
+.category-intro {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto 5rem;
+}
+
+.category-intro .section-badge {
+    margin-bottom: 1.4rem;
+}
+
+.category-intro h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4.2vw, 3.4rem);
+    line-height: 1.15;
+    margin-bottom: 2rem;
+}
+
+.category-intro h2 .accent {
+    font-style: italic;
+}
+
+.intro-rule {
+    width: 64px;
+    height: 1px;
+    margin: 0 auto;
+    background: var(--hairline-strong);
 }
 
 .category-grid {
     max-width: 1600px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1.1rem;
+    /* Placi verticale egale. Coloanele au si o latime maxima, iar grila e
+       centrata: daca ultimul rand ramane incomplet (avem 5 categorii), placile
+       raman centrate si arata intentionat, nu lipite intr-o parte. */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+    justify-content: center;
+    gap: 1.4rem;
 }
 
 .category-tile {
     position: relative;
     display: block;
     overflow: hidden;
-    border-radius: 5px;
+    border-radius: 14px;
     background: var(--color-bg-secondary);
+    aspect-ratio: 3 / 4;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.7s var(--ease-out-expo);
 }
 
-/* primele doua placi sunt mari, urmatoarele trei mai mici */
-.category-tile:nth-child(1),
-.category-tile:nth-child(2) {
-    grid-column: span 3;
-    height: 54vh;
-    min-height: 380px;
-}
-
-.category-tile:nth-child(n+3) {
-    grid-column: span 2;
-    height: 36vh;
-    min-height: 280px;
+.category-tile:hover {
+    transform: translateY(-6px);
 }
 
 .category-tile img {
@@ -1866,50 +1842,119 @@ footer {
     pointer-events: none;
 }
 
-.category-tile-name {
-    font-family: var(--font-heading);
-    font-size: 1.9rem;
-    color: var(--on-image);
-    margin-bottom: 0.35rem;
-}
-
 .category-tile-count {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--on-image-dim);
+    margin-bottom: 0.4rem;
+}
+
+.category-tile-name {
+    font-family: var(--font-heading);
+    font-size: 1.7rem;
+    line-height: 1.15;
+    color: var(--on-image);
 }
 
 /* ==========================================================================
    Banda catre Colectii
    ========================================================================== */
 .collections-band {
-    padding: 9rem 5%;
-    text-align: center;
-    background: var(--color-bg-secondary);
+    position: relative;
+    min-height: 66vh;
+    min-height: 560px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7rem 5%;
+    overflow: hidden;
     border-top: 1px solid var(--hairline);
     border-bottom: 1px solid var(--hairline);
+}
+
+/* Fasia de coperti din spate — patru fotografii una langa alta. E fundal,
+   nu subiectul principal, deci le tinem intunecate si putin desaturate. */
+.band-photos {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    /* cate coloane, atatea fotografii — se aseaza singure */
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    z-index: 0;
+}
+
+.band-photos img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.72) saturate(0.9);
+}
+
+/* Degrade care topeste fasia in pagina sus si jos, plus o umbra generala
+   ca textul de deasupra sa ramana lizibil pe orice fotografie. */
+.band-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        linear-gradient(to bottom,
+            var(--color-bg-primary) 0%,
+            rgba(8, 9, 10, 0.12) 20%,
+            rgba(8, 9, 10, 0.12) 80%,
+            var(--color-bg-primary) 100%),
+        radial-gradient(ellipse at center, rgba(8, 9, 10, 0.10) 0%, rgba(8, 9, 10, 0.32) 100%);
+}
+
+/* Panoul de sticla lichida care tine textul */
+.band-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 640px;
+    padding: 3.4rem 3rem;
+    border-radius: 22px;
+    background: rgba(18, 19, 22, 0.42);
+    backdrop-filter: blur(22px) saturate(170%);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid rgba(247, 245, 241, 0.16);
+    box-shadow: inset 0 1px 0 rgba(247, 245, 241, 0.18), var(--shadow-soft);
 }
 
 .collections-band .band-badge {
     font-size: 0.7rem;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: var(--color-accent-light);
+    color: var(--on-image-dim);
     margin-bottom: 1.4rem;
 }
 
 .collections-band h2 {
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    color: var(--on-image);
     margin-bottom: 1.2rem;
 }
 
 .collections-band p {
-    color: var(--color-text-secondary);
-    max-width: 46ch;
-    margin: 0 auto 3rem;
+    color: var(--on-image-dim);
+    max-width: 44ch;
+    margin: 0 auto 2.6rem;
     font-weight: 300;
+}
+
+/* butonul sta peste fotografii -> varianta deschisa, indiferent de tema */
+.collections-band .glass-btn {
+    color: var(--on-image);
+    border-color: rgba(247, 245, 241, 0.28);
+    background: rgba(247, 245, 241, 0.10);
+}
+
+.collections-band .glass-btn:hover {
+    background: rgba(247, 245, 241, 0.18);
 }
 
 /* ==========================================================================
@@ -2015,21 +2060,17 @@ footer {
         padding: 1.05rem 2rem;
     }
 
-    .category-section {
-        padding: 0 5% 6rem;
-    }
-
     .category-grid {
-        grid-template-columns: 1fr;
-        gap: 0.9rem;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 1rem;
     }
 
-    .category-tile:nth-child(1),
-    .category-tile:nth-child(2),
-    .category-tile:nth-child(n+3) {
-        grid-column: span 1;
-        height: 42vh;
-        min-height: 260px;
+    .category-section {
+        padding: 5rem 5% 6rem;
+    }
+
+    .category-intro {
+        margin-bottom: 3rem;
     }
 
     .category-tile-label {
@@ -2043,7 +2084,18 @@ footer {
     }
 
     .collections-band {
-        padding: 6rem 5%;
+        min-height: 480px;
+        padding: 5rem 5%;
+    }
+
+    /* pe telefon 4 coperti ar fi prea inguste — aratam doar primele doua */
+    .band-photos img:nth-child(n+3) {
+        display: none;
+    }
+
+    .band-content {
+        padding: 2.4rem 1.6rem;
+        border-radius: 18px;
     }
 
     .page-head {
@@ -2076,4 +2128,70 @@ footer {
         opacity: 1;
         transform: none;
     }
+}
+
+/* ==========================================================================
+   Indiciu de derulare in hero — arata ca mai urmeaza continut sub fotografie
+   ========================================================================== */
+.landing-hero .hero-scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 2.6rem;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--on-image-dim);
+    transition: color 0.5s var(--ease-out-expo);
+}
+
+.hero-scroll-cue:hover {
+    color: var(--on-image);
+}
+
+.hero-scroll-cue .cue-line {
+    width: 1px;
+    height: 46px;
+    background: linear-gradient(to bottom, var(--on-image-dim), transparent);
+    animation: cueDrift 2.4s var(--ease-out-expo) infinite;
+    transform-origin: top;
+}
+
+@keyframes cueDrift {
+    0%   { transform: scaleY(0.35); opacity: 0.2; }
+    50%  { transform: scaleY(1);    opacity: 0.9; }
+    100% { transform: scaleY(0.35); opacity: 0.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-scroll-cue .cue-line { animation: none; transform: none; opacity: 0.7; }
+}
+
+@media (max-width: 900px) {
+    .hero-scroll-cue { bottom: 1.6rem; }
+    .hero-scroll-cue .cue-line { height: 32px; }
+}
+
+/* ==========================================================================
+   Cursor normal de sistem: mana pe tot ce e clicabil
+   ========================================================================== */
+button,
+.glass-btn,
+.portfolio-tab,
+.lang-option,
+.theme-toggle,
+.gallery-item,
+.category-tile,
+.collection-tile,
+.hero-scroll-cue {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
 }

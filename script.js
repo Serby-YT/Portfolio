@@ -1,43 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    /* 1. Cursor Logic */
-    const cursor = document.querySelector('.cursor');
-    const follower = document.querySelector('.cursor-follower');
-    let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0, followerX = 0, followerY = 0;
+    /* 1. Cursorul personalizat a fost scos — folosim cursorul normal al
+       sistemului, deci nu mai desenam punctul si cercul care il urmarea. */
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX; mouseY = e.clientY;
-    });
-
-    const renderCursor = () => {
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
-        followerX += (mouseX - followerX) * 0.15;
-        followerY += (mouseY - followerY) * 0.15;
-        follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0)`;
-        requestAnimationFrame(renderCursor);
-    };
-    renderCursor();
-
-    /* 2. Magnetic Elements */
-    const magneticElements = document.querySelectorAll('a, .magnetic, button, .magnetic-btn');
-    magneticElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('active');
-            follower.classList.add('active');
+    /* 2. Efectul magnetic: elementele se apropie usor de cursor la hover.
+       Pe ecrane tactile nu are sens, deci il pornim doar unde exista un
+       dispozitiv de indicare fin (mouse / trackpad). */
+    const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (finePointer) {
+        document.querySelectorAll('a, .magnetic, button, .magnetic-btn').forEach(el => {
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0px, 0px)';
+            });
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
         });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('active');
-            follower.classList.remove('active');
-            el.style.transform = 'translate(0px, 0px)';
-        });
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-        });
-    });
+    }
 
     /* 3. Scroll & Parallax */
     const nav = document.getElementById('main-navigation');
@@ -158,6 +139,35 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     loadHeroCarousel();
 
+    /* 3d2. Fasia de coperti din banda "Colectii" — pana la 4 coperti de colectii
+       reale, ca fundal. Colectia interna "Hero" si cele goale sunt excluse. */
+    const loadBandPhotos = async () => {
+        const strip = document.getElementById('bandPhotos');
+        if (!strip) return;
+
+        const manifest = await fetchManifest();
+        const covers = (manifest.galleries || [])
+            .filter(g => g.name !== 'Hero' && g.cover && g.photos && g.photos.length)
+            .slice(0, 4)
+            .map(g => g.cover);
+
+        if (!covers.length) return; // fara coperti lasam fundalul simplu
+
+        // Numarul de coloane il decide CSS-ul (grid-auto-flow: column), ca sa
+        // poata fi schimbat din media query pe telefon — un stil inline aici
+        // ar bate regula de mobil.
+        strip.innerHTML = '';
+        covers.forEach(file => {
+            const img = document.createElement('img');
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.alt = '';
+            img.src = `./assets/${file.replace(/\.webp$/, '_sm.webp')}`;
+            strip.appendChild(img);
+        });
+    };
+    loadBandPhotos();
+
     /* 3d. Placile de categorie de pe landing — fiecare duce in portofoliu,
        direct pe categoria ei (portfolio.html?cat=...). */
     const loadCategoryTiles = async () => {
@@ -210,8 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const count = document.createElement('div');
                 count.className = 'category-tile-count';
                 count.textContent = `${inSection.length} ${word}`;
-                labelBox.appendChild(name);
+                // contorul mic deasupra, numele mare dedesubt
                 labelBox.appendChild(count);
+                labelBox.appendChild(name);
                 tile.appendChild(labelBox);
 
                 grid.appendChild(tile);

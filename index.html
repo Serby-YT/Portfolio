@@ -44,7 +44,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="styles.css?v=34">
+    <link rel="stylesheet" href="styles.css?v=41">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -65,8 +65,6 @@
         <img id="lightbox-img" src="" data-i18n-alt="lightbox.alt" alt="Imagine mărită">
     </div>
 
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
     <div class="noise-overlay"></div>
 
     <nav id="main-navigation">
@@ -122,21 +120,36 @@
             <a href="portfolio.html" class="glass-btn magnetic" data-i18n="landing.cta.portfolio">Portofoliu</a>
             <a href="collections.html" class="glass-btn magnetic" data-i18n="landing.cta.collections">Colecții</a>
         </div>
+
+        <a href="#categorii" class="hero-scroll-cue rise-in d2" data-i18n-aria-label="landing.scroll">
+            <span data-i18n="landing.scroll">Derulează</span>
+            <span class="cue-line" aria-hidden="true"></span>
+        </a>
     </header>
 
     <main>
         <!-- Fotografiile clicabile: fiecare duce in portofoliu, pe categoria ei -->
         <section class="category-section" id="categorii">
+            <div class="category-intro">
+                <div class="section-badge fade-in" data-i18n="categories.badge">Portofoliu</div>
+                <h2 class="fade-in delay-1" data-i18n="categories.title">De unde vrei să începi?</h2>
+                <div class="intro-rule fade-in delay-2" aria-hidden="true"></div>
+            </div>
             <div class="category-grid" id="categoryGrid"></div>
         </section>
 
-        <!-- Banda catre Colectii (tarile) -->
+        <!-- Banda catre Colectii: o fasie de coperti, estompate, cu textul
+             asezat deasupra intr-un panou de sticla -->
         <section class="collections-band">
-            <div class="band-badge fade-in" data-i18n="band.badge">Colecții</div>
-            <h2 class="fade-in" data-i18n="band.title">Locuri, adunate pe rând.</h2>
-            <p class="fade-in" data-i18n="band.body">Seturi separate de fotografii din drumurile mele — fiecare țară,
-                galeria ei.</p>
-            <a href="collections.html" class="glass-btn magnetic fade-in" data-i18n="band.cta">Vezi colecțiile</a>
+            <div class="band-photos" id="bandPhotos" aria-hidden="true"></div>
+            <div class="band-scrim" aria-hidden="true"></div>
+            <div class="band-content fade-in">
+                <div class="band-badge" data-i18n="band.badge">Colecții</div>
+                <h2 data-i18n="band.title">Locuri, adunate pe rând.</h2>
+                <p data-i18n="band.body">Seturi separate de fotografii — călătorii, natură și proiecte, fiecare cu
+                    galeria ei.</p>
+                <a href="collections.html" class="glass-btn magnetic" data-i18n="band.cta">Vezi colecțiile</a>
+            </div>
         </section>
 
         <!-- Cifre -->
@@ -333,8 +346,8 @@
         </div>
     </footer>
 
-    <script src="./i18n.js?v=2"></script>
-    <script src="./script.js?v=31"></script>
+    <script src="./i18n.js?v=4"></script>
+    <script src="./script.js?v=35"></script>
 </body>
 
 </html>

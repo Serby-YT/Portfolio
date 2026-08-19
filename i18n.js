@@ -35,9 +35,13 @@
             'landing.cta.portfolio': 'Portofoliu',
             'landing.cta.collections': 'Colecții',
 
+            'categories.badge': 'Portofoliu',
+            'categories.title': 'De unde vrei să începi?',
+            'landing.scroll': 'Derulează',
+
             'band.badge': 'Colecții',
             'band.title': 'Locuri, adunate pe rând.',
-            'band.body': 'Seturi separate de fotografii din drumurile mele — fiecare țară, galeria ei.',
+            'band.body': 'Seturi separate de fotografii — călătorii, natură și proiecte, fiecare cu galeria ei.',
             'band.cta': 'Vezi colecțiile',
 
             'testimonials.badge': 'Testimoniale',
@@ -137,9 +141,13 @@
             'landing.cta.portfolio': 'Portfolio',
             'landing.cta.collections': 'Collections',
 
+            'categories.badge': 'Portfolio',
+            'categories.title': 'Where would you like to start?',
+            'landing.scroll': 'Scroll',
+
             'band.badge': 'Collections',
             'band.title': 'Places, gathered one by one.',
-            'band.body': 'Separate sets of photographs from my travels — every country, its own gallery.',
+            'band.body': 'Separate sets of photographs — travels, nature and projects, each with its own gallery.',
             'band.cta': 'View the collections',
 
             'testimonials.badge': 'Testimonials',
