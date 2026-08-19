@@ -247,8 +247,15 @@ body.landing #main-navigation:not(.scrolled) .nav-links a,
 body.landing #main-navigation:not(.scrolled) .lang-option,
 body.landing #main-navigation:not(.scrolled) .lang-sep,
 body.landing #main-navigation:not(.scrolled) .theme-toggle {
-    /* alb plin (nu 72%): fara umbra, are nevoie de contrast propriu pe fotografie */
     color: var(--on-image);
+    /* Aici bara e transparenta, deci textul alb sta direct pe fotografie.
+       Umbra e stransa (lucreaza ca un contur) + una difuza, ca literele sa
+       ramana vizibile chiar si pe o fotografie foarte deschisa.
+       (In starea derulata NU punem umbra — acolo sticla tine fundalul.) */
+    text-shadow:
+        0 0 4px rgba(0, 0, 0, 0.85),
+        0 1px 3px rgba(0, 0, 0, 0.75),
+        0 0 16px rgba(0, 0, 0, 0.45);
 }
 
 body.landing #main-navigation:not(.scrolled) .nav-links a:hover,
@@ -275,9 +282,14 @@ body.landing #main-navigation:not(.scrolled) .lang-switch {
     border-color: rgba(247, 245, 241, 0.24);
 }
 
-/* watermark-ul ramane alb peste fotografie, chiar si in tema deschisa */
+/* Watermark-ul si iconita temei sunt tot albe peste fotografie — aceeasi
+   umbra discreta ca textul, ca sa nu dispara pe o fotografie deschisa. */
 body.landing #main-navigation:not(.scrolled) .site-watermark {
-    filter: none;
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
+}
+
+body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
+    filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
 
 .logo {
