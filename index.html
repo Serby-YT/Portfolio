@@ -44,7 +44,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="styles.css?v=41">
+    <link rel="stylesheet" href="styles.css?v=50">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -52,7 +52,7 @@
         rel="stylesheet">
 </head>
 
-<body>
+<body class="landing">
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
@@ -74,7 +74,7 @@
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
-                <li><a href="index.html" class="magnetic" data-i18n="nav.home">Acasă</a></li>
+                <li><a href="index.html" class="magnetic active" aria-current="page" data-i18n="nav.home">Acasă</a></li>
                 <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
             </ul>
             <a href="collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Colecții</a>
@@ -142,7 +142,6 @@
              asezat deasupra intr-un panou de sticla -->
         <section class="collections-band">
             <div class="band-photos" id="bandPhotos" aria-hidden="true"></div>
-            <div class="band-scrim" aria-hidden="true"></div>
             <div class="band-content fade-in">
                 <div class="band-badge" data-i18n="band.badge">Colecții</div>
                 <h2 data-i18n="band.title">Locuri, adunate pe rând.</h2>
@@ -251,6 +250,11 @@
             <div class="testimonials-grid">
                 <blockquote class="testimonial-card is-sample fade-in">
                     <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="5/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span>
+                    </div>
                     <p data-i18n="testimonials.1.text">„Ne-a prins exact momentele pe care nu le-am văzut noi în ziua
                         nunții. Când am deschis galeria, am plâns. Serios.”</p>
                     <footer>
@@ -264,6 +268,11 @@
 
                 <blockquote class="testimonial-card is-sample fade-in delay-1">
                     <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="5/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span>
+                    </div>
                     <p data-i18n="testimonials.2.text">„Nici nu am simțit că e cineva cu aparatul prin sală. Iar pozele
                         au ieșit ca dintr-un film. Exact atmosfera de la majorat.”</p>
                     <footer>
@@ -277,6 +286,11 @@
 
                 <blockquote class="testimonial-card is-sample fade-in delay-2">
                     <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="4/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star">&#9733;</span>
+                    </div>
                     <p data-i18n="testimonials.3.text">„Am primit galeria mult mai repede decât mă așteptam și toată
                         familia a putut să o descarce fără bătăi de cap.”</p>
                     <footer>
@@ -284,6 +298,61 @@
                         <span class="testimonial-meta">
                             <span class="testimonial-name">Ioana C.</span>
                             <span class="testimonial-role" data-i18n="testimonials.3.role">Botez</span>
+                        </span>
+                    </footer>
+                </blockquote>
+
+                <blockquote class="testimonial-card is-sample fade-in">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="5/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span>
+                    </div>
+                    <p data-i18n="testimonials.4.text">„Am ales-o pe recomandare și n-am regretat nicio secundă.
+                        Discretă la ceremonie, dar n-a ratat niciun moment important.”</p>
+                    <footer>
+                        <span class="testimonial-initials">MG</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Maria G.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.4.role">Cununie civilă</span>
+                        </span>
+                    </footer>
+                </blockquote>
+
+                <blockquote class="testimonial-card is-sample fade-in delay-1">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="4/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star">&#9733;</span>
+                    </div>
+                    <p data-i18n="testimonials.5.text">„Poze curate, profesioniste, exact ce ne trebuia pentru
+                        evenimentul firmei. Aș fi vrut câteva cadre de grup în plus, dar per total suntem
+                        mulțumiți.”</p>
+                    <footer>
+                        <span class="testimonial-initials">VP</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Vlad P.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.5.role">Eveniment corporate</span>
+                        </span>
+                    </footer>
+                </blockquote>
+
+                <blockquote class="testimonial-card is-sample fade-in delay-2">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <div class="testimonial-stars" role="img" aria-label="5/5">
+                        <span class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span><span class="star on">&#9733;</span><span
+                            class="star on">&#9733;</span>
+                    </div>
+                    <p data-i18n="testimonials.6.text">„A prins toată energia petrecerii. Bunicii au râs, copiii au
+                        dansat — și avem totul în poze.”</p>
+                    <footer>
+                        <span class="testimonial-initials">ET</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Elena T.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.6.role">Aniversare</span>
                         </span>
                     </footer>
                 </blockquote>
@@ -346,7 +415,7 @@
         </div>
     </footer>
 
-    <script src="./i18n.js?v=4"></script>
+    <script src="./i18n.js?v=5"></script>
     <script src="./script.js?v=35"></script>
 </body>
 
