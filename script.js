@@ -55,6 +55,175 @@ document.addEventListener('DOMContentLoaded', () => {
         else nav.classList.remove('scrolled');
     });
 
+    /* 3b. Count-up pentru cifrele din secțiunea Statistici */
+    const counters = document.querySelectorAll('.stat-number[data-count]');
+    if (counters.length) {
+        const runCounter = (el) => {
+            const target = parseInt(el.dataset.count, 10);
+            const suffix = el.dataset.suffix || '';
+            const duration = 1600;
+            const start = performance.now();
+            const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3); // frânare lina la final
+                el.textContent = Math.round(target * eased).toLocaleString('ro-RO') + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.dataset.counted) {
+                    entry.target.dataset.counted = 'true';
+                    runCounter(entry.target);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        counters.forEach(el => counterObserver.observe(el));
+    }
+
+    /* 3c. Comutator de tema (clar/inchis).
+       Tema initiala e deja aplicata de scriptul inline din <head>, ca sa nu
+       apara un flash de culoare gresita inainte de randare. */
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('siteTheme', next); } catch (e) { /* mod privat */ }
+        });
+    }
+    // Daca utilizatorul nu a ales manual, urmam setarea sistemului si cand se schimba
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+            let saved = null;
+            try { saved = localStorage.getItem('siteTheme'); } catch (err) { /* ignoram */ }
+            if (!saved) document.documentElement.setAttribute('data-theme', e.matches ? 'light' : 'dark');
+        });
+    }
+
+    /* 3d0. Un singur fetch de manifest pe pagina, refolosit de carusel si placi */
+    const fetchManifest = (() => {
+        let promise = null;
+        return () => {
+            if (!promise) {
+                promise = fetch(`./assets/manifest.json?v=${Date.now()}`)
+                    .then(r => r.ok ? r.json() : {})
+                    .catch(() => ({}));
+            }
+            return promise;
+        };
+    })();
+
+    /* 3d1. Caruselul de pe landing: fotografiile din colectia "Hero" (gestionata
+       din admin) se rotesc pe tot ecranul, cate una la ~5 secunde. Colectia
+       "Hero" nu apare public in pagina de Colectii — e doar sursa caruselului.
+       Daca e goala, ramane fotografia clasica hero.webp. */
+    const loadHeroCarousel = async () => {
+        const wrap = document.getElementById('heroCarousel');
+        if (!wrap) return;
+
+        const manifest = await fetchManifest();
+        const heroGallery = (manifest.galleries || []).find(g => g.name === 'Hero');
+        const files = (heroGallery && heroGallery.photos && heroGallery.photos.length)
+            ? heroGallery.photos.map(f => `./assets/${f}`)
+            : ['./assets/hero.webp'];
+
+        const slides = files.map((src, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = '';
+            img.loading = i === 0 ? 'eager' : 'lazy';
+            if (i === 0) img.fetchPriority = 'high';
+            slide.appendChild(img);
+            wrap.appendChild(slide);
+            return slide;
+        });
+
+        // Cu reduced-motion activat sau o singura fotografie, nu rotim
+        const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (slides.length < 2 || reduced) return;
+
+        let current = 0;
+        setInterval(() => {
+            const next = (current + 1) % slides.length;
+            slides[current].classList.remove('active');
+            slides[next].classList.add('active');
+            current = next;
+        }, 5000);
+    };
+    loadHeroCarousel();
+
+    /* 3d. Placile de categorie de pe landing — fiecare duce in portofoliu,
+       direct pe categoria ei (portfolio.html?cat=...). */
+    const loadCategoryTiles = async () => {
+        const grid = document.getElementById('categoryGrid');
+        if (!grid) return;
+
+        const manifest = await fetchManifest();
+        if (!manifest.sections) return;
+
+        const sections = manifest.sections || [];
+        const photos = manifest.photos || [];
+
+        const render = () => {
+            grid.innerHTML = '';
+            sections.forEach((section, i) => {
+                const inSection = photos.filter(p => p.section === section);
+                if (!inSection.length) return; // fara fotografii nu desenam placa
+
+                // Thumbnail-ul ales din admin (steluta); daca nu e setat sau nu mai
+                // e valabil, cadem pe prima poza din sectiune, ca pana acum.
+                const chosen = (manifest.section_covers || {})[section];
+                const cover = inSection.find(p => p.file === chosen) || inSection[0];
+                const label = window.SiteI18n ? window.SiteI18n.dataName(section) : section;
+                const word = window.SiteI18n
+                    ? window.SiteI18n.t(inSection.length === 1 ? 'collections.count.one' : 'collections.count.many')
+                    : (inSection.length === 1 ? 'fotografie' : 'fotografii');
+
+                const tile = document.createElement('a');
+                tile.className = 'category-tile fade-in' + (i === 1 ? ' delay-1' : i > 1 ? ' delay-2' : '');
+                tile.href = `portfolio.html?cat=${encodeURIComponent(section)}`;
+                tile.dataset.section = section;
+
+                const img = document.createElement('img');
+                img.loading = i < 2 ? 'eager' : 'lazy';
+                img.src = `./assets/${cover.file}`;
+                img.srcset = `./assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, ./assets/${cover.file} 2000w`;
+                img.sizes = '(max-width: 900px) 100vw, 50vw';
+                img.alt = label;
+                tile.appendChild(img);
+
+                const scrim = document.createElement('div');
+                scrim.className = 'category-tile-scrim';
+                tile.appendChild(scrim);
+
+                const labelBox = document.createElement('div');
+                labelBox.className = 'category-tile-label';
+                const name = document.createElement('h2');
+                name.className = 'category-tile-name';
+                name.textContent = label;
+                const count = document.createElement('div');
+                count.className = 'category-tile-count';
+                count.textContent = `${inSection.length} ${word}`;
+                labelBox.appendChild(name);
+                labelBox.appendChild(count);
+                tile.appendChild(labelBox);
+
+                grid.appendChild(tile);
+                if (window.observer) window.observer.observe(tile);
+            });
+        };
+
+        render();
+        document.addEventListener('sitelanguagechange', render);
+    };
+    loadCategoryTiles();
+
     /* 4. Manifest-driven Gallery (sections/tabs) & Lightbox */
     let galleryImages = []; // Store the paths currently shown, for the lightbox
     const loadGallery = async () => {
@@ -75,7 +244,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Photos filed only into a Collection (no section) live there exclusively —
         // they don't spill into the main flowing portfolio unless also given a section.
         const filesInGalleries = new Set((manifest.galleries || []).flatMap(g => g.photos));
-        let activeFilter = 'All';
+        // Deep link din landing: portfolio.html?cat=Portrete preselecteaza categoria
+        const wantedCat = new URLSearchParams(window.location.search).get('cat');
+        let activeFilter = (wantedCat && sections.includes(wantedCat)) ? wantedCat : 'All';
 
         const renderGrid = () => {
             container.innerHTML = '';
@@ -104,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.src = largeSrc;
                 img.srcset = `${smallSrc} 1000w, ${largeSrc} 2000w`;
                 img.sizes = '(max-width: 600px) 100vw, (max-width: 1000px) 50vw, (max-width: 1600px) 33vw, 25vw';
-                img.alt = p.alt || 'Photo by Serban Anita';
+                img.alt = p.alt || (window.SiteI18n ? window.SiteI18n.t('portfolio.photo.alt') : 'Fotografie de Anița Șerban');
                 wrapper.appendChild(img);
                 item.appendChild(wrapper);
 
@@ -115,13 +286,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
+        // Eticheta afisata pentru un tab: 'All' se traduce, restul sunt nume din
+        // manifest (date romanesti) traduse doar la afisare.
+        const tabLabel = (t) => {
+            if (!window.SiteI18n) return t === 'All' ? 'Toate' : t;
+            return t === 'All' ? window.SiteI18n.t('portfolio.tab.all') : window.SiteI18n.dataName(t);
+        };
+
         if (sections.length && tabsContainer) {
             const tabs = ['All', ...sections];
             tabsContainer.innerHTML = '';
             tabs.forEach(t => {
                 const btn = document.createElement('button');
-                btn.className = 'portfolio-tab' + (t === 'All' ? ' active' : '');
-                btn.textContent = t;
+                btn.className = 'portfolio-tab' + (t === activeFilter ? ' active' : '');
+                btn.dataset.filter = t;
+                // 'All' ramane cheia interna de filtrare; eticheta afisata depinde de limba
+                btn.textContent = tabLabel(t);
                 btn.addEventListener('click', () => {
                     tabsContainer.querySelectorAll('.portfolio-tab').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
@@ -133,6 +313,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         renderGrid();
+
+        // La schimbarea limbii: re-etichetam tab-urile si re-randam grila
+        // (alt-textul imaginilor depinde si el de limba).
+        document.addEventListener('sitelanguagechange', () => {
+            if (tabsContainer) {
+                tabsContainer.querySelectorAll('.portfolio-tab').forEach(b => {
+                    b.textContent = tabLabel(b.dataset.filter);
+                });
+            }
+            renderGrid();
+        });
     };
     loadGallery();
 

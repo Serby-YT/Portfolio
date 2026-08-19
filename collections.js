@@ -15,7 +15,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const photoLookup = new Map((manifest.photos || []).map(p => [p.file, p]));
     // Only collections with at least one photo (and therefore a cover) are worth a tile.
-    const galleries = (manifest.galleries || []).filter(g => g.cover && g.photos.length);
+    // "Hero" e colectia interna care alimenteaza caruselul de pe landing —
+    // nu se afiseaza niciodata public.
+    const galleries = (manifest.galleries || []).filter(g => g.name !== 'Hero' && g.cover && g.photos.length);
+
+    // Scurtaturi i18n. Numele colectiilor raman in romana in date si in URL —
+    // se traduc doar la afisare, ca linkurile existente sa nu se strice.
+    const T = (key) => (window.SiteI18n ? window.SiteI18n.t(key) : key);
+    const DISPLAY = (name) => (window.SiteI18n ? window.SiteI18n.dataName(name) : name);
+
+    // Re-randam la schimbarea limbii
+    document.addEventListener('sitelanguagechange', () => {
+        if (galleryName) renderDetail(galleries.find(g => g.name === galleryName));
+        else renderIndex();
+    });
 
     if (galleryName) {
         indexView.style.display = 'none';
@@ -34,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!galleries.length) {
             const empty = document.createElement('p');
             empty.className = 'collections-empty';
-            empty.textContent = 'Nothing here yet — check back soon.';
+            empty.textContent = T('collections.empty');
             list.appendChild(empty);
             return;
         }
@@ -47,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const img = document.createElement('img');
             img.src = `./assets/${g.cover}`;
             img.loading = 'lazy';
-            img.alt = g.name;
+            img.alt = DISPLAY(g.name);
             tile.appendChild(img);
 
             const scrim = document.createElement('div');
@@ -58,10 +71,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             label.className = 'collection-tile-label';
             const name = document.createElement('h3');
             name.className = 'collection-tile-name';
-            name.textContent = g.name;
+            name.textContent = DISPLAY(g.name);
             const count = document.createElement('div');
             count.className = 'collection-tile-count';
-            count.textContent = `${g.photos.length} photo${g.photos.length === 1 ? '' : 's'}`;
+            count.textContent = `${g.photos.length} ${T(g.photos.length === 1 ? 'collections.count.one' : 'collections.count.many')}`;
             label.appendChild(name);
             label.appendChild(count);
             tile.appendChild(label);
@@ -77,13 +90,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         grid.innerHTML = '';
 
         if (!gallery) {
-            title.textContent = 'Collection not found';
-            document.title = 'Collection not found | Anița Șerban Photography';
+            title.textContent = T('collections.notfound');
+            document.title = `${T('collections.notfound')} | Anița Șerban Photography`;
             return;
         }
 
-        title.textContent = gallery.name;
-        document.title = `${gallery.name} | Anița Șerban Photography`;
+        title.textContent = DISPLAY(gallery.name);
+        document.title = `${DISPLAY(gallery.name)} | Anița Șerban Photography`;
 
         const images = gallery.photos.map(file => `./assets/${file}`);
 
@@ -104,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             img.src = largeSrc;
             img.srcset = `${smallSrc} 1000w, ${largeSrc} 2000w`;
             img.sizes = '(max-width: 600px) 100vw, (max-width: 1000px) 50vw, (max-width: 1600px) 33vw, 25vw';
-            img.alt = photoData.alt || gallery.name;
+            img.alt = photoData.alt || DISPLAY(gallery.name);
             wrapper.appendChild(img);
             item.appendChild(wrapper);
 

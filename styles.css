@@ -2,18 +2,28 @@
    Premium Design Tokens
    ========================================================================== */
 :root {
+    /* ---- TEMA INCHISA (implicita): fundal inchis, accente off-white ---- */
     --color-bg-primary: #0a0b0c;
-    /* Deep True Black */
     --color-bg-secondary: #111214;
-    /* Obsidian */
     --color-text-primary: #f0eee9;
-    /* Bright Parchment */
-    --color-text-secondary: #717376;
-    /* Darker Fog Gray */
+    --color-text-secondary: #8a8c8f;
     --color-accent: #2e382d;
-    /* Cinematic Green */
-    --color-accent-light: #495a47;
-    /* Lighter glow green */
+    --color-accent-light: #6f7f6c;
+
+    --hairline: rgba(240, 238, 233, 0.08);
+    --hairline-strong: rgba(240, 238, 233, 0.18);
+    --nav-scrim-top: rgba(10, 11, 12, 0.8);
+    --nav-scrim: rgba(10, 11, 12, 0.45);
+    --lightbox-bg: rgba(10, 11, 12, 0.98);
+    --stroke-faint: rgba(240, 238, 233, 0.05);
+    --shadow-soft: 0 24px 70px rgba(0, 0, 0, 0.5);
+
+    /* Sticla lichida */
+    --glass-bg: rgba(240, 238, 233, 0.07);
+    --glass-bg-hover: rgba(240, 238, 233, 0.13);
+    --glass-border: rgba(240, 238, 233, 0.20);
+    --glass-sheen: rgba(240, 238, 233, 0.55);
+    --glass-inner: rgba(240, 238, 233, 0.18);
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Outfit', sans-serif;
@@ -21,6 +31,39 @@
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     --transition-smooth: all 1s var(--ease-out-expo);
     --transition-fast: all 0.4s var(--ease-out-expo);
+}
+
+/* ---- TEMA DESCHISA: fundal off-white, accente inchise ---- */
+[data-theme="light"] {
+    --color-bg-primary: #f4f2ed;
+    --color-bg-secondary: #e9e6df;
+    --color-text-primary: #15161a;
+    --color-text-secondary: #6c6e73;
+    --color-accent: #c7ccc2;
+    --color-accent-light: #5d6a5a;
+
+    --hairline: rgba(21, 22, 26, 0.10);
+    --hairline-strong: rgba(21, 22, 26, 0.22);
+    --nav-scrim-top: rgba(244, 242, 237, 0.85);
+    --nav-scrim: rgba(244, 242, 237, 0.6);
+    --lightbox-bg: rgba(244, 242, 237, 0.98);
+    --stroke-faint: rgba(21, 22, 26, 0.07);
+    --shadow-soft: 0 24px 70px rgba(21, 22, 26, 0.14);
+
+    --glass-bg: rgba(21, 22, 26, 0.05);
+    --glass-bg-hover: rgba(21, 22, 26, 0.10);
+    --glass-border: rgba(21, 22, 26, 0.16);
+    --glass-sheen: rgba(255, 255, 255, 0.85);
+    --glass-inner: rgba(255, 255, 255, 0.6);
+}
+
+/* Textul asezat PESTE fotografii ramane deschis in ambele teme,
+   pentru ca fotografiile sunt intunecate indiferent de tema. */
+:root,
+[data-theme="light"] {
+    --on-image: #f7f5f1;
+    --on-image-dim: rgba(247, 245, 241, 0.72);
+    --on-image-scrim: linear-gradient(to top, rgba(8, 9, 10, 0.88) 0%, rgba(8, 9, 10, 0.25) 45%, transparent 72%);
 }
 
 /* ==========================================================================
@@ -77,7 +120,7 @@ body {
 .cursor-follower {
     width: 36px;
     height: 36px;
-    border: 1px solid rgba(240, 238, 233, 0.4);
+    border: 1px solid var(--hairline-strong);
     border-radius: 50%;
     position: fixed;
     top: 0;
@@ -92,7 +135,7 @@ body {
 .cursor-follower.active {
     width: 60px;
     height: 60px;
-    background: rgba(240, 238, 233, 0.1);
+    background: var(--glass-bg);
     border-color: transparent;
     backdrop-filter: blur(2px);
 }
@@ -103,6 +146,9 @@ body {
 
 /* Film grain */
 .noise-overlay {
+    /* Granulatia de film a fost scoasa la cererea utilizatorului —
+       pe fundal inchis se vedea ca un zgomot pixelat, neplacut. */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -148,6 +194,10 @@ h3 {
     transition-delay: 0.3s;
 }
 
+.delay-3 {
+    transition-delay: 0.45s;
+}
+
 /* ==========================================================================
    Navigation (Glassmorphism & Magnetic)
    ========================================================================== */
@@ -162,14 +212,14 @@ h3 {
     align-items: center;
     z-index: 1000;
     transition: padding 0.5s var(--ease-out-expo), background 0.5s var(--ease-out-expo);
-    background: linear-gradient(to bottom, rgba(10, 11, 12, 0.8) 0%, transparent 100%);
+    background: linear-gradient(to bottom, var(--nav-scrim-top) 0%, transparent 100%);
 }
 
 #main-navigation.scrolled {
     padding: 1.2rem 4rem;
-    background: rgba(10, 11, 12, 0.4);
+    background: var(--nav-scrim);
     backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--stroke-faint);
 }
 
 .logo {
@@ -208,18 +258,23 @@ h3 {
     transform: scale(1.1);
 }
 
+/* Grila 1fr / auto / 1fr: cele doua coloane laterale primesc automat aceeasi
+   latime, deci linkul din mijloc ("Colectii") sta exact pe centrul paginii
+   indiferent cat de late sunt textele laterale — deci si la schimbarea limbii. */
 .nav-links {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
+    display: grid;
+    /* minmax(0, …) scoate pragul implicit de min-content: fara el, coloana cu
+       textul mai lat (ex. "Portofoliu" in romana) se lateste si impinge
+       mijlocul de pe centru cu cativa pixeli. */
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: 4rem;
     align-items: center;
 }
 
-/* Fixed, equal width on both sides so "Collections" sits exactly on the page's
-   center line no matter how "Home Work" compares in width to "About Contact". */
 .nav-links-side {
     list-style: none;
     display: flex;
@@ -227,7 +282,7 @@ h3 {
     align-items: center;
     margin: 0;
     padding: 0;
-    width: 14rem;
+    white-space: nowrap;
 }
 
 .nav-links-side.left {
@@ -426,7 +481,7 @@ h3 {
     align-items: center;
     justify-content: center;
     padding: 1.2rem 3.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--glass-border);
     border-radius: 40px;
     color: var(--color-text-primary);
     font-size: 0.8rem;
@@ -491,7 +546,7 @@ h3 {
 .scroll-indicator .line {
     width: 1px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--hairline-strong);
     position: relative;
     overflow: hidden;
 }
@@ -562,7 +617,7 @@ h3 {
     letter-spacing: 1.5px;
     text-transform: uppercase;
     background: transparent;
-    border: 1px solid rgba(240, 238, 233, 0.2);
+    border: 1px solid var(--glass-border);
     color: var(--color-text-secondary);
     padding: 0.6rem 1.4rem;
     border-radius: 999px;
@@ -686,7 +741,7 @@ h3 {
 .collection-tile-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10, 11, 12, 0.9) 0%, rgba(10, 11, 12, 0.15) 45%, transparent 70%);
+    background: var(--on-image-scrim);
     pointer-events: none;
 }
 
@@ -702,7 +757,8 @@ h3 {
     font-family: var(--font-heading);
     font-weight: 400;
     font-size: 2.4rem;
-    color: var(--color-text-primary);
+    /* text peste fotografie -> mereu deschis, indiferent de tema */
+    color: var(--on-image);
     margin: 0 0 0.4rem;
 }
 
@@ -711,7 +767,7 @@ h3 {
     font-size: 0.78rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--color-text-secondary);
+    color: var(--on-image-dim);
 }
 
 /* Lightbox Styles */
@@ -721,7 +777,7 @@ h3 {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(10, 11, 12, 0.98);
+    background: var(--lightbox-bg);
     z-index: 10000;
     display: flex;
     align-items: center;
@@ -896,7 +952,7 @@ h3 {
     font-size: 8rem;
     font-weight: 700;
     color: transparent;
-    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.05);
+    -webkit-text-stroke: 2px var(--stroke-faint);
     text-transform: uppercase;
     letter-spacing: -2px;
     margin-bottom: -2rem;
@@ -981,7 +1037,7 @@ h3 {
     left: 0;
     width: 100%;
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--glass-bg);
 }
 
 .underline::after {
@@ -1013,7 +1069,7 @@ h3 {
 footer {
     padding: 4rem 5% 2rem;
     background-color: var(--color-bg-primary);
-    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    border-top: 1px solid var(--stroke-faint);
 }
 
 .footer-content {
@@ -1068,6 +1124,340 @@ footer {
 
 .social-links a:hover::after {
     transform: translateX(0);
+}
+
+/* ==========================================================================
+   Comutator de limba RO / EN (in bara de sus, langa Instagram)
+   ========================================================================== */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+
+.lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.lang-option {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    transition: color 0.35s var(--ease-out-expo);
+}
+
+.lang-option:hover {
+    color: var(--color-text-primary);
+}
+
+.lang-option.active {
+    color: var(--color-text-primary);
+}
+
+.lang-sep {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    opacity: 0.5;
+}
+
+/* ==========================================================================
+   Titlu comun pentru blocurile noi (Parcurs / De ce eu / Testimoniale)
+   ========================================================================== */
+.block-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    text-align: center;
+    margin-bottom: 7rem;
+}
+
+/* ==========================================================================
+   Cifre / Statistici
+   ========================================================================== */
+.stats-section {
+    background: var(--color-bg-secondary);
+    padding: 0 5% 12rem;
+}
+
+.stats-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 6rem;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-family: var(--font-heading);
+    font-size: 3.6rem;
+    line-height: 1;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Parcursul meu (timeline)
+   ========================================================================== */
+.timeline-section {
+    background: var(--color-bg-primary);
+    padding: 12rem 5%;
+}
+
+.timeline {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 3rem;
+}
+
+/* Linia verticală care leagă etapele */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: linear-gradient(to bottom,
+            transparent,
+            var(--color-accent-light) 15%,
+            var(--color-accent-light) 85%,
+            transparent);
+    opacity: 0.5;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 5rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+/* Punctul de pe linie, aliniat cu anul */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: calc(-3rem - 4px);
+    top: 0.5rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-accent-light);
+}
+
+.timeline-year {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-accent-light);
+    margin-bottom: 1rem;
+}
+
+.timeline-body h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.timeline-body p {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+    font-weight: 300;
+    max-width: 60ch;
+}
+
+/* ==========================================================================
+   De ce eu
+   ========================================================================== */
+.why-section {
+    background: var(--color-bg-secondary);
+    padding: 12rem 5%;
+    position: relative;
+    overflow: hidden;
+}
+
+.why-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.why-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+}
+
+.why-card {
+    border-top: 1px solid var(--hairline);
+    padding-top: 2.5rem;
+}
+
+.why-index {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    color: var(--color-accent-light);
+    margin-bottom: 1.5rem;
+}
+
+.why-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.7rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.25;
+}
+
+.why-card p {
+    font-size: 1.02rem;
+    color: var(--color-text-secondary);
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   Testimoniale
+   ========================================================================== */
+.testimonials-section {
+    background: var(--color-bg-primary);
+    padding: 12rem 5%;
+}
+
+.testimonials-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.testimonial-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 2.5rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.testimonial-card p {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.55;
+    color: var(--color-text-primary);
+}
+
+.testimonial-card footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.testimonial-initials {
+    width: 2.6rem;
+    height: 2.6rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: var(--color-accent-light);
+}
+
+.testimonial-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.testimonial-name {
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.testimonial-role {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-text-secondary);
+}
+
+/* Tablet/small-laptop band: the full-size logo + evenly-centered nav text
+   only fit comfortably above ~1400px. Below that (iPads, common 1280/1366
+   laptop widths) the watermark and nav links start overlapping, so shrink
+   both proportionally instead of hiding the nav outright like mobile does. */
+@media (min-width: 901px) and (max-width: 1400px) {
+    #main-navigation,
+    #main-navigation.scrolled {
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
+
+    .logo {
+        gap: 0.6rem;
+    }
+
+    .site-icon {
+        width: 2.6rem;
+        height: 2.6rem;
+    }
+
+    .site-watermark {
+        height: 1.4rem;
+    }
+
+    .nav-links {
+        gap: 1.2rem;
+    }
+
+    .nav-links-side {
+        gap: 1.4rem;
+    }
+
+    .nav-links a {
+        font-size: 0.62rem;
+        letter-spacing: 1.5px;
+    }
+
+    .nav-right {
+        gap: 1rem;
+    }
+
+    .lang-option,
+    .lang-sep {
+        font-size: 0.62rem;
+        letter-spacing: 1.5px;
+    }
 }
 
 /* responsive tweaks */
@@ -1167,6 +1557,65 @@ footer {
         display: none;
     }
 
+    .nav-right {
+        gap: 0.9rem;
+    }
+
+    .lang-option,
+    .lang-sep {
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+    }
+
+    /* Blocurile noi: pe telefon trecem pe o singură coloană */
+    .block-title {
+        font-size: 2.4rem;
+        margin-bottom: 4rem;
+    }
+
+    .stats-section {
+        padding-bottom: 7rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem 1.5rem;
+        padding-top: 4rem;
+    }
+
+    .stat-number {
+        font-size: 2.6rem;
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+    }
+
+    .timeline-section,
+    .why-section,
+    .testimonials-section {
+        padding: 7rem 5%;
+    }
+
+    .timeline {
+        padding-left: 2rem;
+    }
+
+    .timeline-item {
+        padding-bottom: 3.5rem;
+    }
+
+    .timeline-item::before {
+        left: calc(-2rem - 4px);
+    }
+
+    .why-grid,
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
     .cursor,
     .cursor-follower {
         display: none;
@@ -1174,5 +1623,457 @@ footer {
 
     * {
         cursor: auto;
+    }
+}
+/* ==========================================================================
+   Adaptari pentru tema deschisa
+   ========================================================================== */
+/* Watermark-ul e un SVG alb — in tema deschisa il inversam ca sa fie citibil */
+[data-theme="light"] .site-watermark {
+    filter: invert(1);
+}
+
+[data-theme="light"] body {
+    background-image:
+        radial-gradient(at 0% 0%, rgba(93, 106, 90, 0.07) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(93, 106, 90, 0.07) 0px, transparent 50%);
+}
+
+/* ==========================================================================
+   Butoane "liquid glass"
+   ========================================================================== */
+.glass-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.15rem 2.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    box-shadow: inset 0 1px 0 var(--glass-inner), var(--shadow-soft);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    overflow: hidden;
+    isolation: isolate;
+    transition: background 0.6s var(--ease-out-expo),
+                transform 0.6s var(--ease-out-expo),
+                border-color 0.6s var(--ease-out-expo);
+}
+
+/* Reflexia care aluneca peste sticla la hover */
+.glass-btn::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: linear-gradient(115deg, transparent 32%, var(--glass-sheen) 50%, transparent 68%);
+    opacity: 0;
+    transform: translateX(-130%);
+    transition: transform 1.1s var(--ease-out-expo), opacity 0.5s var(--ease-out-expo);
+}
+
+/* Muchia luminoasa de sus — da senzatia de volum/lichid */
+.glass-btn::after {
+    content: '';
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glass-inner), transparent);
+    pointer-events: none;
+}
+
+.glass-btn:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--hairline-strong);
+    transform: translateY(-2px);
+}
+
+.glass-btn:hover::before {
+    opacity: 0.3;
+    transform: translateX(130%);
+}
+
+.glass-btn.on-image {
+    color: var(--on-image);
+    border-color: rgba(247, 245, 241, 0.28);
+    background: rgba(247, 245, 241, 0.08);
+}
+
+/* ==========================================================================
+   Landing — antet curat, fara fotografie de fundal
+   ========================================================================== */
+.landing-hero {
+    min-height: 100vh;
+    min-height: 100svh; /* pe telefoane, ecranul vizibil real (fara barile browserului) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10rem 5% 5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Caruselul de fundal: fotografii pe tot ecranul, cate una la ~5 secunde */
+.hero-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.6s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+.hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Un strat discret de umbra ca textul sa ramana citibil pe orice fotografie */
+.hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        radial-gradient(ellipse at center 42%, rgba(8, 9, 10, 0.42) 0%, rgba(8, 9, 10, 0.18) 55%, rgba(8, 9, 10, 0.34) 100%),
+        linear-gradient(to top, rgba(8, 9, 10, 0.55) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.landing-hero > .rise-in {
+    position: relative;
+    z-index: 2;
+}
+
+/* Peste fotografii, textul e mereu deschis la culoare, in ambele teme */
+.landing-hero .landing-name { color: var(--on-image); }
+.landing-hero .landing-tagline { color: var(--on-image-dim); }
+.landing-hero .glass-btn {
+    color: var(--on-image);
+    border-color: rgba(247, 245, 241, 0.28);
+    background: rgba(247, 245, 241, 0.08);
+}
+.landing-hero .glass-btn:hover {
+    background: rgba(247, 245, 241, 0.16);
+}
+
+.landing-name {
+    font-family: var(--font-heading);
+    font-size: clamp(2.6rem, 6.5vw, 5.6rem);
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    margin-bottom: 1.8rem;
+}
+
+.landing-tagline {
+    font-size: 0.72rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 3.5rem;
+}
+
+.landing-cta-row {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   Placi de categorie (fotografiile clicabile de pe landing)
+   ========================================================================== */
+.category-section {
+    padding: 0 5% 11rem;
+}
+
+.category-grid {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.1rem;
+}
+
+.category-tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 5px;
+    background: var(--color-bg-secondary);
+}
+
+/* primele doua placi sunt mari, urmatoarele trei mai mici */
+.category-tile:nth-child(1),
+.category-tile:nth-child(2) {
+    grid-column: span 3;
+    height: 54vh;
+    min-height: 380px;
+}
+
+.category-tile:nth-child(n+3) {
+    grid-column: span 2;
+    height: 36vh;
+    min-height: 280px;
+}
+
+.category-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.88);
+    transition: transform 1.4s var(--ease-out-expo), filter 0.8s var(--ease-out-expo);
+}
+
+.category-tile:hover img {
+    transform: scale(1.05);
+    filter: brightness(1);
+}
+
+.category-tile-scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--on-image-scrim);
+    pointer-events: none;
+}
+
+.category-tile-label {
+    position: absolute;
+    left: 2rem;
+    right: 2rem;
+    bottom: 1.8rem;
+    pointer-events: none;
+}
+
+.category-tile-name {
+    font-family: var(--font-heading);
+    font-size: 1.9rem;
+    color: var(--on-image);
+    margin-bottom: 0.35rem;
+}
+
+.category-tile-count {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--on-image-dim);
+}
+
+/* ==========================================================================
+   Banda catre Colectii
+   ========================================================================== */
+.collections-band {
+    padding: 9rem 5%;
+    text-align: center;
+    background: var(--color-bg-secondary);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.collections-band .band-badge {
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    margin-bottom: 1.4rem;
+}
+
+.collections-band h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin-bottom: 1.2rem;
+}
+
+.collections-band p {
+    color: var(--color-text-secondary);
+    max-width: 46ch;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+}
+
+/* ==========================================================================
+   Comutator de tema
+   ========================================================================== */
+.theme-toggle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    box-shadow: inset 0 1px 0 var(--glass-inner);
+    color: var(--color-text-primary);
+    transition: background 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+}
+
+.theme-toggle:hover {
+    background: var(--glass-bg-hover);
+    transform: translateY(-1px);
+}
+
+.theme-toggle svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    display: block;
+}
+
+/* soarele se vede in tema inchisa, luna in cea deschisa */
+.theme-toggle .icon-sun { display: block; }
+.theme-toggle .icon-moon { display: none; }
+[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+[data-theme="light"] .theme-toggle .icon-moon { display: block; }
+
+/* ==========================================================================
+   Eticheta "exemplu" pe testimonialele demonstrative
+   ========================================================================== */
+.testimonial-card.is-sample {
+    border-style: dashed;
+}
+
+.sample-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.55rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+    margin-bottom: 1.2rem;
+}
+
+/* ==========================================================================
+   Antet de pagina (portofoliu / colectii)
+   ========================================================================== */
+.page-head {
+    padding: 13rem 5% 4rem;
+    text-align: center;
+}
+
+.page-head .page-badge {
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    margin-bottom: 1.3rem;
+}
+
+.page-head h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2.2rem, 5vw, 4rem);
+}
+
+/* ==========================================================================
+   Responsive pentru blocurile noi
+   ========================================================================== */
+@media (max-width: 900px) {
+    .landing-hero {
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 9rem 5% 4rem;
+    }
+
+    .landing-tagline {
+        letter-spacing: 3px;
+        margin-bottom: 2.5rem;
+    }
+
+    .landing-cta-row {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0 1rem;
+    }
+
+    .glass-btn {
+        padding: 1.05rem 2rem;
+    }
+
+    .category-section {
+        padding: 0 5% 6rem;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+    }
+
+    .category-tile:nth-child(1),
+    .category-tile:nth-child(2),
+    .category-tile:nth-child(n+3) {
+        grid-column: span 1;
+        height: 42vh;
+        min-height: 260px;
+    }
+
+    .category-tile-label {
+        left: 1.4rem;
+        right: 1.4rem;
+        bottom: 1.3rem;
+    }
+
+    .category-tile-name {
+        font-size: 1.5rem;
+    }
+
+    .collections-band {
+        padding: 6rem 5%;
+    }
+
+    .page-head {
+        padding: 9rem 5% 3rem;
+    }
+}
+
+/* ==========================================================================
+   Intrarea din landing — animatie pur CSS.
+   Continutul de sus NU trebuie sa depinda de JavaScript ca sa fie vizibil:
+   daca observer-ul nu ruleaza, .fade-in ar ramane la opacity 0 si pagina
+   ar parea goala. Aici animam din CSS, deci textul apare oricum.
+   ========================================================================== */
+.rise-in {
+    opacity: 0;
+    animation: riseIn 1.1s var(--ease-out-expo) forwards;
+}
+
+.rise-in.d1 { animation-delay: 0.15s; }
+.rise-in.d2 { animation-delay: 0.3s; }
+
+@keyframes riseIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rise-in {
+        animation: none;
+        opacity: 1;
+        transform: none;
     }
 }

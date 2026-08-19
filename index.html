@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro" data-page-title-key="meta.title.home" data-page-desc-key="meta.description.home">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Meta tags critice pentru stergerea cache-ului extrem de pe Safari/Chrome iOS -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Photographer | Moody Landscapes & Events</title>
+    <title>Fotograf evenimente | Anița Șerban Photography</title>
     <meta name="description"
-        content="Portfolio of a photographer specializing in chasing atmospheres through moody landscapes and authentic social events.">
+        content="Fotograf de evenimente — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.">
     <link rel="canonical" href="https://serban-photo.com/">
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -18,42 +17,52 @@
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Anița Șerban Photography">
-    <meta property="og:title" content="Anița Șerban Photography | Moody Landscapes & Events">
+    <meta property="og:title" content="Anița Șerban Photography | Fotograf evenimente">
     <meta property="og:description"
-        content="Portfolio of a photographer specializing in chasing atmospheres through moody landscapes and authentic social events.">
+        content="Fotograf de evenimente — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.">
     <meta property="og:url" content="https://serban-photo.com/">
     <meta property="og:image" content="https://serban-photo.com/assets/hero.webp">
     <meta property="og:image:alt" content="Anița Șerban Photography">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Anița Șerban Photography | Moody Landscapes & Events">
+    <meta name="twitter:title" content="Anița Șerban Photography | Fotograf evenimente">
     <meta name="twitter:description"
-        content="Portfolio of a photographer specializing in chasing atmospheres through moody landscapes and authentic social events.">
+        content="Fotograf de evenimente — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.">
     <meta name="twitter:image" content="https://serban-photo.com/assets/hero.webp">
 
-    <link rel="stylesheet" href="styles.css?v=25">
+    <!-- Tema se aplica INAINTE de randare, ca sa nu apara un flash de culoare gresita -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('siteTheme');
+                var theme = (saved === 'dark' || saved === 'light') ? saved
+                    : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="styles.css?v=34">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
-    <style>
-        /* Mapăm imaginea hero.webp direct aici pentru a fi siguri că se încarcă corect */
-        .hero-background {
-            background-image: url('./assets/hero.webp?v=18') !important;
-        }
-    </style>
 </head>
 
 <body>
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
-        <button id="lightbox-close" class="lightbox-close-btn magnetic" aria-label="Close">&larr; Back to
-            Gallery</button>
-        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" aria-label="Previous">&larr;</button>
-        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" aria-label="Next">&rarr;</button>
-        <img id="lightbox-img" src="" alt="Enlarged view">
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close"
+            data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev"
+            aria-label="Imaginea anterioară">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="lightbox.next"
+            aria-label="Imaginea următoare">&rarr;</button>
+        <img id="lightbox-img" src="" data-i18n-alt="lightbox.alt" alt="Imagine mărită">
     </div>
 
     <div class="cursor"></div>
@@ -61,133 +70,247 @@
     <div class="noise-overlay"></div>
 
     <nav id="main-navigation">
-        <a href="#home" class="logo magnetic">
+        <a href="index.html" class="logo magnetic">
             <img class="site-icon" src="./assets/logo.svg" alt="Logo">
-            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Anița Șerban">
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
-                <li><a href="#home" class="magnetic">Home</a></li>
-                <li><a href="#portfolio" class="magnetic">Work</a></li>
+                <li><a href="index.html" class="magnetic" data-i18n="nav.home">Acasă</a></li>
+                <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
             </ul>
-            <a href="collections.html" class="nav-links-center magnetic">Collections</a>
+            <a href="collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Colecții</a>
             <ul class="nav-links-side right">
-                <li><a href="#about" class="magnetic">About</a></li>
-                <li><a href="#contact" class="magnetic">Contact</a></li>
+                <li><a href="#parcurs" class="magnetic" data-i18n="nav.about">Despre</a></li>
+                <li><a href="#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
             </ul>
         </div>
-        <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="nav-social magnetic">
-            <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
-        </a>
+        <div class="nav-right">
+            <div class="lang-switch" role="group" data-i18n-aria-label="nav.lang.label" aria-label="Schimbă limba">
+                <button type="button" class="lang-option" data-lang-option="ro">RO</button>
+                <span class="lang-sep" aria-hidden="true">/</span>
+                <button type="button" class="lang-option" data-lang-option="en">EN</button>
+            </div>
+            <button type="button" class="theme-toggle" id="themeToggle" data-i18n-aria-label="nav.theme.label"
+                aria-label="Schimbă tema">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4.2" />
+                    <path
+                        d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
+                </svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 13.4A8.2 8.2 0 1 1 10.6 4a6.6 6.6 0 0 0 9.4 9.4Z" />
+                </svg>
+            </button>
+            <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="nav-social magnetic">
+                <img src="./assets/instagram.webp" alt="Instagram" class="social-icon">
+            </a>
+        </div>
     </nav>
 
-    <header id="home" class="hero-section">
-        <div class="hero-background"></div>
-        <div class="hero-vignette"></div>
+    <header id="home" class="landing-hero">
+        <!-- Fotografiile care se rotesc vin din colectia "Hero" (administrabila
+             din panoul de admin); daca e goala, ramane fotografia clasica hero.webp -->
+        <div class="hero-carousel" id="heroCarousel" aria-hidden="true"></div>
+        <div class="hero-scrim"></div>
 
-        <div class="marquee-bg">
-            <span class="marquee-text">ATMOSPHERES &middot; LANDSCAPES &middot; MOMENTS &middot; </span>
-            <span class="marquee-text">ATMOSPHERES &middot; LANDSCAPES &middot; MOMENTS &middot; </span>
-        </div>
-
-        <div class="hero-content reveal-text">
-            <h1 id="hero-title">
-                <span class="line"><span class="word">Chasing</span></span>
-                <span class="line"><span class="word accent">Atmospheres</span></span>
-            </h1>
-            <p id="hero-subtitle">Moody Landscapes & Authentic Events</p>
-
-            <div class="hero-cta-row">
-                <a href="#portfolio" class="cta-button magnetic-btn">
-                    <span class="btn-text">Discover Work</span>
-                    <div class="btn-fill"></div>
-                </a>
-                <a href="collections.html" class="cta-button magnetic-btn">
-                    <span class="btn-text">Collections</span>
-                    <div class="btn-fill"></div>
-                </a>
-            </div>
-        </div>
-
-        <div class="hero-bottom-gradient"></div>
-        <div class="scroll-indicator">
-            <p>Explore</p>
-            <div class="line"></div>
+        <h1 class="landing-name rise-in" data-i18n="landing.name">Anița Șerban</h1>
+        <p class="landing-tagline rise-in d1" data-i18n="landing.tagline">Fotografie de eveniment · România</p>
+        <div class="landing-cta-row rise-in d2">
+            <a href="portfolio.html" class="glass-btn magnetic" data-i18n="landing.cta.portfolio">Portofoliu</a>
+            <a href="collections.html" class="glass-btn magnetic" data-i18n="landing.cta.collections">Colecții</a>
         </div>
     </header>
 
     <main>
-        <section id="portfolio" class="portfolio-section">
-            <div class="section-intro">
-                <div class="section-badge fade-in">Selected Works</div>
-                <div class="section-header fade-in delay-1">
-                    <h2 id="portfolio-title">The Earth & The People</h2>
+        <!-- Fotografiile clicabile: fiecare duce in portofoliu, pe categoria ei -->
+        <section class="category-section" id="categorii">
+            <div class="category-grid" id="categoryGrid"></div>
+        </section>
+
+        <!-- Banda catre Colectii (tarile) -->
+        <section class="collections-band">
+            <div class="band-badge fade-in" data-i18n="band.badge">Colecții</div>
+            <h2 class="fade-in" data-i18n="band.title">Locuri, adunate pe rând.</h2>
+            <p class="fade-in" data-i18n="band.body">Seturi separate de fotografii din drumurile mele — fiecare țară,
+                galeria ei.</p>
+            <a href="collections.html" class="glass-btn magnetic fade-in" data-i18n="band.cta">Vezi colecțiile</a>
+        </section>
+
+        <!-- Cifre -->
+        <section id="cifre" class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item fade-in">
+                    <div class="stat-number" data-count="2" data-suffix="+">0</div>
+                    <div class="stat-label" data-i18n="stats.years">Ani de fotografie</div>
                 </div>
-
-                <div class="portfolio-tabs" id="portfolio-tabs"></div>
-            </div>
-
-            <div class="gallery-grid" id="auto-gallery">
+                <div class="stat-item fade-in delay-1">
+                    <div class="stat-number" data-count="70" data-suffix="+">0</div>
+                    <div class="stat-label" data-i18n="stats.events">Evenimente</div>
+                </div>
+                <div class="stat-item fade-in delay-2">
+                    <div class="stat-number" data-count="10000" data-suffix="+">0</div>
+                    <div class="stat-label" data-i18n="stats.photos">Fotografii livrate</div>
+                </div>
+                <div class="stat-item fade-in delay-3">
+                    <div class="stat-number" data-count="100" data-suffix="+">0</div>
+                    <div class="stat-label" data-i18n="stats.videos">Videoclipuri</div>
+                </div>
             </div>
         </section>
 
-        <section id="about" class="about-section">
+        <!-- De ce eu -->
+        <section id="de-ce-eu" class="why-section">
             <div class="ambient-glow"></div>
-            <div class="about-container">
-                <div class="about-image-wrapper fade-in delay-1">
-                    <div class="image-reveal">
-                        <img src="./assets/AboutMe.webp" alt="Portrait" loading="lazy">
-                    </div>
-                    <div class="image-backdrop"></div>
-                </div>
+            <div class="why-inner">
+                <div class="section-badge fade-in" data-i18n="why.badge">De ce eu</div>
+                <h2 class="block-title fade-in" data-i18n="why.title">Ce primești, de fapt.</h2>
 
-                <div class="about-text fade-in delay-2">
-                    <h2 class="about-title">About Me</h2>
-                    <p class="lead-text">I don't just take pictures; <br> I chase atmospheres.</p>
-                    <p class="body-text">Whether it's the raw, untamed beauty of a mist-covered valley or the fleeting
-                        energy of a night to remember, I'm drawn to moments that make you feel something. Photography
-                        isn't about perfectly staged smiles—it's about authenticity, texture, and the quiet spaces
-                        between the noise.</p>
-                    <div class="sign-off">Let's create something timeless.</div>
+                <div class="why-grid">
+                    <div class="why-card fade-in">
+                        <div class="why-index">01</div>
+                        <h3 data-i18n="why.1.head">Povestea, nu doar poza</h3>
+                        <p data-i18n="why.1.body">Nu caut zâmbete perfect aranjate. Caut momentele dintre ele — emoția,
+                            atmosfera și detaliile pe care nu le observi în ziua respectivă, dar le vei ține minte ani
+                            întregi.</p>
+                    </div>
+                    <div class="why-card fade-in delay-1">
+                        <div class="why-index">02</div>
+                        <h3 data-i18n="why.2.head">Livrare rapidă</h3>
+                        <p data-i18n="why.2.body">Nu aștepți luni de zile. Primești o galerie completă, editată și ușor
+                            de descărcat sau de trimis mai departe familiei, la scurt timp după eveniment.</p>
+                    </div>
+                    <div class="why-card fade-in delay-2">
+                        <div class="why-index">03</div>
+                        <h3 data-i18n="why.3.head">Experiență în evenimente reale</h3>
+                        <p data-i18n="why.3.body">Peste 70 de evenimente — majorate, nunți, botezuri și concerte. Știu
+                            unde să stau, când să apăs și cum să nu fiu în calea momentului tău.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Parcursul meu -->
+        <section id="parcurs" class="timeline-section">
+            <div class="section-badge fade-in" data-i18n="timeline.badge">Parcursul meu</div>
+            <h2 class="block-title fade-in" data-i18n="timeline.title">Cum am ajuns aici.</h2>
+
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-year" data-i18n="timeline.1.year">2024</div>
+                    <div class="timeline-body">
+                        <h3 data-i18n="timeline.1.head">Primul declanșator</h3>
+                        <p data-i18n="timeline.1.body">Am început să fotografiez ca hobby — învățând lumina, compoziția
+                            și răbdarea de a aștepta cadrul potrivit în loc să îl forțez.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-year" data-i18n="timeline.2.year">Ianuarie 2026</div>
+                    <div class="timeline-body">
+                        <h3 data-i18n="timeline.2.head">Primul eveniment</h3>
+                        <p data-i18n="timeline.2.body">Un prieten m-a chemat să fotografiez primul meu eveniment. A fost
+                            momentul în care hobby-ul a devenit altceva — de atunci nu m-am mai oprit.</p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-year" data-i18n="timeline.3.year">Azi</div>
+                    <div class="timeline-body">
+                        <h3 data-i18n="timeline.3.head">Aproape în fiecare weekend</h3>
+                        <p data-i18n="timeline.3.body">Majorate, nunți, botezuri, concerte. Fiecare eveniment mi-a
+                            șlefuit stilul și tehnica, iar acum livrez rapid o galerie completă care spune povestea zilei
+                            tale.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+             TESTIMONIALE — textele de mai jos sunt EXEMPLE scrise de mine,
+             marcate vizibil ca atare. Inlocuieste-le cu recenzii reale, apoi
+             sterge clasa "is-sample" si <span class="sample-tag"> din card.
+             ========================================================== -->
+        <section id="testimoniale" class="testimonials-section">
+            <div class="section-badge fade-in" data-i18n="testimonials.badge">Testimoniale</div>
+            <h2 class="block-title fade-in" data-i18n="testimonials.title">Ce spun oamenii.</h2>
+
+            <div class="testimonials-grid">
+                <blockquote class="testimonial-card is-sample fade-in">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <p data-i18n="testimonials.1.text">„Ne-a prins exact momentele pe care nu le-am văzut noi în ziua
+                        nunții. Când am deschis galeria, am plâns. Serios.”</p>
+                    <footer>
+                        <span class="testimonial-initials">AM</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Andreea M.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.1.role">Nuntă</span>
+                        </span>
+                    </footer>
+                </blockquote>
+
+                <blockquote class="testimonial-card is-sample fade-in delay-1">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <p data-i18n="testimonials.2.text">„Nici nu am simțit că e cineva cu aparatul prin sală. Iar pozele
+                        au ieșit ca dintr-un film. Exact atmosfera de la majorat.”</p>
+                    <footer>
+                        <span class="testimonial-initials">RD</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Robert D.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.2.role">Majorat</span>
+                        </span>
+                    </footer>
+                </blockquote>
+
+                <blockquote class="testimonial-card is-sample fade-in delay-2">
+                    <span class="sample-tag" data-i18n="testimonials.sample">Exemplu</span>
+                    <p data-i18n="testimonials.3.text">„Am primit galeria mult mai repede decât mă așteptam și toată
+                        familia a putut să o descarce fără bătăi de cap.”</p>
+                    <footer>
+                        <span class="testimonial-initials">IC</span>
+                        <span class="testimonial-meta">
+                            <span class="testimonial-name">Ioana C.</span>
+                            <span class="testimonial-role" data-i18n="testimonials.3.role">Botez</span>
+                        </span>
+                    </footer>
+                </blockquote>
+            </div>
+        </section>
+
+        <!-- Contact -->
         <section id="contact" class="contact-section">
             <div class="contact-content fade-in">
-                <h2 class="massive-text">Connect</h2>
-                <p class="contact-sub">Available for commissions anytime.</p>
+                <h2 class="massive-text" data-i18n="contact.title">Contact</h2>
+                <p class="contact-sub" data-i18n="contact.sub">Disponibil pentru colaborări oricând.</p>
 
                 <form id="contact-form" class="minimal-form" action="https://formsubmit.co/amibog2@gmail.com"
                     method="POST">
-                    <!-- Configurare anti-spam și subiect e-mail -->
                     <input type="hidden" name="_subject" value="Mesaj nou de pe Portfolio serban-photo.com!">
                     <input type="text" name="_honey" style="display:none">
-
-                    <!-- Daca vrei ca dupa trimitere sa reincarce pagina acasa fara capche ciudat, poti lasa valoarea 'false' -->
                     <input type="hidden" name="_captcha" value="true">
 
                     <div class="form-row">
                         <div class="input-group">
-                            <input type="text" id="name" name="Nume" required placeholder="Name">
-                            <label for="name">Name</label>
+                            <input type="text" id="name" name="Nume" required data-i18n-placeholder="contact.name"
+                                placeholder="Nume">
+                            <label for="name" data-i18n="contact.name">Nume</label>
                             <div class="underline"></div>
                         </div>
                         <div class="input-group">
-                            <input type="email" id="email" name="Email" required placeholder="Email">
-                            <label for="email">Email</label>
+                            <input type="email" id="email" name="Email" required data-i18n-placeholder="contact.email"
+                                placeholder="Email">
+                            <label for="email" data-i18n="contact.email">Email</label>
                             <div class="underline"></div>
                         </div>
                     </div>
                     <div class="input-group full-width">
-                        <textarea id="message" name="Mesaj" rows="1" required placeholder="Message/Inquiry"></textarea>
-                        <label for="message">Tell me your story</label>
+                        <textarea id="message" name="Mesaj" rows="1" required
+                            data-i18n-placeholder="contact.message.placeholder"
+                            placeholder="Mesaj / Solicitare"></textarea>
+                        <label for="message" data-i18n="contact.message.label">Spune-mi povestea ta</label>
                         <div class="underline"></div>
                     </div>
-                    <button type="submit" class="submit-btn magnetic-btn">
-                        <span class="btn-text">Send Message</span>
-                        <div class="btn-fill"></div>
-                    </button>
+                    <button type="submit" class="glass-btn magnetic" data-i18n="contact.send">Trimite mesajul</button>
                 </form>
             </div>
         </section>
@@ -196,10 +319,11 @@
     <footer>
         <div class="footer-content fade-in">
             <div class="footer-logo">
-                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Anița Șerban">
             </div>
 
-            <p class="footer-copyright">&copy; 2026 Serban Anita.</p>
+            <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2026 Anița Șerban. Toate drepturile
+                rezervate.</p>
 
             <div class="social-links">
                 <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
@@ -209,7 +333,8 @@
         </div>
     </footer>
 
-    <script src="./script.js?v=24"></script>
+    <script src="./i18n.js?v=2"></script>
+    <script src="./script.js?v=31"></script>
 </body>
 
 </html>

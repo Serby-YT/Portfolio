@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro" data-page-title-key="meta.title.collections" data-page-desc-key="meta.description.collections">
+<html lang="ro" data-page-title-key="meta.title.portfolio" data-page-desc-key="meta.description.portfolio">
 
 <head>
     <meta charset="UTF-8">
@@ -7,27 +7,26 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Colecții | Anița Șerban Photography</title>
+    <title>Portofoliu | Anița Șerban Photography</title>
     <meta name="description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
-    <link rel="canonical" href="https://serban-photo.com/collections.html">
+        content="Portofoliul complet — evenimente, portrete, călătorii, natură și produs. Fotografii de Anița Șerban.">
+    <link rel="canonical" href="https://serban-photo.com/portfolio.html">
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Anița Șerban Photography">
-    <meta property="og:title" content="Colecții | Anița Șerban Photography">
+    <meta property="og:title" content="Portofoliu | Anița Șerban Photography">
     <meta property="og:description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
-    <meta property="og:url" content="https://serban-photo.com/collections.html">
+        content="Portofoliul complet — evenimente, portrete, călătorii, natură și produs.">
+    <meta property="og:url" content="https://serban-photo.com/portfolio.html">
     <meta property="og:image" content="https://serban-photo.com/assets/hero.webp">
     <meta property="og:image:alt" content="Anița Șerban Photography">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Colecții | Anița Șerban Photography">
-    <meta name="twitter:description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
+    <meta name="twitter:title" content="Portofoliu | Anița Șerban Photography">
+    <meta name="twitter:description" content="Portofoliul complet — evenimente, portrete, călătorii, natură și produs.">
     <meta name="twitter:image" content="https://serban-photo.com/assets/hero.webp">
 
     <script>
@@ -55,9 +54,12 @@
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
-        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close" data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
-        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev" aria-label="Imaginea anterioară">&larr;</button>
-        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="lightbox.next" aria-label="Imaginea următoare">&rarr;</button>
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close"
+            data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev"
+            aria-label="Imaginea anterioară">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="lightbox.next"
+            aria-label="Imaginea următoare">&rarr;</button>
         <img id="lightbox-img" src="" data-i18n-alt="lightbox.alt" alt="Imagine mărită">
     </div>
 
@@ -68,7 +70,7 @@
     <nav id="main-navigation">
         <a href="index.html" class="logo magnetic">
             <img class="site-icon" src="./assets/logo.svg" alt="Logo">
-            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+            <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Anița Șerban">
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
@@ -106,35 +108,29 @@
         </div>
     </nav>
 
-    <main class="collections-page">
-        <section class="portfolio-section" id="collectionsIndexView">
-            <div class="section-intro">
-                <div class="section-badge fade-in" data-i18n="collections.badge">Explorează</div>
-                <div class="section-header fade-in delay-1">
-                    <h2 data-i18n="collections.title">Colecții</h2>
-                </div>
+    <main>
+        <section class="portfolio-section">
+            <div class="page-head">
+                <div class="page-badge rise-in" data-i18n="portfolio.badge">Lucrări selectate</div>
+                <h1 class="rise-in d1" data-i18n="portfolio.title">Portofoliu</h1>
             </div>
-            <div class="collections-list" id="collectionsList"></div>
-        </section>
 
-        <section class="portfolio-section" id="collectionDetailView" style="display:none">
             <div class="section-intro">
-                <a href="collections.html" class="back-link magnetic" data-i18n="collections.back">&larr; Toate colecțiile</a>
-                <div class="section-header fade-in delay-1">
-                    <h2 id="collectionTitle"></h2>
-                </div>
+                <div class="portfolio-tabs" id="portfolio-tabs"></div>
             </div>
-            <div class="gallery-grid" id="collectionGrid"></div>
+
+            <div class="gallery-grid" id="auto-gallery"></div>
         </section>
     </main>
 
     <footer>
         <div class="footer-content fade-in">
             <div class="footer-logo">
-                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Serban Anita">
+                <img class="site-watermark" src="./assets/watermark_alb.svg" alt="Anița Șerban">
             </div>
 
-            <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2026 Anița Șerban. Toate drepturile rezervate.</p>
+            <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2026 Anița Șerban. Toate drepturile
+                rezervate.</p>
 
             <div class="social-links">
                 <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
@@ -146,7 +142,6 @@
 
     <script src="./i18n.js?v=2"></script>
     <script src="./script.js?v=31"></script>
-    <script src="./collections.js?v=5"></script>
 </body>
 
 </html>
