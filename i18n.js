@@ -121,6 +121,14 @@
             'contact.send': 'Trimite mesajul',
 
             'footer.copyright': '© 2026 Anița Șerban. Toate drepturile rezervate.',
+            'footer.privacy': 'Politică de Confidențialitate',
+
+            'meta.title.privacy': 'Politică de Confidențialitate | Anița Șerban Photography',
+            'meta.description.privacy': 'Ce date colectăm prin formularul de contact, ce cookie-uri folosim și cum îți poți exercita drepturile GDPR.',
+
+            'cookie.notice': 'Acest site nu folosește cookie-uri de analiză sau marketing. Doar un cookie strict necesar, de securitate, poate fi setat automat.',
+            'cookie.link': 'Detalii',
+            'cookie.accept': 'Am înțeles',
 
             'collections.badge': 'Explorează',
             'collections.title': 'Colecții',
@@ -233,6 +241,14 @@
             'contact.send': 'Send message',
 
             'footer.copyright': '© 2026 Anița Șerban. All rights reserved.',
+            'footer.privacy': 'Privacy Policy',
+
+            'meta.title.privacy': 'Privacy Policy | Anița Șerban Photography',
+            'meta.description.privacy': 'What data we collect through the contact form, what cookies we use, and how to exercise your GDPR rights.',
+
+            'cookie.notice': 'This site uses no analytics or marketing cookies. Only a strictly necessary security cookie may be set automatically.',
+            'cookie.link': 'Details',
+            'cookie.accept': 'Got it',
 
             'collections.badge': 'Explore',
             'collections.title': 'Collections',

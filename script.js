@@ -119,6 +119,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /* 3c2. Notificare cookie-uri — pur informativa, nu blocheaza nimic.
+       Site-ul nu seteaza cookie-uri de analiza/marketing, deci nu exista o
+       alegere reala de facut; aratam doar ce se intampla si un link catre
+       detalii. Odata inchisa, ramane inchisa (localStorage), pe orice pagina. */
+    const cookieNotice = document.getElementById('cookieNotice');
+    if (cookieNotice) {
+        let dismissed = false;
+        try { dismissed = localStorage.getItem('cookieNoticeDismissed') === 'true'; } catch (e) { /* mod privat */ }
+
+        if (!dismissed) {
+            cookieNotice.hidden = false;
+            // Mica intarziere, ca sa nu concureze cu intrarea heroului.
+            setTimeout(() => cookieNotice.classList.add('visible'), 1400);
+        }
+
+        const cookieAccept = document.getElementById('cookieAccept');
+        if (cookieAccept) {
+            cookieAccept.addEventListener('click', () => {
+                cookieNotice.classList.remove('visible');
+                try { localStorage.setItem('cookieNoticeDismissed', 'true'); } catch (e) { /* mod privat */ }
+                setTimeout(() => { cookieNotice.hidden = true; }, 500);
+            });
+        }
+    }
+
+    /* 3c3. Pagini de text simplu (Politica de Confidentialitate): continutul
+       lung, cu paragrafe si liste, e mai usor de intretinut ca doua blocuri
+       intregi RO/EN (nu zeci de chei data-i18n), comutate dupa limba curenta. */
+    const legalBlocks = document.querySelectorAll('.legal-lang');
+    if (legalBlocks.length && window.SiteI18n) {
+        const applyLegalLang = () => {
+            const lang = window.SiteI18n.lang;
+            legalBlocks.forEach(el => {
+                el.classList.toggle('active', el.getAttribute('data-lang') === lang);
+            });
+        };
+        applyLegalLang();
+        document.addEventListener('sitelanguagechange', applyLegalLang);
+    }
+
     /* 3d0. Un singur fetch de manifest pe pagina, refolosit de carusel si placi */
     const fetchManifest = (() => {
         let promise = null;
