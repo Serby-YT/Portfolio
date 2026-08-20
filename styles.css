@@ -142,25 +142,45 @@ h3 {
 
 .fade-in {
     opacity: 0;
-    transform: translateY(40px);
-    transition: var(--transition-smooth);
+    /* Un pic mai putina distanta + o urma de scalare = intrare mai "asezata",
+       nu un salt. Animam DOAR transform si opacity (nu 'all') ca sa fie fluid
+       chiar si pe grile mari de fotografii. */
+    transform: translateY(26px) scale(0.985);
+    transition: opacity 0.8s var(--ease-out-expo),
+                transform 1.15s var(--ease-out-expo);
+    will-change: transform, opacity;
 }
 
 .fade-in.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+}
+
+/* Odata intrat, nu mai tinem elementul pe stratul de compozitie (economie) */
+.fade-in.is-settled {
+    will-change: auto;
 }
 
 .delay-1 {
-    transition-delay: 0.15s;
+    transition-delay: 0.12s;
 }
 
 .delay-2 {
-    transition-delay: 0.3s;
+    transition-delay: 0.24s;
 }
 
 .delay-3 {
-    transition-delay: 0.45s;
+    transition-delay: 0.36s;
+}
+
+/* ==========================================================================
+   Slefuire premium a miscarii
+   ========================================================================== */
+
+/* Derulare lina la click pe ancore (nav, "vezi portofoliul" etc.).
+   Doar daca utilizatorul nu a cerut miscare redusa. */
+@media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
 }
 
 /* ==========================================================================
@@ -729,14 +749,24 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     display: block;
     opacity: 0.9;
     filter: grayscale(10%);
-    transition: var(--transition-smooth);
+    /* Transform mai lung si mai lin decat opacity/filter = zoom "greu", cinematic,
+       nu un salt. Animam explicit, nu 'all'. */
+    transition: transform 1.3s var(--ease-out-expo),
+                opacity 0.7s var(--ease-out-expo),
+                filter 0.7s var(--ease-out-expo);
     transform: scale(1);
+    backface-visibility: hidden;
 }
 
 .gallery-item:hover img {
     opacity: 1;
     filter: grayscale(0%);
-    transform: scale(1.03);
+    transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-item img,
+    .gallery-item:hover img { transition: none; transform: none; }
 }
 
 /* ==========================================================================
@@ -1837,6 +1867,17 @@ footer {
     height: 100%;
     object-fit: cover;
     display: block;
+    transform: scale(1.06);
+}
+
+/* Ken Burns lent pe fotografia hero activa — o adiere cinematica, nu un zoom
+   evident. Doar pe placa activa, ca sa nu miste imaginile ascunse degeaba. */
+.hero-slide.active img {
+    animation: zoomPan 12s var(--ease-out-expo) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide.active img { animation: none; transform: scale(1.02); }
 }
 
 /* Un strat discret de umbra ca textul sa ramana citibil pe orice fotografie */

@@ -5,31 +5,65 @@ document.addEventListener('DOMContentLoaded', () => {
     /* 2. Efectul magnetic: elementele se apropie usor de cursor la hover.
        Pe ecrane tactile nu are sens, deci il pornim doar unde exista un
        dispozitiv de indicare fin (mouse / trackpad). */
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (finePointer) {
-        document.querySelectorAll('a, .magnetic, button, .magnetic-btn').forEach(el => {
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'translate(0px, 0px)';
-            });
+    if (finePointer && !reduceMotion) {
+        /* Doar butoanele si elementele marcate explicit .magnetic — nu fiecare
+           link. Un gest intentionat citeste ca premium; totul care se misca sub
+           cursor citeste ca zgomot. Forta e mai mica, iar revenirea are o mica
+           amortizare, ca sa para "greu" / lichid, nu smucit. */
+        document.querySelectorAll('.magnetic-btn, .magnetic').forEach(el => {
+            const strength = 0.2;
+            const prev = el.style.transition;
+            el.style.transition = (prev ? prev + ', ' : '') + 'transform 0.45s var(--ease-out-expo)';
             el.addEventListener('mousemove', (e) => {
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0px, 0px)';
             });
         });
     }
 
     /* 3. Scroll & Parallax */
     const nav = document.getElementById('main-navigation');
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+    const hasPresetDelay = (el) =>
+        el.classList.contains('delay-1') || el.classList.contains('delay-2') || el.classList.contains('delay-3');
+    const observer = new IntersectionObserver((entries, obs) => {
+        // Elementele care intra in acelasi cadru primesc o mica intarziere in
+        // cascada, ca sa curga unul dupa altul (max ~0.48s), nu toate deodata.
+        const shown = entries.filter(e => e.isIntersecting);
+        shown.forEach((entry, i) => {
+            const el = entry.target;
+            if (!reduceMotion && !hasPresetDelay(el) && !el.style.transitionDelay) {
+                el.style.transitionDelay = (Math.min(i, 6) * 0.08) + 's';
+            }
+            el.classList.add('visible');
+            // Dupa ce intrarea s-a terminat, eliberam stratul de compozitie.
+            el.addEventListener('transitionend', () => el.classList.add('is-settled'), { once: true });
+            obs.unobserve(el); // o data aparut, nu-l mai urmarim
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
     window.observer = observer;
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    /* Plasa de siguranta: continutul deja vizibil la incarcare apare imediat,
+       chiar daca observer-ul intarzie prima notificare. Asa nu ramane niciodata
+       o sectiune goala sus in pagina. (Placile de galerie se adauga mai tarziu
+       si sunt gestionate tot de observer, deci nu le atingem aici.) */
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.fade-in:not(.visible)').forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.top < window.innerHeight * 0.9 && r.bottom > 0) {
+                el.classList.add('visible');
+                observer.unobserve(el);
+            }
+        });
+    });
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) nav.classList.add('scrolled');
