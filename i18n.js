@@ -35,6 +35,7 @@
             'landing.bio': 'Sunt Anița Șerban. Nu caut zâmbete perfect aranjate — caut emoția, atmosfera și detaliile pe care le vei ține minte ani întregi.',
             'landing.cta.portfolio': 'Portofoliu',
             'landing.cta.collections': 'Colecții',
+            'landing.cta.contact': 'Contact',
 
             'categories.badge': 'Portofoliu',
             'categories.title': 'De unde vrei să începi?',
@@ -155,6 +156,7 @@
             'landing.bio': "I'm Anița Șerban. I'm not after perfectly arranged smiles — I go for the emotion, the atmosphere, and the details you'll remember for years.",
             'landing.cta.portfolio': 'Portfolio',
             'landing.cta.collections': 'Collections',
+            'landing.cta.contact': 'Contact',
 
             'categories.badge': 'Portfolio',
             'categories.title': 'Where would you like to start?',

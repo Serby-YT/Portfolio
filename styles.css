@@ -1945,6 +1945,23 @@ footer {
     justify-content: flex-start;
 }
 
+/* Buton de contact, in coltul din dreapta jos al heroului */
+.landing-hero .hero-contact-btn {
+    position: absolute;
+    right: 2.6rem;
+    bottom: 2.6rem;
+    z-index: 2;
+}
+
+@media (max-width: 900px) {
+    /* Pe mobil, butoanele Portofoliu/Colecții ocupa deja toata latimea de jos —
+       un buton plutitor in colt s-ar suprapune peste ele. Contact ramane
+       accesibil din navigare. */
+    .hero-contact-btn {
+        display: none;
+    }
+}
+
 /* ==========================================================================
    Placi de categorie (fotografiile clicabile de pe landing)
    ========================================================================== */
