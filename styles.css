@@ -2323,53 +2323,6 @@ footer {
 }
 
 /* ==========================================================================
-   Indiciu de derulare in hero — arata ca mai urmeaza continut sub fotografie
-   ========================================================================== */
-.landing-hero .hero-scroll-cue {
-    position: absolute;
-    right: 2.6rem;
-    left: auto;
-    bottom: 2.6rem;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.9rem;
-    font-size: 0.6rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--on-image-dim);
-    transition: color 0.5s var(--ease-out-expo);
-}
-
-.hero-scroll-cue:hover {
-    color: var(--on-image);
-}
-
-.hero-scroll-cue .cue-line {
-    width: 1px;
-    height: 46px;
-    background: linear-gradient(to bottom, var(--on-image-dim), transparent);
-    animation: cueDrift 2.4s var(--ease-out-expo) infinite;
-    transform-origin: top;
-}
-
-@keyframes cueDrift {
-    0%   { transform: scaleY(0.35); opacity: 0.2; }
-    50%  { transform: scaleY(1);    opacity: 0.9; }
-    100% { transform: scaleY(0.35); opacity: 0.2; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-scroll-cue .cue-line { animation: none; transform: none; opacity: 0.7; }
-}
-
-@media (max-width: 900px) {
-    .hero-scroll-cue { bottom: 1.6rem; }
-    .hero-scroll-cue .cue-line { height: 32px; }
-}
-
-/* ==========================================================================
    Cursor normal de sistem: mana pe tot ce e clicabil
    ========================================================================== */
 button,
@@ -2379,8 +2332,7 @@ button,
 .theme-toggle,
 .gallery-item,
 .category-tile,
-.collection-tile,
-.hero-scroll-cue {
+.collection-tile {
     cursor: pointer;
 }
 

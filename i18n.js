@@ -38,7 +38,6 @@
 
             'categories.badge': 'Portofoliu',
             'categories.title': 'De unde vrei să începi?',
-            'landing.scroll': 'Derulează',
 
             'band.badge': 'Colecții',
             'band.title': 'Locuri, adunate pe rând.',
@@ -159,7 +158,6 @@
 
             'categories.badge': 'Portfolio',
             'categories.title': 'Where would you like to start?',
-            'landing.scroll': 'Scroll',
 
             'band.badge': 'Collections',
             'band.title': 'Places, gathered one by one.',
