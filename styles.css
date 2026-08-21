@@ -1853,10 +1853,10 @@ footer {
     min-height: 100svh; /* pe telefoane, ecranul vizibil real (fara barile browserului) */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10rem 5% 5rem;
+    align-items: flex-start;
+    justify-content: flex-end;
+    text-align: left;
+    padding: 10rem 5% 6rem;
     position: relative;
     overflow: hidden;
 }
@@ -1903,8 +1903,9 @@ footer {
 }
 
 /* Peste fotografii, textul e mereu deschis la culoare, in ambele teme */
-.landing-hero .landing-name { color: var(--on-image); }
-.landing-hero .landing-tagline { color: var(--on-image-dim); }
+.landing-hero .landing-eyebrow { color: var(--on-image-dim); }
+.landing-hero .landing-headline { color: var(--on-image); }
+.landing-hero .landing-bio { color: var(--on-image-dim); }
 .landing-hero .glass-btn {
     color: var(--on-image);
     border-color: rgba(247, 245, 241, 0.28);
@@ -1914,27 +1915,34 @@ footer {
     background: rgba(247, 245, 241, 0.16);
 }
 
-.landing-name {
-    font-family: var(--font-heading);
-    font-size: clamp(2.6rem, 6.5vw, 5.6rem);
-    line-height: 1.05;
-    letter-spacing: 0.01em;
-    margin-bottom: 1.8rem;
-}
-
-.landing-tagline {
+.landing-eyebrow {
     font-size: 0.72rem;
     letter-spacing: 5px;
     text-transform: uppercase;
-    color: var(--color-text-secondary);
-    margin-bottom: 3.5rem;
+    margin-bottom: 1.4rem;
+}
+
+.landing-headline {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    max-width: 15ch;
+    margin-bottom: 1.6rem;
+}
+
+.landing-bio {
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 46ch;
+    margin-bottom: 2.6rem;
 }
 
 .landing-cta-row {
     display: flex;
     gap: 1.2rem;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 /* ==========================================================================
@@ -2215,19 +2223,28 @@ footer {
     .landing-hero {
         min-height: 100vh;
         min-height: 100svh;
-        padding: 9rem 5% 4rem;
+        padding: 9rem 5% 5rem;
     }
 
-    .landing-tagline {
+    .landing-eyebrow {
         letter-spacing: 3px;
-        margin-bottom: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .landing-headline {
+        max-width: 100%;
+    }
+
+    .landing-bio {
+        max-width: 100%;
+        margin-bottom: 2rem;
     }
 
     .landing-cta-row {
         width: 100%;
         flex-direction: column;
         align-items: stretch;
-        padding: 0 1rem;
+        padding: 0;
     }
 
     .glass-btn {
@@ -2290,6 +2307,7 @@ footer {
 
 .rise-in.d1 { animation-delay: 0.15s; }
 .rise-in.d2 { animation-delay: 0.3s; }
+.rise-in.d3 { animation-delay: 0.45s; }
 
 @keyframes riseIn {
     from { opacity: 0; transform: translateY(28px); }
@@ -2309,9 +2327,9 @@ footer {
    ========================================================================== */
 .landing-hero .hero-scroll-cue {
     position: absolute;
-    left: 50%;
+    right: 2.6rem;
+    left: auto;
     bottom: 2.6rem;
-    transform: translateX(-50%);
     z-index: 2;
     display: flex;
     flex-direction: column;

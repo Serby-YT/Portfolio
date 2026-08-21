@@ -130,8 +130,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!dismissed) {
             cookieNotice.hidden = false;
-            // Mica intarziere, ca sa nu concureze cu intrarea heroului.
-            setTimeout(() => cookieNotice.classList.add('visible'), 1400);
+            const showNotice = () => cookieNotice.classList.add('visible');
+            const hero = document.querySelector('.landing-hero');
+            if (hero && 'IntersectionObserver' in window) {
+                // Pe pagina cu hero, textul si butoanele stau jos, exact unde ar
+                // aparea si notificarea — asteptam sa deruleze dincolo de hero
+                // (sau, oricum, dupa cateva secunde, ca sa nu ramana ascunsa
+                // la nesfarsit daca nu deruleaza deloc).
+                const heroObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].intersectionRatio < 0.6) {
+                        showNotice();
+                        heroObserver.disconnect();
+                    }
+                }, { threshold: [0, 0.6] });
+                heroObserver.observe(hero);
+                setTimeout(showNotice, 6000);
+            } else {
+                // Mica intarziere, ca sa nu concureze cu intrarea continutului.
+                setTimeout(showNotice, 1400);
+            }
         }
 
         const cookieAccept = document.getElementById('cookieAccept');
