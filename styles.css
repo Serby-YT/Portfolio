@@ -1884,17 +1884,6 @@ footer {
     height: 100%;
     object-fit: cover;
     display: block;
-    transform: scale(1.06);
-}
-
-/* Ken Burns lent pe fotografia hero activa — o adiere cinematica, nu un zoom
-   evident. Doar pe placa activa, ca sa nu miste imaginile ascunse degeaba. */
-.hero-slide.active img {
-    animation: zoomPan 12s var(--ease-out-expo) forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-slide.active img { animation: none; transform: scale(1.02); }
 }
 
 /* Un strat discret de umbra ca textul sa ramana citibil pe orice fotografie */
