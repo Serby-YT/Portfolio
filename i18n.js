@@ -30,7 +30,7 @@
 
             'nav.theme.label': 'Schimbă tema',
 
-            'landing.eyebrow': 'Fotografie de eveniment · România',
+            'landing.eyebrow': 'Anița Șerban — Fotografie de eveniment · România',
             'landing.headline': 'Momentele dintre momente.',
             'landing.bio': 'Sunt Anița Șerban. Nu caut zâmbete perfect aranjate — caut emoția, atmosfera și detaliile pe care le vei ține minte ani întregi.',
             'landing.cta.portfolio': 'Portofoliu',
@@ -151,7 +151,7 @@
 
             'nav.theme.label': 'Change theme',
 
-            'landing.eyebrow': 'Event photography · Romania',
+            'landing.eyebrow': 'Anița Șerban — Event Photography · Romania',
             'landing.headline': 'The moments between the moments.',
             'landing.bio': "I'm Anița Șerban. I'm not after perfectly arranged smiles — I go for the emotion, the atmosphere, and the details you'll remember for years.",
             'landing.cta.portfolio': 'Portfolio',
