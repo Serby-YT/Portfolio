@@ -15,6 +15,14 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+    <!-- Preincarcam fotografia curenta din hero (colectia "Hero", administrata din
+         admin) — altfel imaginea LCP astepta dupa script.js + fetch-ul manifestului
+         inainte sa inceapa macar descarcarea. Daca schimbi coperta din admin, actualizeaza
+         si linkul asta la urmatorul deploy de cod pentru acelasi beneficiu. -->
+    <link rel="preload" as="image" href="./assets/Serban_237_sm.webp"
+        imagesrcset="./assets/Serban_237_sm.webp 1000w, ./assets/Serban_237.webp 2000w"
+        imagesizes="100vw" fetchpriority="high">
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",

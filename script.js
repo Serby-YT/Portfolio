@@ -181,7 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let promise = null;
         return () => {
             if (!promise) {
-                promise = fetch(`./assets/manifest.json?v=${Date.now()}`)
+                // Bustam cache-ul o data la 5 minute, nu la fiecare incarcare de pagina —
+                // altfel browserul nu poate refolosi niciodata manifestul din cache.
+                const cacheBucket = Math.floor(Date.now() / 300000);
+                promise = fetch(`./assets/manifest.json?v=${cacheBucket}`)
                     .then(r => r.ok ? r.json() : {})
                     .catch(() => ({}));
             }
@@ -199,15 +202,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const manifest = await fetchManifest();
         const heroGallery = (manifest.galleries || []).find(g => g.name === 'Hero');
+        // Fotografiile din colectia "Hero" trec prin pipeline-ul de optimizare si
+        // au mereu o varianta "_sm" (verificat); fallback-ul static hero.webp nu are,
+        // deci ii dam srcset doar celor din manifest.
         const files = (heroGallery && heroGallery.photos && heroGallery.photos.length)
-            ? heroGallery.photos.map(f => `./assets/${f}`)
-            : ['./assets/hero.webp'];
+            ? heroGallery.photos.map(f => ({ src: `./assets/${f}`, hasSmall: true }))
+            : [{ src: './assets/hero.webp', hasSmall: false }];
 
-        const slides = files.map((src, i) => {
+        const slides = files.map(({ src, hasSmall }, i) => {
             const slide = document.createElement('div');
             slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
             const img = document.createElement('img');
             img.src = src;
+            if (hasSmall) {
+                // Varianta redusa pe mobil — la fel ca la placile de categorie,
+                // ca fotografia din hero (LCP) sa nu descarce inutil originalul.
+                img.srcset = `${src.replace(/\.webp$/, '_sm.webp')} 1000w, ${src} 2000w`;
+                img.sizes = '100vw';
+            }
             img.alt = '';
             img.loading = i === 0 ? 'eager' : 'lazy';
             if (i === 0) img.fetchPriority = 'high';
@@ -335,8 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let manifest = { sections: [], photos: [] };
         try {
-            const res = await fetch(`./assets/manifest.json?v=${Date.now()}`);
-            if (res.ok) manifest = await res.json();
+            manifest = await fetchManifest();
         } catch (e) {
             console.warn('Could not load gallery manifest:', e);
         }
