@@ -72,7 +72,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="styles.css?v=59">
+    <link rel="stylesheet" href="styles.css?v=61">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- CSS-ul de fonturi incarcat neblocant: nu opreste primul randare cat
@@ -112,8 +112,9 @@
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
-                <li><a href="index.html" class="magnetic active" aria-current="page" data-i18n="nav.home">Acasă</a></li>
+                <li data-video-hides><a href="index.html" class="magnetic" data-i18n="nav.home">Acasă</a></li>
                 <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
+                <li data-video-entry hidden><a href="video.html" class="magnetic" data-i18n="nav.video">Video</a></li>
             </ul>
             <a href="collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Colecții</a>
             <ul class="nav-links-side right">
@@ -175,7 +176,8 @@
             atmosfera și detaliile pe care le vei ține minte ani întregi.</p>
         <div class="landing-cta-row rise-in d3">
             <a href="portfolio.html" class="glass-btn magnetic" data-i18n="landing.cta.portfolio">Portofoliu</a>
-            <a href="collections.html" class="glass-btn magnetic" data-i18n="landing.cta.collections">Colecții</a>
+            <a href="collections.html" class="glass-btn magnetic" data-video-hides data-i18n="landing.cta.collections">Colecții</a>
+            <a href="video.html" class="glass-btn magnetic" data-video-entry hidden data-i18n="landing.cta.video">Video</a>
         </div>
 
         <a href="#contact" class="glass-btn magnetic hero-contact-btn rise-in d3" data-i18n="landing.cta.contact">Contact</a>
@@ -202,6 +204,19 @@
                 <p data-i18n="band.body">Seturi separate de fotografii — călătorii, natură și proiecte, fiecare cu
                     galeria ei.</p>
                 <a href="collections.html" class="glass-btn magnetic" data-i18n="band.cta">Vezi colecțiile</a>
+            </div>
+        </section>
+
+        <!-- Banda catre Video: acelasi tipar ca banda de Colectii, dar fundalul
+             e o bucla muta din showreel (cu poster ca rezerva). -->
+        <section class="collections-band video-band" data-video-entry hidden>
+            <div class="band-video" id="bandVideo" aria-hidden="true"></div>
+            <div class="band-content fade-in">
+                <div class="band-badge" data-i18n="videoband.badge">Video</div>
+                <h2 data-i18n="videoband.title">Și când cadrul se mișcă.</h2>
+                <p data-i18n="videoband.body">Filme de eveniment și proiecte personale — fiecare cu povestea,
+                    scenariul și cadrele din spate.</p>
+                <a href="video.html" class="glass-btn magnetic" data-i18n="videoband.cta">Vezi proiectele video</a>
             </div>
         </section>
 
@@ -481,8 +496,8 @@
         </div>
     </div>
 
-    <script src="./i18n.js?v=14"></script>
-    <script src="./script.js?v=44"></script>
+    <script src="./i18n.js?v=15"></script>
+    <script src="./script.js?v=46"></script>
 </body>
 
 </html>

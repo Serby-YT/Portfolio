@@ -2515,3 +2515,521 @@ button,
 button:disabled {
     cursor: default;
 }
+
+
+/* ==========================================================================
+   Pagina Video — reel, carduri de proiect, pagina de proiect
+   ========================================================================== */
+
+/* ---- Reel-ul din capul paginii ---- */
+.reel-stage {
+    position: relative;
+    height: 82vh;
+    min-height: 460px;
+    max-height: 860px;
+    margin: 0 5% 8rem;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+}
+
+.reel-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(10%) brightness(0.86);
+    transition: var(--transition-smooth);
+}
+
+.reel-stage.sound-on .reel-video {
+    filter: grayscale(0%) brightness(0.94);
+}
+
+.reel-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+            rgba(8, 9, 10, 0.68) 0%,
+            rgba(8, 9, 10, 0.34) 40%,
+            rgba(8, 9, 10, 0.14) 75%,
+            rgba(8, 9, 10, 0.20) 100%);
+    pointer-events: none;
+}
+
+.reel-content {
+    position: absolute;
+    left: 3rem;
+    right: 3rem;
+    bottom: 3rem;
+    pointer-events: none;
+}
+
+.reel-content .section-badge {
+    text-align: left;
+    color: var(--on-image-dim);
+    margin-bottom: 1rem;
+}
+
+.reel-content h1 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    line-height: 1.1;
+    color: var(--on-image);
+    margin: 0 0 0.8rem;
+}
+
+.reel-content p {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 1rem;
+    color: var(--on-image-dim);
+    max-width: 46ch;
+}
+
+/* Butonul de sunet: singura comanda peste reel, ca sa nu-l incarcam cu UI */
+.reel-sound {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--on-image);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.reel-sound:hover {
+    background: var(--glass-bg-hover);
+}
+
+.reel-sound svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Doar una dintre pictograme e vizibila, dupa starea butonului */
+.reel-sound .icon-unmuted,
+.reel-stage.sound-on .reel-sound .icon-muted {
+    display: none;
+}
+
+.reel-stage.sound-on .reel-sound .icon-unmuted {
+    display: block;
+}
+
+/* ---- Lista de proiecte ---- */
+.video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.video-card {
+    display: block;
+    text-decoration: none;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.video-card-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.video-card-poster,
+.video-card-loop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.video-card-poster {
+    opacity: 0.96;
+    filter: grayscale(10%) brightness(0.9);
+    transition: var(--transition-smooth);
+}
+
+/* Bucla sta peste poster si se stinge in el la hover — fara taietura brusca */
+.video-card-loop {
+    opacity: 0;
+    transition: opacity 0.7s var(--ease-out-expo);
+}
+
+.video-card-frame.playing .video-card-loop {
+    opacity: 1;
+}
+
+.video-card:hover .video-card-poster {
+    filter: grayscale(0%) brightness(0.92);
+    transform: scale(1.03);
+}
+
+.video-card-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+            rgba(8, 9, 10, 0.62) 0%,
+            rgba(8, 9, 10, 0.32) 40%,
+            rgba(8, 9, 10, 0.14) 75%,
+            transparent 100%);
+    pointer-events: none;
+}
+
+.video-card-label {
+    position: absolute;
+    left: 2.5rem;
+    right: 2.5rem;
+    bottom: 2.2rem;
+    pointer-events: none;
+}
+
+.video-card-name {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 2.4rem;
+    color: var(--on-image);
+    margin: 0 0 0.4rem;
+}
+
+.video-card-sub {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--on-image-dim);
+}
+
+/* ---- Pagina unui proiect ---- */
+.video-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin: -6rem 0 6rem;
+}
+
+.video-meta-line {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.video-roles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.video-role-chip {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+}
+
+/* O singura coloana ingusta: povestea se citeste, nu se scaneaza */
+.video-detail {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
+}
+
+.video-hero {
+    /* Clipul de deschidere iese din coloana — e imagine, nu text.
+       Marginile negative sunt singura metoda care tine si intr-un container
+       flex: left/transform s-ar raporta la pozitia elementului din flex, nu
+       la pagina, si clipul ar fugi in dreapta. */
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    flex-shrink: 0;
+    background: #000;
+}
+
+.video-hero video {
+    width: 100%;
+    max-height: 82vh;
+    object-fit: cover;
+    display: block;
+}
+
+.video-intro,
+.video-text {
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--color-text-primary);
+}
+
+.video-intro {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+}
+
+/* Scenariul arata a document, nu a paragraf — de asta e pus in panou */
+.video-script {
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 2rem 2.2rem;
+}
+
+.video-script-head {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    margin-bottom: 1.2rem;
+}
+
+.video-script-body {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.86rem;
+    line-height: 1.85;
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.video-clip {
+    margin: 0;
+}
+
+.video-clip video {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+    background: #000;
+}
+
+.video-clip figcaption {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    color: var(--color-text-secondary);
+    margin-top: 0.9rem;
+    text-align: center;
+}
+
+.video-stills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.video-still {
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.video-still img {
+    width: 100%;
+    display: block;
+    transition: var(--transition-smooth);
+}
+
+.video-still:hover img {
+    transform: scale(1.04);
+}
+
+/* ---- Filmul complet (YouTube, incarcat la clic) ---- */
+.video-full-head {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.video-facade {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+    cursor: pointer;
+}
+
+.video-facade img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.9;
+    transition: var(--transition-smooth);
+}
+
+.video-facade:hover img {
+    opacity: 1;
+    transform: scale(1.02);
+}
+
+.video-facade-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: var(--transition-fast);
+}
+
+/* Triunghiul de play, desenat din borduri — fara alt fisier de incarcat */
+.video-facade-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    border-style: solid;
+    border-width: 0.55rem 0 0.55rem 0.95rem;
+    border-color: transparent transparent transparent var(--on-image);
+}
+
+.video-facade:hover .video-facade-play {
+    background: var(--glass-bg-hover);
+}
+
+.video-full iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 4px;
+    display: block;
+}
+
+/* ---- Ecrane mici ---- */
+@media (max-width: 768px) {
+    .reel-stage {
+        height: 70vh;
+        min-height: 380px;
+        margin: 0 5% 5rem;
+    }
+
+    .reel-content {
+        left: 1.5rem;
+        right: 1.5rem;
+        bottom: 2rem;
+    }
+
+    .reel-sound {
+        top: 1.2rem;
+        right: 1.2rem;
+        width: 2.6rem;
+        height: 2.6rem;
+    }
+
+    .video-card-label {
+        left: 1.4rem;
+        right: 1.4rem;
+        bottom: 1.4rem;
+    }
+
+    .video-card-name {
+        font-size: 1.5rem;
+    }
+
+    .video-meta {
+        margin: -4rem 0 4rem;
+    }
+
+    .video-detail {
+        gap: 3rem;
+    }
+
+    .video-script {
+        padding: 1.4rem 1.3rem;
+    }
+
+    .video-stills {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cine a cerut mai putina miscare primeste doar postere si zero transformari */
+@media (prefers-reduced-motion: reduce) {
+
+    .video-card-loop {
+        display: none;
+    }
+
+    .video-card:hover .video-card-poster,
+    .video-still:hover img,
+    .video-facade:hover img {
+        transform: none;
+    }
+}
+
+/* ---- Banda "Video" de pe landing: acelasi tipar ca banda de Colectii,
+   dar fundalul e o bucla muta in loc de fasia de coperti. ---- */
+.band-video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.band-video video,
+.band-video img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Acelasi tratament ca la .band-photos img: fundal discret, textul din
+       panoul de sticla ramane subiectul. */
+    filter: brightness(0.6) saturate(0.85);
+}
+
+
+/* [hidden] trebuie sa invinga display-urile puse pe componente (banda Video e
+   flex, deci fara asta atributul hidden n-ar avea niciun efect asupra ei). */
+[hidden] {
+    display: none !important;
+}
