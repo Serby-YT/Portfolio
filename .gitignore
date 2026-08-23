@@ -14,3 +14,5 @@ Thumbs.db
 assets/
 *.sh
 serban-photo_old/
+log_conversie.txt
+optimizare.log
