@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
        Prima poza e deja randata static in index.html (pentru LCP — Lighthouse
        vrea elementul insusi descoperibil din HTML, nu doar un preload). Aici
        NU o recream; doar adaugam restul rotatiei peste slide-ul existent. */
-    const HERO_STATIC_FIRST = 'Serban_237.webp'; // trebuie sa coincida cu <img>-ul static din index.html
+    const HERO_STATIC_FIRST = 'Serban_270.webp'; // trebuie sa coincida cu <img>-ul static din index.html
     const loadHeroCarousel = async () => {
         const wrap = document.getElementById('heroCarousel');
         if (!wrap) return;
