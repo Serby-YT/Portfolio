@@ -22,7 +22,7 @@
         ro: {
             'meta.title.home': 'Anița Șerban Photography | Fotograf de evenimente',
             'meta.title.collections': 'Colecții | Anița Șerban Photography',
-            'meta.description.home': 'Fotograf de evenimente — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
+            'meta.description.home': 'Fotograf de evenimente și momente speciale — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
             'meta.description.collections': 'Colecții de fotografie — proiecte și călătorii, adunate pe teme.',
 
             'meta.title.portfolio': 'Portofoliu | Anița Șerban Photography',
@@ -143,7 +143,7 @@
         en: {
             'meta.title.home': 'Anița Șerban Photography | Event Photographer',
             'meta.title.collections': 'Collections | Anița Șerban Photography',
-            'meta.description.home': 'Event photographer — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
+            'meta.description.home': 'Photographing events and special moments — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
             'meta.description.collections': 'Photography collections — projects and travels, gathered by theme.',
 
             'meta.title.portfolio': 'Portfolio | Anița Șerban Photography',

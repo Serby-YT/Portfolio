@@ -1,21 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://serban-photo.com/</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/hero.webp</image:loc>
+      <image:title>Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_237.webp</image:loc>
+      <image:title>Fotografie de eveniment de Anița Șerban</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://serban-photo.com/portfolio.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_13.webp</image:loc>
+      <image:title>Evenimente — Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_229.webp</image:loc>
+      <image:title>Portrete — Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_29.webp</image:loc>
+      <image:title>Produs — Anița Șerban Photography</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://serban-photo.com/collections.html</loc>
-    <lastmod>2026-08-18</lastmod>
+    <lastmod>2026-08-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_163.webp</image:loc>
+      <image:title>Marea Britanie — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_199.webp</image:loc>
+      <image:title>Ungaria — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_204.webp</image:loc>
+      <image:title>România — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_48.webp</image:loc>
+      <image:title>Călătorii — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_64.webp</image:loc>
+      <image:title>Natură — Colecții Anița Șerban Photography</image:title>
+    </image:image>
   </url>
 </urlset>
