@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro" data-page-title-key="meta.title.collections" data-page-desc-key="meta.description.collections">
+<html lang="ro" data-page-title-key="meta.title.video" data-page-desc-key="meta.description.video">
 
 <head>
     <meta charset="UTF-8">
@@ -7,30 +7,28 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Colecții | Anița Șerban Photography</title>
+    <title>Video | Anița Șerban Photography</title>
     <meta name="description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
-    <link rel="canonical" href="https://serban-photo.com/collections.html">
+        content="Proiecte video de Anița Șerban — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.">
+    <link rel="canonical" href="https://serban-photo.com/video.html">
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <!-- Google Search cere un favicon de minim 48x48 (idealul: multiplu de 48);
-         vechiul favicon.ico avea doar 16x16, deci nu aparea niciodata in rezultate. -->
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Anița Șerban Photography">
-    <meta property="og:title" content="Colecții | Anița Șerban Photography">
+    <meta property="og:title" content="Video | Anița Șerban Photography">
     <meta property="og:description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
-    <meta property="og:url" content="https://serban-photo.com/collections.html">
+        content="Proiecte video de Anița Șerban — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.">
+    <meta property="og:url" content="https://serban-photo.com/video.html">
     <meta property="og:image" content="https://serban-photo.com/assets/Serban_163.webp">
-    <meta property="og:image:alt" content="Colecții Anița Șerban Photography">
+    <meta property="og:image:alt" content="Video Anița Șerban Photography">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Colecții | Anița Șerban Photography">
+    <meta name="twitter:title" content="Video | Anița Șerban Photography">
     <meta name="twitter:description"
-        content="Curated photo collections by Anița Șerban — trips and projects, one gallery at a time.">
+        content="Proiecte video de Anița Șerban — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.">
     <meta name="twitter:image" content="https://serban-photo.com/assets/Serban_163.webp">
 
     <script>
@@ -49,9 +47,6 @@
     <link rel="stylesheet" href="styles.css?v=60">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- CSS-ul de fonturi incarcat neblocant: nu opreste primul randare cat
-         timp asteapta raspunsul de la fonts.googleapis.com. display=swap
-         garanteaza deja ca textul apare imediat cu un font de rezerva. -->
     <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap">
     <link
@@ -66,7 +61,7 @@
 
 <body>
 
-    <!-- Lightbox -->
+    <!-- Lightbox — refolosit pentru cadrele din proiecte -->
     <div id="lightbox" class="lightbox">
         <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close" data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
         <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev" aria-label="Imaginea anterioară">&larr;</button>
@@ -84,9 +79,9 @@
         <div class="nav-links">
             <ul class="nav-links-side left">
                 <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
-                <li><a href="video.html" class="magnetic" data-i18n="nav.video">Video</a></li>
+                <li><a href="video.html" class="magnetic active" aria-current="page" data-i18n="nav.video">Video</a></li>
             </ul>
-            <a href="collections.html" class="nav-links-center magnetic active" aria-current="page" data-i18n="nav.collections">Colecții</a>
+            <a href="collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Colecții</a>
             <ul class="nav-links-side right">
                 <li><a href="index.html#parcurs" class="magnetic" data-i18n="nav.about">Despre</a></li>
                 <li><a href="index.html#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
@@ -117,25 +112,58 @@
         </div>
     </nav>
 
-    <main class="collections-page">
-        <section class="portfolio-section" id="collectionsIndexView">
-            <div class="section-intro">
-                <div class="section-badge fade-in" data-i18n="collections.badge">Explorează</div>
-                <div class="section-header fade-in delay-1">
-                    <h2 data-i18n="collections.title">Colecții</h2>
+    <main class="video-page">
+
+        <!-- INDEX: reel-ul de sus + lista de proiecte -->
+        <section class="portfolio-section" id="videoIndexView">
+
+            <!-- Reel-ul: o singura bucla muta, cu poster ca fallback.
+                 Sursele vin din manifest (videoReel), nu sunt hardcodate. -->
+            <div class="reel-stage" id="reelStage" hidden>
+                <video class="reel-video" id="reelVideo" muted loop playsinline preload="none"></video>
+                <div class="reel-scrim" aria-hidden="true"></div>
+                <div class="reel-content">
+                    <div class="section-badge" data-i18n="video.reel.badge">Showreel</div>
+                    <h1 data-i18n="video.reel.title">Imagini care se mișcă.</h1>
+                    <p data-i18n="video.reel.body">Un minut din ce am filmat anul acesta.</p>
                 </div>
+                <button type="button" class="reel-sound magnetic" id="reelSound"
+                    data-i18n-aria-label="video.reel.sound" aria-label="Pornește sunetul" aria-pressed="false">
+                    <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                        <path d="m17 9 4 6m0-6-4 6" />
+                    </svg>
+                    <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+                        <path d="M17 9a4 4 0 0 1 0 6M19.5 6.5a7.5 7.5 0 0 1 0 11" />
+                    </svg>
+                </button>
             </div>
-            <div class="collections-list" id="collectionsList"></div>
+
+            <div class="section-intro">
+                <div class="section-badge fade-in" data-i18n="video.badge">Filme</div>
+                <div class="section-header fade-in delay-1">
+                    <h2 data-i18n="video.title">Proiecte video</h2>
+                </div>
+                <div class="portfolio-tabs" id="video-tabs"></div>
+            </div>
+
+            <div class="video-list" id="videoList"></div>
         </section>
 
-        <section class="portfolio-section" id="collectionDetailView" style="display:none">
+        <!-- DETALIU: un proiect, cu povestea lui -->
+        <section class="portfolio-section" id="videoDetailView" style="display:none">
             <div class="section-intro">
-                <a href="collections.html" class="back-link magnetic" data-i18n="collections.back">&larr; Toate colecțiile</a>
+                <a href="video.html" class="back-link magnetic" data-i18n="video.back">&larr; Toate proiectele</a>
                 <div class="section-header fade-in delay-1">
-                    <h2 id="collectionTitle"></h2>
+                    <h2 id="videoTitle"></h2>
                 </div>
+                <div class="video-meta" id="videoMeta"></div>
             </div>
-            <div class="gallery-grid" id="collectionGrid"></div>
+
+            <div class="video-detail" id="videoDetail"></div>
         </section>
     </main>
 
@@ -169,7 +197,7 @@
 
     <script src="./i18n.js?v=15"></script>
     <script src="./script.js?v=45"></script>
-    <script src="./collections.js?v=7"></script>
+    <script src="./video.js?v=1"></script>
 </body>
 
 </html>

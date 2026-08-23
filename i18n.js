@@ -24,6 +24,8 @@
             'meta.title.collections': 'Colecții | Anița Șerban Photography',
             'meta.description.home': 'Fotograf de evenimente și momente speciale — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
             'meta.description.collections': 'Colecții de fotografie — proiecte și călătorii, adunate pe teme.',
+            'meta.title.video': 'Video | Anița Șerban Photography',
+            'meta.description.video': 'Proiecte video — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.',
 
             'meta.title.portfolio': 'Portofoliu | Anița Șerban Photography',
             'meta.description.portfolio': 'Portofoliul complet — evenimente, portrete, călătorii, natură și produs.',
@@ -34,6 +36,7 @@
             'landing.headline': 'Emoția, surprinsă la timp.',
             'landing.bio': 'Nu caut zâmbete perfect aranjate — caut emoția, atmosfera și detaliile pe care le vei ține minte ani întregi.',
             'landing.cta.portfolio': 'Portofoliu',
+            'landing.cta.video': 'Video',
             'landing.cta.collections': 'Colecții',
             'landing.cta.contact': 'Contact',
 
@@ -70,6 +73,7 @@
             'nav.home': 'Acasă',
             'nav.work': 'Portofoliu',
             'nav.collections': 'Colecții',
+            'nav.video': 'Video',
             'nav.about': 'Despre',
             'nav.contact': 'Contact',
             'nav.lang.label': 'Schimbă limba',
@@ -136,6 +140,27 @@
             'collections.back': '← Toate colecțiile',
             'collections.empty': 'Momentan nu este nimic aici — revino curând.',
             'collections.notfound': 'Colecția nu a fost găsită',
+
+            /* Pagina Video */
+            'video.badge': 'Filme',
+            'video.title': 'Proiecte video',
+            'video.back': '← Toate proiectele',
+            'video.empty': 'Momentan nu este niciun proiect aici — revino curând.',
+            'video.notfound': 'Proiectul nu a fost găsit',
+            'video.tab.all': 'Toate',
+            'video.script': 'Scenariu',
+            'video.full': 'Filmul complet',
+            'video.full.play': 'Pornește filmul',
+            'video.reel.badge': 'Showreel',
+            'video.reel.title': 'Imagini care se mișcă.',
+            'video.reel.body': 'Un minut din ce am filmat anul acesta.',
+            'video.reel.sound': 'Pornește sunetul',
+            'videoband.badge': 'Video',
+            'videoband.title': 'Și când cadrul se mișcă.',
+            'videoband.body': 'Filme de eveniment și proiecte personale — fiecare cu povestea, scenariul și cadrele din spate.',
+            'videoband.cta': 'Vezi proiectele video',
+            'split.photo': 'Fotografie',
+            'split.video': 'Video',
             'collections.count.one': 'fotografie',
             'collections.count.many': 'fotografii'
         },
@@ -145,6 +170,8 @@
             'meta.title.collections': 'Collections | Anița Șerban Photography',
             'meta.description.home': 'Photographing events and special moments — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
             'meta.description.collections': 'Photography collections — projects and travels, gathered by theme.',
+            'meta.title.video': 'Video | Anița Șerban Photography',
+            'meta.description.video': 'Video projects — events and personal work, each with the story behind the frames.',
 
             'meta.title.portfolio': 'Portfolio | Anița Șerban Photography',
             'meta.description.portfolio': 'The full portfolio — events, portraits, travel, nature and product.',
@@ -155,6 +182,7 @@
             'landing.headline': 'Emotion, caught in time.',
             'landing.bio': "I'm not after perfectly arranged smiles — I go for the emotion, the atmosphere, and the details you'll remember for years.",
             'landing.cta.portfolio': 'Portfolio',
+            'landing.cta.video': 'Video',
             'landing.cta.collections': 'Collections',
             'landing.cta.contact': 'Contact',
 
@@ -191,6 +219,7 @@
             'nav.home': 'Home',
             'nav.work': 'Work',
             'nav.collections': 'Collections',
+            'nav.video': 'Video',
             'nav.about': 'About',
             'nav.contact': 'Contact',
             'nav.lang.label': 'Change language',
@@ -257,6 +286,27 @@
             'collections.back': '← All collections',
             'collections.empty': 'Nothing here yet — check back soon.',
             'collections.notfound': 'Collection not found',
+
+            /* Video page */
+            'video.badge': 'Films',
+            'video.title': 'Video projects',
+            'video.back': '← All projects',
+            'video.empty': 'No projects here yet — check back soon.',
+            'video.notfound': 'Project not found',
+            'video.tab.all': 'All',
+            'video.script': 'Script',
+            'video.full': 'The full film',
+            'video.full.play': 'Play the film',
+            'video.reel.badge': 'Showreel',
+            'video.reel.title': 'Frames that move.',
+            'video.reel.body': 'A minute of what I shot this year.',
+            'video.reel.sound': 'Turn on the sound',
+            'videoband.badge': 'Video',
+            'videoband.title': 'And when the frame moves.',
+            'videoband.body': 'Event films and personal projects — each with the story, the script and the frames behind it.',
+            'videoband.cta': 'See the video projects',
+            'split.photo': 'Photography',
+            'split.video': 'Video',
             'collections.count.one': 'photo',
             'collections.count.many': 'photos'
         }
@@ -275,7 +325,15 @@
         'Ungaria': 'Hungary',
         'Italia': 'Italy',
         'Croația': 'Croatia',
-        'România': 'Romania'
+        'România': 'Romania',
+        /* Video: categorii de proiect si roluri */
+        'Proiecte': 'Projects',
+        'Regie': 'Directing',
+        'Filmare': 'Cinematography',
+        'Montaj': 'Editing',
+        'Color': 'Color grade',
+        'Sunet': 'Sound',
+        'Dronă': 'Drone'
     };
 
     function detectLang() {

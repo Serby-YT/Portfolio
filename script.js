@@ -317,6 +317,55 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     loadBandPhotos();
 
+    /* 3d3. Fundalul benzii "Video" — bucla din showreel, muta. Daca reel-ul
+       nu e definit in manifest, cadem pe coperta primului proiect video; daca
+       nici aceea nu exista, banda ramane pe fundalul simplu. */
+    const loadVideoBand = async () => {
+        const strip = document.getElementById('bandVideo');
+        if (!strip) return;
+
+        const manifest = await fetchManifest();
+        const reel = manifest.videoReel;
+        const firstProject = (manifest.videoProjects || []).find(p => p.cover);
+
+        const reduced = window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (reel && reel.file && !reduced) {
+            const v = document.createElement('video');
+            v.muted = true;
+            v.loop = true;
+            v.playsInline = true;
+            v.preload = 'none';
+            if (reel.poster) v.poster = `./assets/${reel.poster}`;
+
+            // Sursa se pune abia cand banda ajunge pe ecran — altfel bucla se
+            // descarca odata cu pagina, inaintea fotografiilor care conteaza.
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(e => {
+                    if (!e.isIntersecting) return;
+                    v.src = `./assets/${reel.file}`;
+                    v.play().catch(() => { });
+                    obs.disconnect();
+                });
+            }, { rootMargin: '200px' });
+            io.observe(strip);
+
+            strip.appendChild(v);
+            return;
+        }
+
+        const poster = (reel && reel.poster) || (firstProject && firstProject.cover);
+        if (!poster) return;
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = '';
+        img.src = `./assets/${poster}`;
+        strip.appendChild(img);
+    };
+    loadVideoBand();
+
     /* 3d. Placile de categorie de pe landing — fiecare duce in portofoliu,
        direct pe categoria ei (portfolio.html?cat=...). */
     const loadCategoryTiles = async () => {

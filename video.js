@@ -1,0 +1,411 @@
+/* Pagina Video — index (lista de proiecte) + detaliu (?p=slug).
+   Acelasi tipar ca la collections.js: un singur fisier HTML cu doua sectiuni,
+   comutate din parametrul din URL, totul citit din manifest.json. */
+document.addEventListener('DOMContentLoaded', async () => {
+    const params = new URLSearchParams(window.location.search);
+    const wantedSlug = params.get('p');
+
+    const indexView = document.getElementById('videoIndexView');
+    const detailView = document.getElementById('videoDetailView');
+
+    const T = (key) => (window.SiteI18n ? window.SiteI18n.t(key) : key);
+    const DISPLAY = (name) => (window.SiteI18n ? window.SiteI18n.dataName(name) : name);
+    const LANG = () => (window.SiteI18n ? window.SiteI18n.lang : 'ro');
+
+    /* Textele lungi (poveste, scenariu, legende) stau in manifest cu ambele
+       limbi alaturi — dictionarul din i18n.js e doar pentru sirurile de interfata. */
+    const L = (field) => {
+        if (!field) return '';
+        if (typeof field === 'string') return field;
+        return field[LANG()] || field.ro || field.en || '';
+    };
+
+    /* Utilizatorii care au cerut mai putina miscare primesc doar postere:
+       nicio bucla nu porneste singura. */
+    const REDUCED_MOTION = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let manifest = { videoProjects: [], videoReel: null };
+    try {
+        // Acelasi interval de 5 minute ca in script.js / collections.js.
+        const cacheBucket = Math.floor(Date.now() / 300000);
+        const res = await fetch(`./assets/manifest.json?v=${cacheBucket}`);
+        if (res.ok) manifest = await res.json();
+    } catch (e) {
+        console.warn('Could not load video manifest:', e);
+    }
+
+    // Un proiect fara cover n-are cu ce sa se arate in lista.
+    const projects = (manifest.videoProjects || []).filter(p => p.slug && p.cover);
+
+    /* ---- Redarea buclelor: doar ce e pe ecran ruleaza ------------------- */
+    /* Un singur observator pentru toate clipurile din pagina. Ce iese din
+       ecran se pune pe pauza — altfel zece bucle 1080p ruleaza in acelasi
+       timp si pagina incepe sa sacadeze pe telefon. */
+    const playWhenVisible = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const v = entry.target;
+            if (entry.isIntersecting) {
+                if (!REDUCED_MOTION && v.dataset.autoplay === 'true') {
+                    // play() da o promisiune respinsa daca browserul refuza
+                    // pornirea automata; posterul ramane afisat, deci e ok.
+                    v.play().catch(() => { });
+                }
+            } else {
+                v.pause();
+            }
+        });
+    }, { rootMargin: '100px', threshold: 0.25 });
+
+    /* Sursa se pune abia cand clipul e aproape de ecran: fara asta, browserul
+       incepe sa traga toate fisierele odata cu pagina. */
+    const lazyVideoSrc = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const v = entry.target;
+            if (v.dataset.src && !v.src) {
+                v.src = v.dataset.src;
+                v.load();
+            }
+            obs.unobserve(v);
+        });
+    }, { rootMargin: '300px' });
+
+    const makeVideo = (file, poster, { autoplay = true, controls = false } = {}) => {
+        const v = document.createElement('video');
+        v.muted = true;
+        v.loop = true;
+        v.playsInline = true;
+        v.preload = 'none';
+        v.controls = controls;
+        if (poster) v.poster = `./assets/${poster}`;
+        v.dataset.src = `./assets/${file}`;
+        v.dataset.autoplay = String(autoplay && !REDUCED_MOTION);
+        lazyVideoSrc.observe(v);
+        if (autoplay) playWhenVisible.observe(v);
+        return v;
+    };
+
+    /* ---- Reel-ul din capul paginii ------------------------------------- */
+    let reelReady = false;
+    function renderReel() {
+        if (reelReady) return;
+        const reel = manifest.videoReel;
+        const stage = document.getElementById('reelStage');
+        const video = document.getElementById('reelVideo');
+        const soundBtn = document.getElementById('reelSound');
+        if (!stage || !video || !reel || !reel.file) return;
+
+        reelReady = true;
+        stage.hidden = false;
+        if (reel.poster) video.poster = `./assets/${reel.poster}`;
+        video.dataset.src = `./assets/${reel.file}`;
+        video.dataset.autoplay = String(!REDUCED_MOTION);
+        lazyVideoSrc.observe(video);
+        playWhenVisible.observe(video);
+
+        soundBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            soundBtn.setAttribute('aria-pressed', String(!video.muted));
+            stage.classList.toggle('sound-on', !video.muted);
+            // Daca sunetul e pornit dintr-un clic, avem voie sa si pornim redarea.
+            if (!video.muted) video.play().catch(() => { });
+        });
+    }
+
+    /* ---- Index: lista de proiecte -------------------------------------- */
+    let activeFilter = 'All';
+
+    function renderTabs() {
+        const container = document.getElementById('video-tabs');
+        if (!container) return;
+        const kinds = [...new Set(projects.map(p => p.kind).filter(Boolean))];
+        if (!kinds.length) { container.innerHTML = ''; return; }
+
+        const tabs = ['All', ...kinds];
+        container.innerHTML = '';
+        tabs.forEach(kind => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'portfolio-tab' + (kind === activeFilter ? ' active' : '');
+            btn.textContent = kind === 'All' ? T('video.tab.all') : DISPLAY(kind);
+            btn.addEventListener('click', () => {
+                activeFilter = kind;
+                container.querySelectorAll('.portfolio-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderList();
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    function renderList() {
+        const list = document.getElementById('videoList');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const shown = activeFilter === 'All'
+            ? projects
+            : projects.filter(p => p.kind === activeFilter);
+
+        if (!shown.length) {
+            const empty = document.createElement('p');
+            empty.className = 'collections-empty';
+            empty.textContent = T('video.empty');
+            list.appendChild(empty);
+            return;
+        }
+
+        shown.forEach(p => {
+            const card = document.createElement('a');
+            card.className = 'video-card fade-in';
+            card.href = `video.html?p=${encodeURIComponent(p.slug)}`;
+
+            const frame = document.createElement('div');
+            frame.className = 'video-card-frame';
+
+            const img = document.createElement('img');
+            img.className = 'video-card-poster';
+            img.src = `./assets/${p.cover}`;
+            img.loading = 'lazy';
+            img.alt = DISPLAY(p.name);
+            frame.appendChild(img);
+
+            /* Bucla scurta sta peste poster si se stinge in el. Pe desktop
+               porneste la hover; pe telefon (unde hover nu exista) o pornim
+               cand cardul intra pe ecran. */
+            if (p.loop && !REDUCED_MOTION) {
+                const loop = makeVideo(p.loop, null, { autoplay: false });
+                loop.className = 'video-card-loop';
+                frame.appendChild(loop);
+
+                const canHover = window.matchMedia('(hover: hover)').matches;
+                if (canHover) {
+                    card.addEventListener('mouseenter', () => {
+                        if (!loop.src && loop.dataset.src) loop.src = loop.dataset.src;
+                        loop.play().catch(() => { });
+                        frame.classList.add('playing');
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        loop.pause();
+                        frame.classList.remove('playing');
+                    });
+                } else {
+                    loop.dataset.autoplay = 'true';
+                    playWhenVisible.observe(loop);
+                    frame.classList.add('playing');
+                }
+            }
+
+            const scrim = document.createElement('div');
+            scrim.className = 'video-card-scrim';
+            frame.appendChild(scrim);
+
+            const label = document.createElement('div');
+            label.className = 'video-card-label';
+
+            const name = document.createElement('h3');
+            name.className = 'video-card-name';
+            name.textContent = DISPLAY(p.name);
+            label.appendChild(name);
+
+            const sub = document.createElement('div');
+            sub.className = 'video-card-sub';
+            sub.textContent = [p.location, p.year].filter(Boolean).join(' · ');
+            label.appendChild(sub);
+
+            frame.appendChild(label);
+            card.appendChild(frame);
+            list.appendChild(card);
+            if (window.observer) window.observer.observe(card);
+        });
+    }
+
+    /* ---- Detaliu: un proiect ------------------------------------------- */
+    function renderDetail(project) {
+        const title = document.getElementById('videoTitle');
+        const meta = document.getElementById('videoMeta');
+        const body = document.getElementById('videoDetail');
+        body.innerHTML = '';
+        meta.innerHTML = '';
+
+        if (!project) {
+            title.textContent = T('video.notfound');
+            document.title = `${T('video.notfound')} | Anița Șerban Photography`;
+            return;
+        }
+
+        title.textContent = DISPLAY(project.name);
+        document.title = `${DISPLAY(project.name)} | Anița Șerban Photography`;
+
+        // Rand de context: unde, cand, si ce am facut la proiect.
+        const bits = [project.location, project.year].filter(Boolean).join(' · ');
+        if (bits) {
+            const line = document.createElement('div');
+            line.className = 'video-meta-line';
+            line.textContent = bits;
+            meta.appendChild(line);
+        }
+        if (project.role && project.role.length) {
+            const roles = document.createElement('div');
+            roles.className = 'video-roles';
+            project.role.forEach(r => {
+                const chip = document.createElement('span');
+                chip.className = 'video-role-chip';
+                chip.textContent = DISPLAY(r);
+                roles.appendChild(chip);
+            });
+            meta.appendChild(roles);
+        }
+
+        // Cadrele din proiect alimenteaza acelasi lightbox ca in restul site-ului.
+        const stillsForLightbox = [];
+        (project.blocks || []).forEach(b => {
+            if (b.type === 'stills') (b.files || []).forEach(f => stillsForLightbox.push(`./assets/${f}`));
+        });
+
+        // Clipul de deschidere: cel mai bun cadru, latime completa.
+        if (project.hero) {
+            const stage = document.createElement('div');
+            stage.className = 'video-hero fade-in';
+            stage.appendChild(makeVideo(project.hero.file, project.hero.poster));
+            body.appendChild(stage);
+            if (window.observer) window.observer.observe(stage);
+        }
+
+        // Paragraful de intrare — de ce exista filmul.
+        if (project.intro) {
+            const intro = document.createElement('p');
+            intro.className = 'video-intro fade-in';
+            intro.textContent = L(project.intro);
+            body.appendChild(intro);
+            if (window.observer) window.observer.observe(intro);
+        }
+
+        let stillIndex = 0;
+
+        (project.blocks || []).forEach(block => {
+            let el = null;
+
+            if (block.type === 'text') {
+                el = document.createElement('p');
+                el.className = 'video-text';
+                el.textContent = L(block.body);
+
+            } else if (block.type === 'script') {
+                el = document.createElement('div');
+                el.className = 'video-script';
+                const head = document.createElement('div');
+                head.className = 'video-script-head';
+                head.textContent = block.label ? L(block.label) : T('video.script');
+                const pre = document.createElement('pre');
+                pre.className = 'video-script-body';
+                pre.textContent = L(block.body);
+                el.appendChild(head);
+                el.appendChild(pre);
+
+            } else if (block.type === 'clip') {
+                el = document.createElement('figure');
+                el.className = 'video-clip';
+                el.appendChild(makeVideo(block.file, block.poster));
+                const caption = L(block.caption);
+                if (caption) {
+                    const cap = document.createElement('figcaption');
+                    cap.textContent = caption;
+                    el.appendChild(cap);
+                }
+
+            } else if (block.type === 'stills') {
+                el = document.createElement('div');
+                el.className = 'video-stills';
+                (block.files || []).forEach(file => {
+                    const myIndex = stillIndex++;
+                    const item = document.createElement('div');
+                    item.className = 'video-still hover-zoom';
+                    const img = document.createElement('img');
+                    img.loading = 'lazy';
+                    img.src = `./assets/${file}`;
+                    img.srcset = `./assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, ./assets/${file} 2000w`;
+                    img.sizes = '(max-width: 700px) 100vw, 50vw';
+                    img.alt = DISPLAY(project.name);
+                    item.appendChild(img);
+                    item.addEventListener('click', () => {
+                        if (window.SerbanLightbox) window.SerbanLightbox.open(stillsForLightbox, myIndex);
+                    });
+                    el.appendChild(item);
+                });
+            }
+
+            if (!el) return;
+            el.classList.add('fade-in');
+            body.appendChild(el);
+            if (window.observer) window.observer.observe(el);
+        });
+
+        /* Filmul intreg, daca exista — incarcat abia la clic. Pana atunci
+           YouTube nu ruleaza niciun script si nu pune niciun cookie, deci
+           pagina ramane in acord cu nota de confidentialitate. */
+        if (project.youtube) {
+            const wrap = document.createElement('div');
+            wrap.className = 'video-full fade-in';
+
+            const head = document.createElement('div');
+            head.className = 'video-full-head';
+            head.textContent = T('video.full');
+            wrap.appendChild(head);
+
+            const facade = document.createElement('button');
+            facade.type = 'button';
+            facade.className = 'video-facade magnetic';
+            facade.setAttribute('aria-label', T('video.full.play'));
+
+            const thumb = document.createElement('img');
+            thumb.loading = 'lazy';
+            thumb.alt = '';
+            thumb.src = project.youtubePoster
+                ? `./assets/${project.youtubePoster}`
+                : `https://i.ytimg.com/vi/${project.youtube}/maxresdefault.jpg`;
+            facade.appendChild(thumb);
+
+            const play = document.createElement('span');
+            play.className = 'video-facade-play';
+            play.setAttribute('aria-hidden', 'true');
+            facade.appendChild(play);
+
+            facade.addEventListener('click', () => {
+                const iframe = document.createElement('iframe');
+                // youtube-nocookie + autoplay: nimic nu se incarca inainte de clic.
+                iframe.src = `https://www.youtube-nocookie.com/embed/${project.youtube}?autoplay=1&rel=0`;
+                iframe.title = DISPLAY(project.name);
+                iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+                iframe.allowFullscreen = true;
+                iframe.loading = 'lazy';
+                facade.replaceWith(iframe);
+            });
+
+            wrap.appendChild(facade);
+            body.appendChild(wrap);
+            if (window.observer) window.observer.observe(wrap);
+        }
+    }
+
+    /* ---- Comutarea intre vederi + reactia la schimbarea limbii ---------- */
+    const current = () => projects.find(p => p.slug === wantedSlug);
+
+    function render() {
+        if (wantedSlug) {
+            indexView.style.display = 'none';
+            detailView.style.display = '';
+            renderDetail(current());
+        } else {
+            indexView.style.display = '';
+            detailView.style.display = 'none';
+            renderReel();
+            renderTabs();
+            renderList();
+        }
+    }
+
+    document.addEventListener('sitelanguagechange', render);
+    render();
+});
