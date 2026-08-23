@@ -5,9 +5,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const indexView = document.getElementById('collectionsIndexView');
     const detailView = document.getElementById('collectionDetailView');
 
+    let lastGalleryCount = 0;
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const grid = document.getElementById('collectionGrid');
+            if (grid) applyGalleryCols(grid, lastGalleryCount);
+        }, 200);
+    });
+
     let manifest = { galleries: [], photos: [] };
     try {
-        const res = await fetch(`./assets/manifest.json?v=${Date.now()}`);
+        // Bustam cache-ul o data la 5 minute, nu la fiecare incarcare — la fel
+        // ca in script.js / fetchManifest.
+        const cacheBucket = Math.floor(Date.now() / 300000);
+        const res = await fetch(`./assets/manifest.json?v=${cacheBucket}`);
         if (res.ok) manifest = await res.json();
     } catch (e) {
         console.warn('Could not load collections manifest:', e);
@@ -98,14 +111,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         title.textContent = DISPLAY(gallery.name);
         document.title = `${DISPLAY(gallery.name)} | Anița Șerban Photography`;
 
-        // Cu putine poze, coloanele cu latime fixa (320px) las gol vizibil
-        // pe ecrane late — vezi acelasi fix in script.js / renderGrid.
-        const n = gallery.photos.length;
-        if (n > 0 && n <= 12) {
-            grid.style.setProperty('--gallery-cols', n <= 2 ? n : n <= 6 ? 3 : 4);
-        } else {
-            grid.style.removeProperty('--gallery-cols');
-        }
+        // Coloane explicite pentru orice galerie — vezi applyGalleryCols in script.js
+        // (incarcat inaintea acestui fisier, deci functia e deja pe window).
+        lastGalleryCount = gallery.photos.length;
+        applyGalleryCols(grid, lastGalleryCount);
 
         const images = gallery.photos.map(file => `./assets/${file}`);
 

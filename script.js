@@ -176,6 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('sitelanguagechange', applyLegalLang);
     }
 
+    /* Coloane explicite pentru orice galerie de fotografii (portofoliu SI
+       colectii) — nu doar cele mici. Multicol cu o latime-hint (320px) lasa
+       browserul sa aleaga cate coloane foloseste, iar balance-ul CSS poate
+       alege mai putine decat ar incape, lasand gol vizibil pe ecrane late.
+       Calculam explicit cate coloane de ~320px incap in latimea reala a
+       containerului, fara sa depasim numarul de poze (ar rezulta coloane goale). */
+    window.applyGalleryCols = (container, count) => {
+        if (!count) { container.style.removeProperty('--gallery-cols'); return; }
+        const width = container.getBoundingClientRect().width || window.innerWidth;
+        const targetCols = Math.max(1, Math.round(width / 320));
+        container.style.setProperty('--gallery-cols', Math.min(targetCols, count));
+    };
+
     /* 3d0. Un singur fetch de manifest pe pagina, refolosit de carusel si placi */
     const fetchManifest = (() => {
         let promise = null;
@@ -373,6 +386,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const wantedCat = new URLSearchParams(window.location.search).get('cat');
         let activeFilter = (wantedCat && sections.includes(wantedCat)) ? wantedCat : 'All';
 
+        let lastCount = 0;
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            // Doar recalculam numarul de coloane (nu reconstruim imaginile) —
+            // usor, ca sa ramana corect si daca utilizatorul roteste telefonul
+            // sau redimensioneaza fereastra.
+            resizeTimer = setTimeout(() => applyGalleryCols(container, lastCount), 200);
+        });
+
         const renderGrid = () => {
             container.innerHTML = '';
             galleryImages = [];
@@ -380,16 +403,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? photos.filter(p => !(!p.section && filesInGalleries.has(p.file)))
                 : photos.filter(p => p.section === activeFilter);
 
-            // Cu putine poze, coloanele cu latime fixa (320px) las gol vizibil
-            // pe ecrane late — balance-ul CSS alege mai putine coloane decat
-            // ar incape. Sub un anumit numar, fortam un numar explicit de
-            // coloane, care ocupa mereu toata latimea disponibila.
-            const n = filtered.length;
-            if (n > 0 && n <= 12) {
-                container.style.setProperty('--gallery-cols', n <= 2 ? n : n <= 6 ? 3 : 4);
-            } else {
-                container.style.removeProperty('--gallery-cols');
-            }
+            lastCount = filtered.length;
+            applyGalleryCols(container, lastCount);
 
             filtered.forEach((p, i) => {
                 const largeSrc = `./assets/${p.file}`;
