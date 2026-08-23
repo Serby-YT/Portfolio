@@ -213,9 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
        "Hero" nu apare public in pagina de Colectii — e doar sursa caruselului.
        Daca e goala, ramane fotografia clasica hero.webp.
        Prima poza e deja randata static in index.html (pentru LCP — Lighthouse
-       vrea elementul insusi descoperibil din HTML, nu doar un preload). Aici
-       NU o recream; doar adaugam restul rotatiei peste slide-ul existent. */
-    const HERO_STATIC_FIRST = 'Serban_270.webp'; // trebuie sa coincida cu <img>-ul static din index.html
+       vrea elementul insusi descoperibil din HTML, nu doar un preload), plus
+       un onerror inline care sare pe hero.webp instant daca fisierul lipseste.
+       Aici NU o recream — dar o SINCRONIZAM mereu cu manifestul real: daca
+       poza randata static a fost stearsa/schimbata din admin intre timp (nu
+       mai coincide cu prima poza din colectia Hero, sau pur si simplu nu s-a
+       incarcat), ii inlocuim src/srcset cu poza corecta, curenta. Asa nu mai
+       trebuie sa tinem manual un nume de fisier sincronizat intre cod si admin. */
     const loadHeroCarousel = async () => {
         const wrap = document.getElementById('heroCarousel');
         if (!wrap) return;
@@ -231,11 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const existingSlide = wrap.querySelector('.hero-slide');
         const slides = existingSlide ? [existingSlide] : [];
-        // Daca primul fisier din manifest e chiar cel randat static, il sarim —
-        // altfel (coperta a fost schimbata din admin de la ultimul deploy de cod)
-        // adaugam tot setul, iar slide-ul static devine pur si simplu un cadru
-        // in plus la inceputul rotatiei, fara sa rupa nimic.
-        const startIndex = (existingSlide && files[0] && files[0].src.endsWith(HERO_STATIC_FIRST)) ? 1 : 0;
+        let startIndex = 0;
+
+        if (existingSlide && files[0]) {
+            const img = existingSlide.querySelector('img');
+            const wantsFirst = files[0];
+            const isStale = img && img.getAttribute('src') !== wantsFirst.src;
+            const failedToLoad = img && img.complete && img.naturalWidth === 0;
+            if (img && (isStale || failedToLoad)) {
+                img.src = wantsFirst.src;
+                if (wantsFirst.hasSmall) {
+                    img.srcset = `${wantsFirst.src.replace(/\.webp$/, '_sm.webp')} 1000w, ${wantsFirst.src} 2000w`;
+                    img.sizes = '100vw';
+                } else {
+                    img.removeAttribute('srcset');
+                    img.removeAttribute('sizes');
+                }
+            }
+            startIndex = 1; // primul fisier e mereu acoperit de slide-ul static, corectat sau nu
+        }
 
         for (let i = startIndex; i < files.length; i++) {
             const { src, hasSmall } = files[i];
