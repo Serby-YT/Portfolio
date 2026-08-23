@@ -195,7 +195,11 @@ document.addEventListener('DOMContentLoaded', () => {
     /* 3d1. Caruselul de pe landing: fotografiile din colectia "Hero" (gestionata
        din admin) se rotesc pe tot ecranul, cate una la ~5 secunde. Colectia
        "Hero" nu apare public in pagina de Colectii — e doar sursa caruselului.
-       Daca e goala, ramane fotografia clasica hero.webp. */
+       Daca e goala, ramane fotografia clasica hero.webp.
+       Prima poza e deja randata static in index.html (pentru LCP — Lighthouse
+       vrea elementul insusi descoperibil din HTML, nu doar un preload). Aici
+       NU o recream; doar adaugam restul rotatiei peste slide-ul existent. */
+    const HERO_STATIC_FIRST = 'Serban_237.webp'; // trebuie sa coincida cu <img>-ul static din index.html
     const loadHeroCarousel = async () => {
         const wrap = document.getElementById('heroCarousel');
         if (!wrap) return;
@@ -209,9 +213,18 @@ document.addEventListener('DOMContentLoaded', () => {
             ? heroGallery.photos.map(f => ({ src: `./assets/${f}`, hasSmall: true }))
             : [{ src: './assets/hero.webp', hasSmall: false }];
 
-        const slides = files.map(({ src, hasSmall }, i) => {
+        const existingSlide = wrap.querySelector('.hero-slide');
+        const slides = existingSlide ? [existingSlide] : [];
+        // Daca primul fisier din manifest e chiar cel randat static, il sarim —
+        // altfel (coperta a fost schimbata din admin de la ultimul deploy de cod)
+        // adaugam tot setul, iar slide-ul static devine pur si simplu un cadru
+        // in plus la inceputul rotatiei, fara sa rupa nimic.
+        const startIndex = (existingSlide && files[0] && files[0].src.endsWith(HERO_STATIC_FIRST)) ? 1 : 0;
+
+        for (let i = startIndex; i < files.length; i++) {
+            const { src, hasSmall } = files[i];
             const slide = document.createElement('div');
-            slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
+            slide.className = 'hero-slide';
             const img = document.createElement('img');
             img.src = src;
             if (hasSmall) {
@@ -221,12 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.sizes = '100vw';
             }
             img.alt = '';
-            img.loading = i === 0 ? 'eager' : 'lazy';
-            if (i === 0) img.fetchPriority = 'high';
+            img.loading = 'lazy';
             slide.appendChild(img);
             wrap.appendChild(slide);
-            return slide;
-        });
+            slides.push(slide);
+        }
 
         // Cu reduced-motion activat sau o singura fotografie, nu rotim
         const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

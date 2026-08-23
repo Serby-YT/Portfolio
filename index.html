@@ -18,14 +18,6 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-    <!-- Preincarcam fotografia curenta din hero (colectia "Hero", administrata din
-         admin) — altfel imaginea LCP astepta dupa script.js + fetch-ul manifestului
-         inainte sa inceapa macar descarcarea. Daca schimbi coperta din admin, actualizeaza
-         si linkul asta la urmatorul deploy de cod pentru acelasi beneficiu. -->
-    <link rel="preload" as="image" href="./assets/Serban_237_sm.webp"
-        imagesrcset="./assets/Serban_237_sm.webp 1000w, ./assets/Serban_237.webp 2000w"
-        imagesizes="100vw" fetchpriority="high">
-
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -157,7 +149,19 @@
     <header id="home" class="landing-hero">
         <!-- Fotografiile care se rotesc vin din colectia "Hero" (administrabila
              din panoul de admin); daca e goala, ramane fotografia clasica hero.webp -->
-        <div class="hero-carousel" id="heroCarousel" aria-hidden="true"></div>
+        <!-- Prima poza randata static (nu din JS), ca Lighthouse/browserul sa o
+             descopere direct din HTML — nu doar dintr-un preload, ci elementul
+             insusi. JS-ul din script.js prelueste acest slide ca a lui #0 si
+             adauga restul rotatiei peste el, fara sa-l recreeze. Daca schimbi
+             coperta din admin, actualizeaza si fisierul asta la urmatorul deploy. -->
+        <div class="hero-carousel" id="heroCarousel" aria-hidden="true">
+            <div class="hero-slide active">
+                <img src="./assets/Serban_237.webp"
+                    srcset="./assets/Serban_237_sm.webp 1000w, ./assets/Serban_237.webp 2000w"
+                    sizes="100vw" width="2000" height="1334" alt=""
+                    loading="eager" fetchpriority="high">
+            </div>
+        </div>
         <div class="hero-scrim"></div>
 
         <h1 class="landing-eyebrow rise-in" data-i18n="landing.eyebrow">Anița Șerban — Fotografie de eveniment · România</h1>
