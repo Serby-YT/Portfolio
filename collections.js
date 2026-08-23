@@ -98,6 +98,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         title.textContent = DISPLAY(gallery.name);
         document.title = `${DISPLAY(gallery.name)} | Anița Șerban Photography`;
 
+        // Cu putine poze, coloanele cu latime fixa (320px) las gol vizibil
+        // pe ecrane late — vezi acelasi fix in script.js / renderGrid.
+        const n = gallery.photos.length;
+        if (n > 0 && n <= 12) {
+            grid.style.setProperty('--gallery-cols', n <= 2 ? n : n <= 6 ? 3 : 4);
+        } else {
+            grid.style.removeProperty('--gallery-cols');
+        }
+
         const images = gallery.photos.map(file => `./assets/${file}`);
 
         gallery.photos.forEach((file, i) => {

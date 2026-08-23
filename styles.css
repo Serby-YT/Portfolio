@@ -722,7 +722,11 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
 }
 
 .gallery-grid {
-    columns: 320px;
+    /* Implicit: latime fixa pe coloana (320px), browserul decide cate incap.
+       Cu putine poze, --gallery-cols e setat din JS la un numar EXPLICIT de
+       coloane — spre deosebire de o latime-hint, un numar explicit ocupa
+       mereu toata latimea containerului, deci nu mai ramane gol in dreapta. */
+    columns: var(--gallery-cols, 320px);
     column-gap: 6px;
     width: 100%;
     margin: 0;

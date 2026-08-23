@@ -380,6 +380,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? photos.filter(p => !(!p.section && filesInGalleries.has(p.file)))
                 : photos.filter(p => p.section === activeFilter);
 
+            // Cu putine poze, coloanele cu latime fixa (320px) las gol vizibil
+            // pe ecrane late — balance-ul CSS alege mai putine coloane decat
+            // ar incape. Sub un anumit numar, fortam un numar explicit de
+            // coloane, care ocupa mereu toata latimea disponibila.
+            const n = filtered.length;
+            if (n > 0 && n <= 12) {
+                container.style.setProperty('--gallery-cols', n <= 2 ? n : n <= 6 ? 3 : 4);
+            } else {
+                container.style.removeProperty('--gallery-cols');
+            }
+
             filtered.forEach((p, i) => {
                 const largeSrc = `./assets/${p.file}`;
                 const smallSrc = `./assets/${p.file.replace(/\.webp$/, '_sm.webp')}`;
