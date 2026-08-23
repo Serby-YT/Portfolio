@@ -366,6 +366,30 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     loadVideoBand();
 
+    /* 3d4. Punctele de intrare spre Video (link in nav, buton in hero, banda)
+       stau ascunse pana cand manifestul chiar are un proiect video. Asa putem
+       urca codul pe site inainte sa existe filmari, fara ca vizitatorul sa dea
+       peste o pagina goala. Cand apare primul proiect, "Acasa" se retrage din
+       nav ca sa ramana doua linkuri pe fiecare parte. */
+    const gateVideoEntryPoints = async () => {
+        const entries = document.querySelectorAll('[data-video-entry]');
+        if (!entries.length) return;
+
+        let hasVideo = false;
+        try {
+            const manifest = await fetchManifest();
+            hasVideo = (manifest.videoProjects || []).some(p => p && p.slug && p.cover);
+        } catch (e) {
+            // Fara manifest lasam totul ascuns — starea sigura e site-ul de azi.
+            return;
+        }
+        if (!hasVideo) return;
+
+        entries.forEach(el => el.removeAttribute('hidden'));
+        document.querySelectorAll('[data-video-hides]').forEach(el => el.setAttribute('hidden', ''));
+    };
+    gateVideoEntryPoints();
+
     /* 3d. Placile de categorie de pe landing — fiecare duce in portofoliu,
        direct pe categoria ei (portfolio.html?cat=...). */
     const loadCategoryTiles = async () => {

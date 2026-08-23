@@ -3026,3 +3026,10 @@ button:disabled {
        panoul de sticla ramane subiectul. */
     filter: brightness(0.6) saturate(0.85);
 }
+
+
+/* [hidden] trebuie sa invinga display-urile puse pe componente (banda Video e
+   flex, deci fara asta atributul hidden n-ar avea niciun efect asupra ei). */
+[hidden] {
+    display: none !important;
+}
