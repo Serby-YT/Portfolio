@@ -180,12 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
        colectii) — nu doar cele mici. Multicol cu o latime-hint (320px) lasa
        browserul sa aleaga cate coloane foloseste, iar balance-ul CSS poate
        alege mai putine decat ar incape, lasand gol vizibil pe ecrane late.
-       Calculam explicit cate coloane de ~320px incap in latimea reala a
-       containerului, fara sa depasim numarul de poze (ar rezulta coloane goale). */
+       Calculam explicit cate coloane incap in latimea reala a containerului —
+       dar plafonate la MAX_COLS, ca pe monitoare foarte late sa nu ajunga la
+       10+ coloane inguste (fotografiile deveneau minuscule). Peste plafon,
+       poze in plus inseamna mai multe RANDURI, nu coloane mai inguste. */
+    const MAX_GALLERY_COLS = 4;
     window.applyGalleryCols = (container, count) => {
         if (!count) { container.style.removeProperty('--gallery-cols'); return; }
         const width = container.getBoundingClientRect().width || window.innerWidth;
-        const targetCols = Math.max(1, Math.round(width / 320));
+        const targetCols = Math.max(1, Math.min(MAX_GALLERY_COLS, Math.round(width / 320)));
         container.style.setProperty('--gallery-cols', Math.min(targetCols, count));
     };
 
