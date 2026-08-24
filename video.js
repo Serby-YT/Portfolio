@@ -317,7 +317,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             } else if (block.type === 'stills') {
                 el = document.createElement('div');
-                el.className = 'video-stills';
+                // Un singur cadru ocupa tot randul; doua stau alaturi.
+                el.className = 'video-stills' + ((block.files || []).length === 1 ? ' single' : '');
                 (block.files || []).forEach(file => {
                     const myIndex = stillIndex++;
                     const item = document.createElement('div');
