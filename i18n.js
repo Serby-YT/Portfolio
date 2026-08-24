@@ -333,7 +333,8 @@
         'Montaj': 'Editing',
         'Color': 'Color grade',
         'Sunet': 'Sound',
-        'Dronă': 'Drone'
+        'Dronă': 'Drone',
+        'Tehnic': 'Technical'
     };
 
     function detectLang() {
