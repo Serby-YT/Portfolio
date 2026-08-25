@@ -222,6 +222,63 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /* ---- Detaliu: un proiect ------------------------------------------- */
+    /* ---------------------------------------------------------------
+       SEO pentru vizualizarea de proiect.
+       Proiectele traiesc pe video.html?p=<slug> si sunt in sitemap, dar
+       canonical-ul din HTML arata mereu spre video.html — adica ii spunea
+       lui Google sa NU indexeze paginile de proiect. Le rescriem la runtime,
+       impreuna cu og: si cu un VideoObject construit din manifest.
+       --------------------------------------------------------------- */
+    const SITE = 'https://serban-photo.com';
+
+    function setMeta(selector, attr, value) {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute(attr, value);
+    }
+
+    function setCanonical(url) {
+        let link = document.querySelector('link[rel="canonical"]');
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'canonical';
+            document.head.appendChild(link);
+        }
+        link.href = url;
+        setMeta('meta[property="og:url"]', 'content', url);
+    }
+
+    function setVideoSchema(project) {
+        const old = document.getElementById('videoSchema');
+        if (old) old.remove();
+        if (!project) return;
+
+        const url = `${SITE}/video.html?p=${project.slug}`;
+        const poster = (project.hero && project.hero.poster) || project.cover;
+        const intro = project.intro && (project.intro[LANG()] || project.intro.ro);
+
+        const node = {
+            '@context': 'https://schema.org',
+            '@type': 'VideoObject',
+            name: DISPLAY(project.name),
+            url: url,
+            inLanguage: LANG() === 'en' ? 'en' : 'ro-RO',
+            creator: { '@id': `${SITE}/#anita` },
+            publisher: { '@id': `${SITE}/#business` }
+        };
+        if (intro) node.description = intro;
+        if (poster) node.thumbnailUrl = `${SITE}/assets/${poster}`;
+        if (project.year) node.uploadDate = `${project.year}-01-01`;
+        if (project.location) node.contentLocation = { '@type': 'Place', name: project.location };
+        if (project.youtube) node.embedUrl = `https://www.youtube.com/embed/${project.youtube}`;
+        else if (project.hero && project.hero.file) node.contentUrl = `${SITE}/assets/${project.hero.file}`;
+
+        const tag = document.createElement('script');
+        tag.type = 'application/ld+json';
+        tag.id = 'videoSchema';
+        tag.textContent = JSON.stringify(node);
+        document.head.appendChild(tag);
+    }
+
     function renderDetail(project) {
         const title = document.getElementById('videoTitle');
         const meta = document.getElementById('videoMeta');
@@ -232,11 +289,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!project) {
             title.textContent = T('video.notfound');
             document.title = `${T('video.notfound')} | Anița Șerban Photography`;
+            setVideoSchema(null);
+            let robots = document.querySelector('meta[name="robots"]');
+            if (!robots) {
+                robots = document.createElement('meta');
+                robots.name = 'robots';
+                document.head.appendChild(robots);
+            }
+            robots.content = 'noindex, follow';
             return;
         }
 
         title.textContent = DISPLAY(project.name);
         document.title = `${DISPLAY(project.name)} | Anița Șerban Photography`;
+        setCanonical(`${SITE}/video.html?p=${project.slug}`);
+        setMeta('meta[property="og:title"]', 'content', `${DISPLAY(project.name)} | Anița Șerban Photography`);
+        const ogImg = (project.hero && project.hero.poster) || project.cover;
+        if (ogImg) setMeta('meta[property="og:image"]', 'content', `${SITE}/assets/${ogImg}`);
+        setVideoSchema(project);
 
         // Rand de context: unde, cand, si ce am facut la proiect.
         const bits = [project.location, project.year].filter(Boolean).join(' · ');
@@ -401,6 +471,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             indexView.style.display = '';
             detailView.style.display = 'none';
+            setCanonical(`${SITE}/video.html`);
+            setVideoSchema(null);
             renderReel();
             renderTabs();
             renderList();

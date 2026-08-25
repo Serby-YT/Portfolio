@@ -23,12 +23,12 @@
             'meta.title.home': 'Anița Șerban Photography | Fotograf de evenimente',
             'meta.title.collections': 'Colecții | Anița Șerban Photography',
             'meta.description.home': 'Fotograf de evenimente și momente speciale — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
-            'meta.description.collections': 'Colecții de fotografie — proiecte și călătorii, adunate pe teme.',
+            'meta.description.collections': 'Colecții de fotografie semnate de Anița Șerban — călătorii, natură și proiecte personale din România, Ungaria și Marea Britanie.',
             'meta.title.video': 'Video | Anița Șerban Photography',
-            'meta.description.video': 'Proiecte video — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.',
+            'meta.description.video': 'Proiecte video de Anița Șerban — filmări de eveniment și proiecte personale, fiecare cu povestea din spatele cadrelor.',
 
             'meta.title.portfolio': 'Portofoliu | Anița Șerban Photography',
-            'meta.description.portfolio': 'Portofoliul complet — evenimente, portrete, călătorii, natură și produs.',
+            'meta.description.portfolio': 'Portofoliu de fotografie: evenimente, portrete, călătorii, natură și produs. Lucrări selectate de Anița Șerban, fotograf de eveniment în România.',
 
             'nav.theme.label': 'Schimbă tema',
 
@@ -169,12 +169,12 @@
             'meta.title.home': 'Anița Șerban Photography | Event Photographer',
             'meta.title.collections': 'Collections | Anița Șerban Photography',
             'meta.description.home': 'Photographing events and special moments — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
-            'meta.description.collections': 'Photography collections — projects and travels, gathered by theme.',
+            'meta.description.collections': 'Photography collections by Anița Șerban — travel, nature and personal projects from Romania, Hungary and the United Kingdom.',
             'meta.title.video': 'Video | Anița Șerban Photography',
-            'meta.description.video': 'Video projects — events and personal work, each with the story behind the frames.',
+            'meta.description.video': 'Video projects by Anița Șerban — event films and personal work, each with the story behind the frames.',
 
             'meta.title.portfolio': 'Portfolio | Anița Șerban Photography',
-            'meta.description.portfolio': 'The full portfolio — events, portraits, travel, nature and product.',
+            'meta.description.portfolio': 'Photography portfolio: events, portraits, travel, nature and product. Selected work by Anița Șerban, event photographer in Romania.',
 
             'nav.theme.label': 'Change theme',
 
@@ -342,15 +342,10 @@
         try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { saved = null; }
         if (SUPPORTED.indexOf(saved) !== -1) return saved;
 
-        // fara alegere salvata -> ne luam dupa preferinta de limba a browserului
-        var prefs = navigator.languages && navigator.languages.length
-            ? navigator.languages
-            : [navigator.language || navigator.userLanguage || ''];
-        for (var i = 0; i < prefs.length; i++) {
-            var code = String(prefs[i]).toLowerCase();
-            if (code.indexOf('ro') === 0) return 'ro';
-            if (code.indexOf('en') === 0) return 'en';
-        }
+        // Fara alegere salvata -> ramanem pe limba din HTML-ul servit (ro).
+        // NU ne luam dupa navigator.languages: Googlebot randeaza cu locale
+        // en-US, deci detectia automata ii servea pagina in engleza, peste
+        // titlul si descrierea in romana. Comutatorul EN ramane pentru oameni.
         return DEFAULT_LANG;
     }
 

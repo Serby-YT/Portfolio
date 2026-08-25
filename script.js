@@ -517,6 +517,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const img = document.createElement('img');
                 img.loading = 'lazy';
+                img.decoding = 'async';
+                // Dimensiunile intrinseci exista deja in manifest — fara ele
+                // browserul nu stie cat loc sa rezerve si layout-ul sare (CLS).
+                if (p.w && p.h) { img.width = p.w; img.height = p.h; }
                 img.src = largeSrc;
                 img.srcset = `${smallSrc} 1000w, ${largeSrc} 2000w`;
                 img.sizes = '(max-width: 600px) 100vw, (max-width: 1000px) 50vw, (max-width: 1600px) 33vw, 25vw';

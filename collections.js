@@ -132,6 +132,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const img = document.createElement('img');
             img.loading = 'lazy';
+            img.decoding = 'async';
+            if (photoData.w && photoData.h) { img.width = photoData.w; img.height = photoData.h; }
             img.src = largeSrc;
             img.srcset = `${smallSrc} 1000w, ${largeSrc} 2000w`;
             img.sizes = '(max-width: 600px) 100vw, (max-width: 1000px) 50vw, (max-width: 1600px) 33vw, 25vw';
