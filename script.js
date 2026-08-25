@@ -16,15 +16,49 @@ document.addEventListener('DOMContentLoaded', () => {
             const strength = 0.2;
             const prev = el.style.transition;
             el.style.transition = (prev ? prev + ', ' : '') + 'transform 0.45s var(--ease-out-expo)';
+
+            /* Masuram geometria O SINGURA DATA, la intrarea cursorului.
+               getBoundingClientRect() in mousemove forteaza layout sincron la
+               fiecare eveniment (de zeci de ori pe secunda) — degeaba, pentru
+               ca dreptunghiul nu se schimba cat timp cursorul e inauntru. */
+            let rect = null;
+            let frame = 0;
+            let pendingX = 0;
+            let pendingY = 0;
+
+            const apply = () => {
+                frame = 0;
+                el.style.transform = `translate(${pendingX}px, ${pendingY}px)`;
+            };
+
+            el.addEventListener('mouseenter', () => {
+                rect = el.getBoundingClientRect();
+            });
+
             el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
+                if (!rect) rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
+                pendingX = x * strength;
+                pendingY = y * strength;
+                /* Un singur write pe cadru: evenimentele intermediare nu se
+                   vad oricum. */
+                if (!frame) frame = requestAnimationFrame(apply);
             });
+
             el.addEventListener('mouseleave', () => {
+                if (frame) {
+                    cancelAnimationFrame(frame);
+                    frame = 0;
+                }
+                rect = null;
                 el.style.transform = 'translate(0px, 0px)';
             });
+
+            /* Daca pagina se deruleaza sau se redimensioneaza, geometria
+               memorata nu mai e valabila — o recalculam la urmatorul mousemove. */
+            window.addEventListener('scroll', () => { rect = null; }, { passive: true });
+            window.addEventListener('resize', () => { rect = null; });
         });
     }
 
@@ -42,8 +76,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 el.style.transitionDelay = (Math.min(i, 6) * 0.08) + 's';
             }
             el.classList.add('visible');
-            // Dupa ce intrarea s-a terminat, eliberam stratul de compozitie.
-            el.addEventListener('transitionend', () => el.classList.add('is-settled'), { once: true });
+            /* Dupa ce intrarea s-a terminat, eliberam stratul de compozitie.
+               transitionend se declanseaza o data pentru FIECARE proprietate:
+               opacity termina la 0.8s, transform abia la 1.15s. Daca eliberam
+               la primul eveniment, scoatem elementul de pe stratul de
+               compozitie in timp ce inca se misca. */
+            if (reduceMotion) {
+                // Fara transform de asteptat: eliberam imediat.
+                el.classList.add('is-settled');
+            } else {
+                const settle = (e) => {
+                    /* transitionend urca din copii: o placa .fade-in contine o
+                       imagine cu propria tranzitie de transform (1.3s la hover).
+                       Fara verificarea asta, un hover devreme ar "aseza"
+                       elementul inainte sa-si termine intrarea. */
+                    if (e.target !== el) return;
+                    if (e.propertyName !== 'transform') return;
+                    el.classList.add('is-settled');
+                    el.removeEventListener('transitionend', settle);
+                };
+                el.addEventListener('transitionend', settle);
+                /* Plasa de siguranta: daca transitionend nu ajunge niciodata
+                   (element ascuns, tranzitie anulata), eliberam oricum dupa
+                   durata maxima (1.15s) + intarzierea din cascada (~0.48s). */
+                window.setTimeout(() => {
+                    el.classList.add('is-settled');
+                    el.removeEventListener('transitionend', settle);
+                }, 1600);
+            }
             obs.unobserve(el); // o data aparut, nu-l mai urmarim
         });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
@@ -65,10 +125,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* Scriem in DOM doar cand starea chiar se schimba, nu la fiecare eveniment. */
+    let navScrolled = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) nav.classList.add('scrolled');
-        else nav.classList.remove('scrolled');
-    });
+        const shouldScroll = window.scrollY > 50;
+        if (shouldScroll === navScrolled) return;
+        navScrolled = shouldScroll;
+        nav.classList.toggle('scrolled', shouldScroll);
+    }, { passive: true });
 
     /* 3b. Count-up pentru cifrele din secțiunea Statistici */
     const counters = document.querySelectorAll('.stat-number[data-count]');
@@ -279,12 +343,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (slides.length < 2 || reduced) return;
 
         let current = 0;
-        setInterval(() => {
+
+        const advance = () => {
             const next = (current + 1) % slides.length;
             slides[current].classList.remove('active');
             slides[next].classList.add('active');
             current = next;
-        }, 5000);
+        };
+
+        let timer = setInterval(advance, 5000);
+
+        /* Un tab ascuns care tot schimba fotografii pe tot ecranul consuma
+           decodare degeaba si te intampina la revenire in mijlocul unui fade. */
+        document.addEventListener('visibilitychange', () => {
+            clearInterval(timer);
+            if (!document.hidden) timer = setInterval(advance, 5000);
+        });
     };
     loadHeroCarousel();
 
@@ -587,6 +661,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const openLightbox = (index) => {
         currentLightboxIndex = parseInt(index);
         updateLightboxImage();
+        /* Ascunderea barei de derulare muta pagina din spate cu latimea ei.
+           Compensam cu padding, ca sa nu sara nimic la deschidere. */
+        const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+        if (scrollbar > 0) document.body.style.paddingRight = scrollbar + 'px';
         lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
@@ -594,12 +672,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeLightbox = () => {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
     };
+
+    /* Preincarcam vecinii, ca sagetile sa nu astepte reteaua. */
+    const preloadNeighbours = () => {
+        if (!galleryImages.length) return;
+        [1, -1].forEach(offset => {
+            const i = (currentLightboxIndex + offset + galleryImages.length) % galleryImages.length;
+            const img = new Image();
+            img.src = galleryImages[i];
+        });
+    };
+
+    let swapToken = 0;
 
     const updateLightboxImage = () => {
         if (currentLightboxIndex < 0) currentLightboxIndex = galleryImages.length - 1;
         if (currentLightboxIndex >= galleryImages.length) currentLightboxIndex = 0;
-        lightboxImg.src = galleryImages[currentLightboxIndex];
+
+        const src = galleryImages[currentLightboxIndex];
+        const token = ++swapToken;
+
+        /* Prima deschidere: fara stingere, punem direct imaginea. */
+        if (!lightboxImg.src) {
+            lightboxImg.src = src;
+            preloadNeighbours();
+            return;
+        }
+
+        lightboxImg.classList.add('is-swapping');
+
+        const finish = () => {
+            lightboxImg.src = src;
+            lightboxImg.classList.remove('is-swapping');
+        };
+
+        const next = new Image();
+        next.onload = () => {
+            /* Daca intre timp s-a mai apasat o sageata, aceasta incarcare e
+               depasita — o ignoram, altfel am reveni la fotografia veche. */
+            if (token !== swapToken) return;
+            finish();
+            preloadNeighbours();
+        };
+        next.onerror = () => {
+            if (token !== swapToken) return;
+            finish();
+        };
+        next.src = src;
+
+        /* Plasa de siguranta: daca imaginea nu se incarca in 400ms, nu lasam
+           lightbox-ul gol — o aratam oricum si lasam browserul sa o completeze. */
+        window.setTimeout(() => {
+            if (token !== swapToken) return;
+            if (lightboxImg.classList.contains('is-swapping')) finish();
+        }, 400);
     };
 
     // Small public hook so other pages (e.g. collections.html) can reuse this same
@@ -622,31 +750,76 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (e.key === 'ArrowRight') { currentLightboxIndex++; updateLightboxImage(); }
     });
 
-    let touchStartX = 0;
-    let touchEndX = 0;
+    /* Gest de swipe cu urmarirea degetului. Pragul nu e doar distanta: un
+       flick scurt si rapid trebuie sa comute, iar o tragere lenta si lunga nu.
+       De aceea decidem si dupa viteza (px/ms). */
+    const SWIPE_DISTANCE = 80;      // px — pragul pozitional
+    const SWIPE_VELOCITY = 0.11;    // px/ms — pragul de viteza (flick)
+    const SWIPE_SLOP = 12;          // px — sub atat nu e inca un gest
+    const MAX_DRAG = 140;           // px — cat de departe poate fi tras vizual
 
-    const handleSwipe = () => {
-        const swipeDist = touchStartX - touchEndX;
-        if (swipeDist > 50) {
-            // Swipe Left -> Next
-            currentLightboxIndex++;
-            updateLightboxImage();
-        } else if (swipeDist < -50) {
-            // Swipe Right -> Prev
-            currentLightboxIndex--;
-            updateLightboxImage();
-        }
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragStartTime = 0;
+    let dragging = false;
+    let dragAxis = null;            // 'x' | 'y' | null
+
+    const resetDrag = () => {
+        dragging = false;
+        dragAxis = null;
+        lightboxImg.classList.remove('is-dragging');
+        lightboxImg.style.transform = '';
+        lightboxImg.style.opacity = '';
     };
 
-    if (lightbox) {
+    if (lightbox && lightboxImg) {
         lightbox.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
+            dragStartX = e.changedTouches[0].clientX;
+            dragStartY = e.changedTouches[0].clientY;
+            dragStartTime = e.timeStamp;
+            dragging = true;
+            dragAxis = null;
+            lightboxImg.classList.add('is-dragging');
         }, { passive: true });
-        
+
+        lightbox.addEventListener('touchmove', (e) => {
+            if (!dragging) return;
+            const dx = e.changedTouches[0].clientX - dragStartX;
+            const dy = e.changedTouches[0].clientY - dragStartY;
+
+            /* Decidem axa o singura data, la primul gest clar. Un swipe
+               vertical nu trebuie sa schimbe fotografia. */
+            if (!dragAxis) {
+                if (Math.abs(dx) < SWIPE_SLOP && Math.abs(dy) < SWIPE_SLOP) return;
+                dragAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+                if (dragAxis === 'y') { resetDrag(); return; }
+            }
+
+            /* Frecare crescatoare dincolo de MAX_DRAG: imaginea nu se opreste
+               brusc la limita, se ingreuneaza. */
+            const eased = Math.sign(dx) * MAX_DRAG * Math.tanh(Math.abs(dx) / MAX_DRAG);
+            lightboxImg.style.transform = `translateX(${eased}px)`;
+            lightboxImg.style.opacity = String(1 - Math.min(Math.abs(eased) / (MAX_DRAG * 2), 0.35));
+        }, { passive: true });
+
         lightbox.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+            if (!dragging) return;
+            const dx = e.changedTouches[0].clientX - dragStartX;
+            const elapsed = Math.max(e.timeStamp - dragStartTime, 1);
+            const velocity = Math.abs(dx) / elapsed;
+            const wasHorizontal = dragAxis === 'x';
+
+            lightboxImg.classList.remove('is-dragging');
+
+            if (wasHorizontal && (Math.abs(dx) > SWIPE_DISTANCE || velocity > SWIPE_VELOCITY)) {
+                if (dx < 0) currentLightboxIndex++;
+                else currentLightboxIndex--;
+                updateLightboxImage();
+            }
+            resetDrag();
         }, { passive: true });
+
+        lightbox.addEventListener('touchcancel', resetDrag, { passive: true });
     }
 
     /* 5. Helpers */

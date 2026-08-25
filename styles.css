@@ -31,9 +31,27 @@
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Outfit', sans-serif;
 
+    /* ---- Curbe de miscare ----
+       Fiecare tip de miscare are curba lui. Una singura pentru tot inseamna ca
+       trei din patru cazuri folosesc curba gresita si compenseaza cu durata.
+         expo     — intrari mari, dramatice (dezvaluirea la derulare)
+         out      — implicit pentru UI: intrari, iesiri, feedback
+         in-out   — ceva care se muta sau se transforma pe ecran
+         drawer   — panouri care intra dintr-o margine (curba iOS)              */
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-    --transition-smooth: all 1s var(--ease-out-expo);
-    --transition-fast: all 0.4s var(--ease-out-expo);
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    /* Imagini din placi: zoom + desaturare la hover. Doar proprietatile care
+       se schimba efectiv — niciodata 'all'. */
+    --transition-smooth: transform 450ms var(--ease-out),
+                         opacity 250ms var(--ease-out),
+                         filter 250ms var(--ease-out);
+    /* Controale (taburi, linkuri, pastile): doar culoare si contur. */
+    --transition-fast: background 250ms var(--ease-out),
+                       border-color 250ms var(--ease-out),
+                       color 250ms var(--ease-out),
+                       opacity 250ms var(--ease-out);
 }
 
 /* ---- TEMA DESCHISA: fundal off-white, accente inchise ---- */
@@ -161,6 +179,27 @@ h3 {
     will-change: auto;
 }
 
+/* Miscare redusa: pastram estomparea (spune "a aparut continut nou"), dar
+   scoatem orice deplasare si scalare. Mai putin si mai bland, nu zero. */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in {
+        transform: none;
+        transition: opacity 0.3s ease;
+        will-change: auto;
+    }
+
+    .fade-in.visible {
+        transform: none;
+    }
+
+    /* Cascada nu mai are sens fara miscare */
+    .delay-1,
+    .delay-2,
+    .delay-3 {
+        transition-delay: 0s;
+    }
+}
+
 .delay-1 {
     transition-delay: 0.12s;
 }
@@ -199,7 +238,10 @@ h3 {
     /* Sus, in capul paginii: complet transparent. Bara insasi nu are fundal —
        sticla e desenata de pseudo-elementele din spate. */
     background: transparent;
-    transition: padding 0.5s var(--ease-out-expo);
+    /* transform, nu padding: padding declanseaza layout la fiecare cadru,
+       iar bara e fixa peste continut — deci o putem urca fara sa mute nimic. */
+    transition: transform 0.35s var(--ease-out-expo);
+    will-change: transform;
 }
 
 /* ---- Sticla lichida cu "progressive blur" ----
@@ -222,10 +264,12 @@ h3 {
 
 /* Stratul principal: blur puternic + tenta + muchie luminoasa sus */
 #main-navigation::before {
-    bottom: -26px;
+    /* -26px + 1.3rem (cat urca bara la derulare) ca banda sa acopere aceeasi
+       portiune din pagina ca inainte. */
+    bottom: -47px;
     background: var(--nav-glass);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     box-shadow: inset 0 1px 0 var(--glass-inner);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 82%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 82%);
@@ -234,7 +278,7 @@ h3 {
 /* Al doilea strat: blur usor care coboara mai jos, ca trecerea sharp -> blur
    sa fie treptata (progressive), nu un prag brusc */
 #main-navigation::after {
-    bottom: -34px;
+    bottom: -55px;
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
@@ -247,7 +291,9 @@ h3 {
 }
 
 #main-navigation.scrolled {
-    padding: 1.2rem 4rem;
+    /* 2.5rem - 1.2rem = 1.3rem sus si jos => bara urca cu 1.3rem si pare la
+       fel de compacta, fara sa reaseze nimic. */
+    transform: translateY(-1.3rem);
 }
 
 /* Cand sticla e in spate, textul are deja fundal: il facem simplu si contrastat
@@ -340,12 +386,16 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     width: 2.2rem;
     height: 2.2rem;
     object-fit: contain;
-    transition: transform var(--transition-bounce);
+    transition: transform 200ms var(--ease-out);
     transform: translateZ(0);
 }
 
-.social-icon:hover {
-    transform: scale(1.1);
+/* Pe ecrane tactile, :hover ramane "lipit" dupa atingere — deci miscarea de
+   hover merge doar acolo unde exista un dispozitiv de indicare fin. */
+@media (hover: hover) and (pointer: fine) {
+    .social-icon:hover {
+        transform: scale(1.06);
+    }
 }
 
 /* Grila 1fr / auto / 1fr: cele doua coloane laterale primesc automat aceeasi
@@ -537,18 +587,28 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     text-transform: uppercase;
     margin-bottom: 4rem;
     opacity: 0;
-    animation: fadeUpText 1s 1s ease forwards;
+    /* Intrare, deci ease-out (rapid la inceput). Intarzierea e o cascada
+       fata de titlu, nu o pauza: 0.15s, nu 1s. */
+    animation: fadeUpText 0.6s 0.15s var(--ease-out) forwards;
 }
 
 @keyframes fadeUpText {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(16px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #hero-subtitle {
+        animation: none;
+        opacity: 1;
+        transform: none;
     }
 }
 
@@ -574,14 +634,14 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     letter-spacing: 3px;
     overflow: hidden;
     z-index: 1;
-    transition: border-color 0.4s;
+    transition: border-color 220ms var(--ease-out);
     backdrop-filter: blur(5px);
 }
 
 .btn-text {
     position: relative;
     z-index: 2;
-    transition: color 0.4s;
+    transition: color 220ms var(--ease-out);
 }
 
 .btn-fill {
@@ -592,7 +652,7 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     height: 100%;
     background: var(--color-text-primary);
     border-radius: 50%;
-    transition: top 0.4s var(--ease-out-expo), border-radius 0.4s var(--ease-out-expo);
+    transition: top 0.4s var(--ease-in-out), border-radius 0.4s var(--ease-in-out);
     z-index: 1;
 }
 
@@ -644,16 +704,28 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     width: 100%;
     height: 50%;
     background: var(--color-text-primary);
-    animation: scrollDrop 2s infinite ease-in-out;
+    animation: scrollDrop 2s infinite linear;
 }
 
+/* Miscare constanta => linear. Opacitatea la 0% si 100% ascunde cusatura
+   buclei: segmentul nu "sare" niciodata vizibil de jos inapoi sus. */
 @keyframes scrollDrop {
     0% {
         transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
     }
 
     100% {
         transform: translateY(200%);
+        opacity: 0;
     }
 }
 
@@ -765,7 +837,12 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
 .gallery-item:hover img {
     opacity: 1;
     filter: grayscale(0%);
-    transform: scale(1.05);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -832,7 +909,12 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
 .collection-tile:hover img {
     opacity: 1;
     filter: grayscale(0%) brightness(0.92);
-    transform: scale(1.04);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .collection-tile:hover img {
+        transform: scale(1.04);
+    }
 }
 
 .collection-tile-scrim {
@@ -888,13 +970,35 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.5s var(--ease-out-expo);
+    /* Nimic nu apare din nimic: 0.96 -> 1 da senzatia ca fotografia "ajunge",
+       nu ca se materializeaza. Modal centrat, deci origine centrala e corecta. */
+    transform: scale(0.96);
+    transition: opacity 320ms var(--ease-out),
+                transform 320ms var(--ease-out);
     backdrop-filter: blur(10px);
 }
 
 .lightbox.active {
     opacity: 1;
+    transform: scale(1);
     pointer-events: all;
+}
+
+/* Iesirea e mai rapida decat intrarea: utilizatorul a decis deja sa inchida. */
+.lightbox:not(.active) {
+    transition: opacity 200ms var(--ease-out),
+                transform 200ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lightbox {
+        transform: none;
+        transition: opacity 200ms ease;
+    }
+
+    .lightbox.active {
+        transform: none;
+    }
 }
 
 #lightbox-img {
@@ -902,6 +1006,29 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     height: 80vh !important;
     object-fit: contain !important;
     filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.8));
+    /* transform: revenirea degetului dupa swipe (010).
+       opacity: schimbarea fotografiei la sageti / swipe (015). Scurt
+       intentionat — sagetile se apasa des, iar orice mai lung ar face
+       rasfoirea greoaie. */
+    transition: transform 0.28s var(--ease-out),
+                opacity 140ms var(--ease-out);
+}
+
+/* In timpul gestului imaginea urmareste degetul fara tranzitie (altfel ar
+   ramane in urma). La eliberare tranzitia revine si revenirea e lina. */
+#lightbox-img.is-dragging {
+    transition: none;
+}
+
+#lightbox-img.is-swapping {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* 140ms de opacitate nu implica deplasare — il pastram. */
+    #lightbox-img {
+        transition: opacity 140ms ease;
+    }
 }
 
 .lightbox-close-btn {
@@ -930,7 +1057,7 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     z-index: 10001;
     padding: 2rem;
     opacity: 0.5;
-    transition: opacity 0.3s;
+    transition: opacity 200ms var(--ease-out);
 }
 
 .lightbox-nav-btn:hover {
@@ -1120,7 +1247,14 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     left: 0;
     color: var(--color-text-secondary);
     font-size: 1rem;
-    transition: var(--transition-fast);
+    /* Eticheta plutitoare isi schimba top / font-size / letter-spacing, nu doar
+       culoarea — deci nu poate folosi --transition-fast. Lista e explicita.
+       (De revizuit: 'top' si 'font-size' declanseaza layout; echivalentul
+       compus ar fi transform: translateY() scale().) */
+    transition: top 250ms var(--ease-out),
+                font-size 250ms var(--ease-out),
+                letter-spacing 250ms var(--ease-out),
+                color 250ms var(--ease-out);
     pointer-events: none;
 }
 
@@ -1149,15 +1283,20 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
     position: absolute;
     top: 0;
     left: 0;
-    width: 0%;
+    /* scaleX, nu width: 'width' declanseaza layout la fiecare cadru. Linia
+       porneste din stanga, deci transform-origin: left da exact acelasi
+       rezultat vizual, dar compus pe GPU. */
+    width: 100%;
     height: 100%;
     background: var(--color-text-primary);
-    transition: width 0.5s var(--ease-out-expo);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.5s var(--ease-in-out);
 }
 
 .input-group input:focus~.underline::after,
 .input-group textarea:focus~.underline::after {
-    width: 100%;
+    transform: scaleX(1);
 }
 
 .submit-btn {
@@ -1242,8 +1381,10 @@ footer {
     color: var(--color-text-primary);
 }
 
-.social-links a:hover::after {
-    transform: translateX(0);
+@media (hover: hover) and (pointer: fine) {
+    .social-links a:hover::after {
+        transform: translateX(0);
+    }
 }
 
 /* ==========================================================================
@@ -1804,7 +1945,7 @@ footer {
     overflow: hidden;
     isolation: isolate;
     transition: background 0.6s var(--ease-out-expo),
-                transform 0.6s var(--ease-out-expo),
+                transform 160ms var(--ease-out),
                 border-color 0.6s var(--ease-out-expo);
 }
 
@@ -1835,12 +1976,22 @@ footer {
 .glass-btn:hover {
     background: var(--glass-bg-hover);
     border-color: var(--hairline-strong);
-    transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glass-btn:hover {
+        transform: translateY(-2px);
+    }
 }
 
 .glass-btn:hover::before {
     opacity: 0.3;
-    transform: translateX(130%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .glass-btn:hover::before {
+        transform: translateX(130%);
+    }
 }
 
 .glass-btn.on-image {
@@ -1876,11 +2027,18 @@ footer {
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 1.6s ease-in-out;
+    /* Fara masca, cele doua fotografii se vad simultan la ~50% si imaginea
+       devine tulbure. Un blur mic pe cea care pleaca ascunde suprapunerea.
+       ease-out (nu ease-in-out): ease-in-out e cel mai lent exact la mijloc,
+       adica fix acolo unde suprapunerea arata cel mai rau. */
+    filter: blur(2px);
+    transition: opacity 1.2s var(--ease-out),
+                filter 1.2s var(--ease-out);
 }
 
 .hero-slide.active {
     opacity: 1;
+    filter: blur(0px);
 }
 
 .hero-slide img {
@@ -2026,8 +2184,12 @@ footer {
     transition: transform 0.7s var(--ease-out-expo);
 }
 
-.category-tile:hover {
-    transform: translateY(-6px);
+/* Pe ecrane tactile, :hover ramane "lipit" dupa atingere — deci miscarea de
+   hover merge doar acolo unde exista un dispozitiv de indicare fin. */
+@media (hover: hover) and (pointer: fine) {
+    .category-tile:hover {
+        transform: translateY(-6px);
+    }
 }
 
 .category-tile img {
@@ -2040,8 +2202,13 @@ footer {
 }
 
 .category-tile:hover img {
-    transform: scale(1.05);
     filter: brightness(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .category-tile:hover img {
+        transform: scale(1.05);
+    }
 }
 
 .category-tile-scrim {
@@ -2181,7 +2348,12 @@ footer {
 
 .theme-toggle:hover {
     background: var(--glass-bg-hover);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .theme-toggle:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .theme-toggle svg {
@@ -2358,6 +2530,86 @@ button,
 }
 
 /* ==========================================================================
+   Raspuns la apasare
+   ==========================================================================
+   Nimic nu confirma apasarea pe acest site — pe ecran tactil, unde :hover nu
+   exista, utilizatorul nu are niciun semn ca atingerea a fost inregistrata.
+   O scadere mica de scara, rapida la ducere si la intoarcere, e suficienta.
+   160ms: sub atat pare o eroare de randare, peste pare o animatie.
+
+   NOTA: .magnetic-btn nu primeste :active — clasa nu exista in markup. Iar
+   elementele .magnetic (multe .glass-btn) primesc transform inline din
+   script.js la mousemove, care bate orice regula din foaia de stil: acolo
+   raspunsul la apasare se vede doar pe touch, unde efectul magnetic e oprit. */
+button,
+.portfolio-tab,
+.lang-option,
+.theme-toggle {
+    transition: transform 160ms var(--ease-out);
+}
+
+button:active,
+.portfolio-tab:active,
+.lang-option:active,
+.theme-toggle:active {
+    transform: scale(0.97);
+}
+
+.glass-btn:active {
+    transform: scale(0.97);
+}
+
+/* Placile de fotografii sunt mari: 0.97 ar fi un salt vizibil. Mai putin. */
+.gallery-item,
+.category-tile,
+.collection-tile {
+    transition: transform 160ms var(--ease-out);
+}
+
+.gallery-item:active,
+.category-tile:active,
+.collection-tile:active {
+    transform: scale(0.985);
+}
+
+/* Unde exista pointer fin, apasarea trebuie sa pastreze si ridicarea de la
+   hover — altfel butonul ar cadea inapoi in momentul apasarii. */
+@media (hover: hover) and (pointer: fine) {
+    .glass-btn:active {
+        transform: translateY(-2px) scale(0.97);
+    }
+
+    .category-tile:active {
+        transform: translateY(-6px) scale(0.985);
+    }
+
+    .theme-toggle:active {
+        transform: translateY(-1px) scale(0.97);
+    }
+}
+
+/* Sagetile lightbox-ului au deja opacity la hover — la apasare o ducem la 1. */
+.lightbox-nav-btn:active,
+.lightbox-close-btn:active {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    button:active,
+    .glass-btn:active,
+    .portfolio-tab:active,
+    .lang-option:active,
+    .theme-toggle:active,
+    .gallery-item:active,
+    .category-tile:active,
+    .collection-tile:active {
+        transform: none;
+        opacity: 0.85;
+    }
+}
+
+/* ==========================================================================
    Notificare cookie-uri — card discret, sticla lichida, informativ
    ========================================================================== */
 .cookie-notice {
@@ -2371,8 +2623,8 @@ button,
     border-radius: 16px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
-    backdrop-filter: blur(24px) saturate(160%);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
     box-shadow: var(--shadow-soft);
     opacity: 0;
     transform: translateY(14px);
@@ -2679,7 +2931,12 @@ button:disabled {
 
 .video-card:hover .video-card-poster {
     filter: grayscale(0%) brightness(0.92);
-    transform: scale(1.03);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .video-card:hover .video-card-poster {
+        transform: scale(1.03);
+    }
 }
 
 .video-card-scrim {
@@ -2906,8 +3163,10 @@ button:disabled {
     transition: var(--transition-smooth);
 }
 
-.video-still:hover img {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .video-still:hover img {
+        transform: scale(1.04);
+    }
 }
 
 /* ---- Filmul complet (YouTube, incarcat la clic) ---- */
@@ -2945,7 +3204,12 @@ button:disabled {
 
 .video-facade:hover img {
     opacity: 1;
-    transform: scale(1.02);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .video-facade:hover img {
+        transform: scale(1.02);
+    }
 }
 
 .video-facade-play {

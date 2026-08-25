@@ -16,3 +16,8 @@ assets/
 serban-photo_old/
 log_conversie.txt
 optimizare.log
+
+# Note de lucru si unelte locale — docroot-ul e servit public de nginx,
+# deci nu trebuie sa ajunga niciodata in el.
+plans/
+.claude/
