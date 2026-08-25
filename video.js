@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Acelasi interval de 5 minute ca in script.js / collections.js.
         const cacheBucket = Math.floor(Date.now() / 300000);
-        const res = await fetch(`./assets/manifest.json?v=${cacheBucket}`);
+        const res = await fetch(`/assets/manifest.json?v=${cacheBucket}`);
         if (res.ok) manifest = await res.json();
     } catch (e) {
         console.warn('Could not load video manifest:', e);
@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         v.playsInline = true;
         v.preload = 'none';
         v.controls = controls;
-        if (poster) v.poster = `./assets/${poster}`;
-        v.dataset.src = `./assets/${file}`;
+        if (poster) v.poster = `/assets/${poster}`;
+        v.dataset.src = `/assets/${file}`;
         v.dataset.autoplay = String(autoplay && !REDUCED_MOTION);
         lazyVideoSrc.observe(v);
         if (autoplay) playWhenVisible.observe(v);
@@ -98,8 +98,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         reelReady = true;
         stage.hidden = false;
-        if (reel.poster) video.poster = `./assets/${reel.poster}`;
-        video.dataset.src = `./assets/${reel.file}`;
+        if (reel.poster) video.poster = `/assets/${reel.poster}`;
+        video.dataset.src = `/assets/${reel.file}`;
         video.dataset.autoplay = String(!REDUCED_MOTION);
         lazyVideoSrc.observe(video);
         playWhenVisible.observe(video);
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const img = document.createElement('img');
             img.className = 'video-card-poster';
-            img.src = `./assets/${p.cover}`;
+            img.src = `/assets/${p.cover}`;
             img.loading = 'lazy';
             img.alt = DISPLAY(p.name);
             frame.appendChild(img);
@@ -230,6 +230,11 @@ document.addEventListener('DOMContentLoaded', async () => {
        impreuna cu og: si cu un VideoObject construit din manifest.
        --------------------------------------------------------------- */
     const SITE = 'https://serban-photo.com';
+    // Pagina exista in doua limbi: /video.html si /en/video.html. URL-urile
+    // canonice trebuie sa ramana in limba paginii curente, altfel varianta
+    // engleza s-ar canonicaliza spre cea romaneasca si ar iesi din index.
+    const LANG_BASE = /^\/en(\/|$)/.test(location.pathname) ? '/en' : '';
+    const pageUrl = (query) => `${SITE}${LANG_BASE}/video.html${query || ''}`;
 
     function setMeta(selector, attr, value) {
         const el = document.querySelector(selector);
@@ -245,6 +250,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         link.href = url;
         setMeta('meta[property="og:url"]', 'content', url);
+
+        // Perechea hreflang trebuie sa urmeze acelasi ?p=, nu doar /video.html
+        const query = url.slice(url.indexOf('/video.html') + '/video.html'.length);
+        const pairs = { ro: `${SITE}/video.html${query}`, en: `${SITE}/en/video.html${query}` };
+        document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(function (el) {
+            const hl = el.getAttribute('hreflang');
+            if (hl === 'ro' || hl === 'x-default') el.href = pairs.ro;
+            else if (hl === 'en') el.href = pairs.en;
+        });
     }
 
     function setVideoSchema(project) {
@@ -252,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (old) old.remove();
         if (!project) return;
 
-        const url = `${SITE}/video.html?p=${project.slug}`;
+        const url = pageUrl(`?p=${project.slug}`);
         const poster = (project.hero && project.hero.poster) || project.cover;
         const intro = project.intro && (project.intro[LANG()] || project.intro.ro);
 
@@ -302,7 +316,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         title.textContent = DISPLAY(project.name);
         document.title = `${DISPLAY(project.name)} | Anița Șerban Photography`;
-        setCanonical(`${SITE}/video.html?p=${project.slug}`);
+        setCanonical(pageUrl(`?p=${project.slug}`));
         setMeta('meta[property="og:title"]', 'content', `${DISPLAY(project.name)} | Anița Șerban Photography`);
         const ogImg = (project.hero && project.hero.poster) || project.cover;
         if (ogImg) setMeta('meta[property="og:image"]', 'content', `${SITE}/assets/${ogImg}`);
@@ -331,7 +345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Cadrele din proiect alimenteaza acelasi lightbox ca in restul site-ului.
         const stillsForLightbox = [];
         (project.blocks || []).forEach(b => {
-            if (b.type === 'stills') (b.files || []).forEach(f => stillsForLightbox.push(`./assets/${f}`));
+            if (b.type === 'stills') (b.files || []).forEach(f => stillsForLightbox.push(`/assets/${f}`));
         });
 
         // Clipul de deschidere: cel mai bun cadru, latime completa.
@@ -395,8 +409,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     item.className = 'video-still hover-zoom';
                     const img = document.createElement('img');
                     img.loading = 'lazy';
-                    img.src = `./assets/${file}`;
-                    img.srcset = `./assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, ./assets/${file} 2000w`;
+                    img.src = `/assets/${file}`;
+                    img.srcset = `/assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${file} 2000w`;
                     img.sizes = '(max-width: 700px) 100vw, 50vw';
                     img.alt = DISPLAY(project.name);
                     item.appendChild(img);
@@ -434,7 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             thumb.loading = 'lazy';
             thumb.alt = '';
             thumb.src = project.youtubePoster
-                ? `./assets/${project.youtubePoster}`
+                ? `/assets/${project.youtubePoster}`
                 : `https://i.ytimg.com/vi/${project.youtube}/maxresdefault.jpg`;
             facade.appendChild(thumb);
 
@@ -471,7 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             indexView.style.display = '';
             detailView.style.display = 'none';
-            setCanonical(`${SITE}/video.html`);
+            setCanonical(pageUrl());
             setVideoSchema(null);
             renderReel();
             renderTabs();

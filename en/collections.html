@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ro" data-page-title-key="meta.title.collections" data-page-desc-key="meta.description.collections">
+<!-- Generat de build_en.js din collections.html + i18n.js. Nu edita manual. -->
+<html lang="en" data-page-title-key="meta.title.collections" data-page-desc-key="meta.description.collections">
 
 <head>
     <meta charset="UTF-8">
@@ -7,10 +8,10 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Colecții | Anița Șerban Photography</title>
+    <title>Collections | Anița Șerban Photography</title>
     <meta name="description"
-        content="Colecții de fotografie semnate de Anița Șerban — călătorii, natură și proiecte personale din România, Ungaria și Marea Britanie.">
-    <link rel="canonical" href="https://serban-photo.com/collections.html">
+        content="Photography collections by Anița Șerban — travel, nature and personal projects from Romania, Hungary and the United Kingdom.">
+    <link rel="canonical" href="https://serban-photo.com/en/collections.html">
     <link rel="alternate" hreflang="ro" href="https://serban-photo.com/collections.html">
     <link rel="alternate" hreflang="en" href="https://serban-photo.com/en/collections.html">
     <link rel="alternate" hreflang="x-default" href="https://serban-photo.com/collections.html">
@@ -20,20 +21,36 @@
         "@graph": [
             {
                 "@type": "ImageGallery",
-                "@id": "https://serban-photo.com/collections.html#page",
-                "url": "https://serban-photo.com/collections.html",
-                "name": "Colecții | Anița Șerban Photography",
-                "description": "Colecții de fotografie de Anița Șerban: călătorii, natură și proiecte personale.",
-                "inLanguage": "ro-RO",
-                "isPartOf": { "@id": "https://serban-photo.com/#website" },
-                "about": { "@id": "https://serban-photo.com/#business" },
-                "creator": { "@id": "https://serban-photo.com/#anita" }
+                "@id": "https://serban-photo.com/en/collections.html#page",
+                "url": "https://serban-photo.com/en/collections.html",
+                "name": "Collections | Anița Șerban Photography",
+                "description": "Photography collections by Anița Șerban — travel, nature and personal projects from Romania, Hungary and the United Kingdom.",
+                "inLanguage": "en",
+                "isPartOf": {
+                    "@id": "https://serban-photo.com/#website"
+                },
+                "about": {
+                    "@id": "https://serban-photo.com/#business"
+                },
+                "creator": {
+                    "@id": "https://serban-photo.com/#anita"
+                }
             },
             {
                 "@type": "BreadcrumbList",
                 "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://serban-photo.com/" },
-                    { "@type": "ListItem", "position": 2, "name": "Colecții", "item": "https://serban-photo.com/collections.html" }
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://serban-photo.com/en/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Collections",
+                        "item": "https://serban-photo.com/en/collections.html"
+                    }
                 ]
             }
         ]
@@ -48,15 +65,16 @@
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Anița Șerban Photography">
-    <meta property="og:title" content="Colecții | Anița Șerban Photography">
+    <meta property="og:title" content="Collections | Anița Șerban Photography">
     <meta property="og:description"
         content="Colecții de fotografie semnate de Anița Șerban — călătorii, natură și proiecte personale din România, Ungaria și Marea Britanie.">
-    <meta property="og:url" content="https://serban-photo.com/collections.html">
+    <meta property="og:url" content="https://serban-photo.com/en/collections.html">
+    <meta property="og:locale" content="en">
     <meta property="og:image" content="https://serban-photo.com/assets/Serban_163.webp">
     <meta property="og:image:alt" content="Colecții Anița Șerban Photography">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Colecții | Anița Șerban Photography">
+    <meta name="twitter:title" content="Collections | Anița Șerban Photography">
     <meta name="twitter:description"
         content="Colecții de fotografie semnate de Anița Șerban — călătorii, natură și proiecte personale din România, Ungaria și Marea Britanie.">
     <meta name="twitter:image" content="https://serban-photo.com/assets/Serban_163.webp">
@@ -96,38 +114,38 @@
 
     <!-- Lightbox -->
     <div id="lightbox" class="lightbox">
-        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close" data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
-        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev" aria-label="Imaginea anterioară">&larr;</button>
-        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="lightbox.next" aria-label="Imaginea următoare">&rarr;</button>
-        <img id="lightbox-img" src="" data-i18n-alt="lightbox.alt" alt="Imagine mărită">
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="Close" data-i18n="lightbox.back" aria-label="Închide">← Back to gallery</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="Previous image" aria-label="Imaginea anterioară">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="Next image" aria-label="Imaginea următoare">&rarr;</button>
+        <img id="lightbox-img" src="" data-i18n-alt="Enlarged view" alt="Imagine mărită">
     </div>
 
     <div class="noise-overlay"></div>
 
     <nav id="main-navigation">
-        <a href="/" class="logo magnetic">
+        <a href="/en/" class="logo magnetic">
             <img class="site-icon" src="/assets/logo.svg" alt="Anița Șerban Photography">
             <img class="site-watermark" src="/assets/watermark_alb.svg" alt="Serban Anita">
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
-                <li data-video-hides><a href="/" class="magnetic" data-i18n="nav.home">Acasă</a></li>
-                <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
-                <li data-video-entry hidden><a href="video.html" class="magnetic" data-i18n="nav.video">Video</a></li>
+                <li data-video-hides><a href="/en/" class="magnetic" data-i18n="nav.home">Home</a></li>
+                <li><a href="/en/portfolio.html" class="magnetic" data-i18n="nav.work">Work</a></li>
+                <li data-video-entry hidden><a href="/en/video.html" class="magnetic" data-i18n="nav.video">Video</a></li>
             </ul>
-            <a href="collections.html" class="nav-links-center magnetic active" aria-current="page" data-i18n="nav.collections">Colecții</a>
+            <a href="/en/collections.html" class="nav-links-center magnetic active" aria-current="page" data-i18n="nav.collections">Collections</a>
             <ul class="nav-links-side right">
-                <li><a href="index.html#parcurs" class="magnetic" data-i18n="nav.about">Despre</a></li>
-                <li><a href="index.html#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
+                <li><a href="/en/#parcurs" class="magnetic" data-i18n="nav.about">About</a></li>
+                <li><a href="/en/#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
             </ul>
         </div>
         <div class="nav-right">
-            <div class="lang-switch" role="group" data-i18n-aria-label="nav.lang.label" aria-label="Schimbă limba">
+            <div class="lang-switch" role="group" data-i18n-aria-label="Change language" aria-label="Schimbă limba">
                 <button type="button" class="lang-option" data-lang-option="ro">RO</button>
                 <span class="lang-sep" aria-hidden="true">/</span>
                 <button type="button" class="lang-option" data-lang-option="en">EN</button>
             </div>
-            <button type="button" class="theme-toggle" id="themeToggle" data-i18n-aria-label="nav.theme.label"
+            <button type="button" class="theme-toggle" id="themeToggle" data-i18n-aria-label="Change theme"
                 aria-label="Schimbă tema">
                 <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                     stroke-linecap="round" aria-hidden="true">
@@ -149,15 +167,15 @@
     <main class="collections-page">
         <section class="portfolio-section" id="collectionsIndexView">
             <div class="page-head">
-                <div class="page-badge rise-in" data-i18n="collections.badge">Explorează</div>
-                <h1 class="rise-in d1" data-i18n="collections.title">Colecții</h1>
+                <div class="page-badge rise-in" data-i18n="collections.badge">Explore</div>
+                <h1 class="rise-in d1" data-i18n="collections.title">Collections</h1>
             </div>
             <div class="collections-list" id="collectionsList"></div>
         </section>
 
         <section class="portfolio-section" id="collectionDetailView" style="display:none">
             <div class="section-intro">
-                <a href="collections.html" class="back-link magnetic" data-i18n="collections.back">&larr; Toate colecțiile</a>
+                <a href="/en/collections.html" class="back-link magnetic" data-i18n="collections.back">← All collections</a>
                 <div class="section-header fade-in delay-1">
                     <h2 id="collectionTitle"></h2>
                 </div>
@@ -172,7 +190,7 @@
                 <img class="site-watermark" src="/assets/watermark_alb.svg" alt="Serban Anita">
             </div>
 
-            <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2026 Anița Șerban. Toate drepturile rezervate.</p>
+            <p class="footer-copyright" data-i18n="footer.copyright">© 2026 Anița Șerban. All rights reserved.</p>
 
             <div class="social-links">
                 <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
@@ -181,16 +199,14 @@
             </div>
         </div>
 
-        <a href="privacy.html" class="footer-legal-link magnetic" data-i18n="footer.privacy">Politică de Confidențialitate</a>
+        <a href="/en/privacy.html" class="footer-legal-link magnetic" data-i18n="footer.privacy">Privacy Policy</a>
     </footer>
 
     <div id="cookieNotice" class="cookie-notice" hidden>
-        <p data-i18n="cookie.notice">Acest site nu folosește cookie-uri de analiză sau marketing. Doar un cookie
-            strict necesar, de securitate, poate fi setat automat.</p>
+        <p data-i18n="cookie.notice">This site uses no analytics or marketing cookies. Only a strictly necessary security cookie may be set automatically.</p>
         <div class="cookie-notice-actions">
-            <a href="privacy.html" data-i18n="cookie.link">Detalii</a>
-            <button type="button" id="cookieAccept" class="glass-btn magnetic" data-i18n="cookie.accept">Am
-                înțeles</button>
+            <a href="/en/privacy.html" data-i18n="cookie.link">Details</a>
+            <button type="button" id="cookieAccept" class="glass-btn magnetic" data-i18n="cookie.accept">Got it</button>
         </div>
     </div>
 

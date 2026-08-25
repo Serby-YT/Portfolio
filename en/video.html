@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ro" data-page-title-key="meta.title.video" data-page-desc-key="meta.description.video">
+<!-- Generat de build_en.js din video.html + i18n.js. Nu edita manual. -->
+<html lang="en" data-page-title-key="meta.title.video" data-page-desc-key="meta.description.video">
 
 <head>
     <meta charset="UTF-8">
@@ -9,8 +10,8 @@
     <meta http-equiv="Expires" content="0">
     <title>Video | Anița Șerban Photography</title>
     <meta name="description"
-        content="Proiecte video de Anița Șerban — filmări de eveniment și proiecte personale, fiecare cu povestea din spatele cadrelor.">
-    <link rel="canonical" href="https://serban-photo.com/video.html">
+        content="Video projects by Anița Șerban — event films and personal work, each with the story behind the frames.">
+    <link rel="canonical" href="https://serban-photo.com/en/video.html">
     <link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html">
     <link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html">
     <link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html">
@@ -20,20 +21,36 @@
         "@graph": [
             {
                 "@type": "CollectionPage",
-                "@id": "https://serban-photo.com/video.html#page",
-                "url": "https://serban-photo.com/video.html",
+                "@id": "https://serban-photo.com/en/video.html#page",
+                "url": "https://serban-photo.com/en/video.html",
                 "name": "Video | Anița Șerban Photography",
-                "description": "Proiecte video de Anița Șerban: filmări de eveniment și proiecte personale.",
-                "inLanguage": "ro-RO",
-                "isPartOf": { "@id": "https://serban-photo.com/#website" },
-                "about": { "@id": "https://serban-photo.com/#business" },
-                "creator": { "@id": "https://serban-photo.com/#anita" }
+                "description": "Video projects by Anița Șerban — event films and personal work, each with the story behind the frames.",
+                "inLanguage": "en",
+                "isPartOf": {
+                    "@id": "https://serban-photo.com/#website"
+                },
+                "about": {
+                    "@id": "https://serban-photo.com/#business"
+                },
+                "creator": {
+                    "@id": "https://serban-photo.com/#anita"
+                }
             },
             {
                 "@type": "BreadcrumbList",
                 "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://serban-photo.com/" },
-                    { "@type": "ListItem", "position": 2, "name": "Video", "item": "https://serban-photo.com/video.html" }
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": "https://serban-photo.com/en/"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Video",
+                        "item": "https://serban-photo.com/en/video.html"
+                    }
                 ]
             }
         ]
@@ -49,7 +66,8 @@
     <meta property="og:title" content="Video | Anița Șerban Photography">
     <meta property="og:description"
         content="Proiecte video de Anița Șerban — evenimente și proiecte personale, fiecare cu povestea din spatele cadrelor.">
-    <meta property="og:url" content="https://serban-photo.com/video.html">
+    <meta property="og:url" content="https://serban-photo.com/en/video.html">
+    <meta property="og:locale" content="en">
     <meta property="og:image" content="https://serban-photo.com/assets/Serban_163.webp">
     <meta property="og:image:alt" content="Video Anița Șerban Photography">
 
@@ -91,37 +109,37 @@
 
     <!-- Lightbox — refolosit pentru cadrele din proiecte -->
     <div id="lightbox" class="lightbox">
-        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="lightbox.close" data-i18n="lightbox.back" aria-label="Închide">&larr; Înapoi la galerie</button>
-        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="lightbox.prev" aria-label="Imaginea anterioară">&larr;</button>
-        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="lightbox.next" aria-label="Imaginea următoare">&rarr;</button>
-        <img id="lightbox-img" src="" data-i18n-alt="lightbox.alt" alt="Imagine mărită">
+        <button id="lightbox-close" class="lightbox-close-btn magnetic" data-i18n-aria-label="Close" data-i18n="lightbox.back" aria-label="Închide">← Back to gallery</button>
+        <button id="lightbox-prev" class="lightbox-nav-btn prev magnetic" data-i18n-aria-label="Previous image" aria-label="Imaginea anterioară">&larr;</button>
+        <button id="lightbox-next" class="lightbox-nav-btn next magnetic" data-i18n-aria-label="Next image" aria-label="Imaginea următoare">&rarr;</button>
+        <img id="lightbox-img" src="" data-i18n-alt="Enlarged view" alt="Imagine mărită">
     </div>
 
     <div class="noise-overlay"></div>
 
     <nav id="main-navigation">
-        <a href="/" class="logo magnetic">
+        <a href="/en/" class="logo magnetic">
             <img class="site-icon" src="/assets/logo.svg" alt="Anița Șerban Photography">
             <img class="site-watermark" src="/assets/watermark_alb.svg" alt="Serban Anita">
         </a>
         <div class="nav-links">
             <ul class="nav-links-side left">
-                <li><a href="portfolio.html" class="magnetic" data-i18n="nav.work">Portofoliu</a></li>
-                <li><a href="video.html" class="magnetic active" aria-current="page" data-i18n="nav.video">Video</a></li>
+                <li><a href="/en/portfolio.html" class="magnetic" data-i18n="nav.work">Work</a></li>
+                <li><a href="/en/video.html" class="magnetic active" aria-current="page" data-i18n="nav.video">Video</a></li>
             </ul>
-            <a href="collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Colecții</a>
+            <a href="/en/collections.html" class="nav-links-center magnetic" data-i18n="nav.collections">Collections</a>
             <ul class="nav-links-side right">
-                <li><a href="index.html#parcurs" class="magnetic" data-i18n="nav.about">Despre</a></li>
-                <li><a href="index.html#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
+                <li><a href="/en/#parcurs" class="magnetic" data-i18n="nav.about">About</a></li>
+                <li><a href="/en/#contact" class="magnetic" data-i18n="nav.contact">Contact</a></li>
             </ul>
         </div>
         <div class="nav-right">
-            <div class="lang-switch" role="group" data-i18n-aria-label="nav.lang.label" aria-label="Schimbă limba">
+            <div class="lang-switch" role="group" data-i18n-aria-label="Change language" aria-label="Schimbă limba">
                 <button type="button" class="lang-option" data-lang-option="ro">RO</button>
                 <span class="lang-sep" aria-hidden="true">/</span>
                 <button type="button" class="lang-option" data-lang-option="en">EN</button>
             </div>
-            <button type="button" class="theme-toggle" id="themeToggle" data-i18n-aria-label="nav.theme.label"
+            <button type="button" class="theme-toggle" id="themeToggle" data-i18n-aria-label="Change theme"
                 aria-label="Schimbă tema">
                 <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                     stroke-linecap="round" aria-hidden="true">
@@ -152,11 +170,11 @@
                 <div class="reel-scrim" aria-hidden="true"></div>
                 <div class="reel-content">
                     <div class="section-badge" data-i18n="video.reel.badge">Showreel</div>
-                    <h1 data-i18n="video.reel.title">Imagini care se mișcă.</h1>
-                    <p data-i18n="video.reel.body">Un minut din ce am filmat anul acesta.</p>
+                    <h1 data-i18n="video.reel.title">Frames that move.</h1>
+                    <p data-i18n="video.reel.body">A minute of what I shot this year.</p>
                 </div>
                 <button type="button" class="reel-sound magnetic" id="reelSound"
-                    data-i18n-aria-label="video.reel.sound" aria-label="Pornește sunetul" aria-pressed="false">
+                    data-i18n-aria-label="Turn on the sound" aria-label="Pornește sunetul" aria-pressed="false">
                     <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M4 9v6h4l5 4V5L8 9H4Z" />
@@ -171,9 +189,9 @@
             </div>
 
             <div class="section-intro">
-                <div class="section-badge fade-in" data-i18n="video.badge">Filme</div>
+                <div class="section-badge fade-in" data-i18n="video.badge">Films</div>
                 <div class="section-header fade-in delay-1">
-                    <h2 data-i18n="video.title">Proiecte video</h2>
+                    <h2 data-i18n="video.title">Video projects</h2>
                 </div>
                 <div class="portfolio-tabs" id="video-tabs"></div>
             </div>
@@ -184,7 +202,7 @@
         <!-- DETALIU: un proiect, cu povestea lui -->
         <section class="portfolio-section" id="videoDetailView" style="display:none">
             <div class="section-intro">
-                <a href="video.html" class="back-link magnetic" data-i18n="video.back">&larr; Toate proiectele</a>
+                <a href="/en/video.html" class="back-link magnetic" data-i18n="video.back">← All projects</a>
                 <div class="section-header fade-in delay-1">
                     <h2 id="videoTitle"></h2>
                 </div>
@@ -201,7 +219,7 @@
                 <img class="site-watermark" src="/assets/watermark_alb.svg" alt="Serban Anita">
             </div>
 
-            <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2026 Anița Șerban. Toate drepturile rezervate.</p>
+            <p class="footer-copyright" data-i18n="footer.copyright">© 2026 Anița Șerban. All rights reserved.</p>
 
             <div class="social-links">
                 <a href="https://www.instagram.com/serby.photo/#" target="_blank" class="magnetic">
@@ -210,16 +228,14 @@
             </div>
         </div>
 
-        <a href="privacy.html" class="footer-legal-link magnetic" data-i18n="footer.privacy">Politică de Confidențialitate</a>
+        <a href="/en/privacy.html" class="footer-legal-link magnetic" data-i18n="footer.privacy">Privacy Policy</a>
     </footer>
 
     <div id="cookieNotice" class="cookie-notice" hidden>
-        <p data-i18n="cookie.notice">Acest site nu folosește cookie-uri de analiză sau marketing. Doar un cookie
-            strict necesar, de securitate, poate fi setat automat.</p>
+        <p data-i18n="cookie.notice">This site uses no analytics or marketing cookies. Only a strictly necessary security cookie may be set automatically.</p>
         <div class="cookie-notice-actions">
-            <a href="privacy.html" data-i18n="cookie.link">Detalii</a>
-            <button type="button" id="cookieAccept" class="glass-btn magnetic" data-i18n="cookie.accept">Am
-                înțeles</button>
+            <a href="/en/privacy.html" data-i18n="cookie.link">Details</a>
+            <button type="button" id="cookieAccept" class="glass-btn magnetic" data-i18n="cookie.accept">Got it</button>
         </div>
     </div>
 

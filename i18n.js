@@ -337,16 +337,28 @@
         'Tehnic': 'Technical'
     };
 
-    function detectLang() {
-        var saved;
-        try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { saved = null; }
-        if (SUPPORTED.indexOf(saved) !== -1) return saved;
+    /* -----------------------------------------------------------------
+       Limba sta in URL, nu in localStorage si nu in navigator.
+       Romana traieste in radacina (/portfolio.html), engleza sub /en/
+       (/en/portfolio.html). Fiecare varianta e o pagina reala, cu
+       hreflang intre ele — altfel engleza nu putea fi indexata deloc.
+       ----------------------------------------------------------------- */
+    function pathLang(pathname) {
+        return /^\/en(\/|$)/.test(pathname || '') ? 'en' : 'ro';
+    }
 
-        // Fara alegere salvata -> ramanem pe limba din HTML-ul servit (ro).
-        // NU ne luam dupa navigator.languages: Googlebot randeaza cu locale
-        // en-US, deci detectia automata ii servea pagina in engleza, peste
-        // titlul si descrierea in romana. Comutatorul EN ramane pentru oameni.
-        return DEFAULT_LANG;
+    function detectLang() {
+        return pathLang(location.pathname);
+    }
+
+    /* URL-ul aceleiasi pagini in cealalta limba, cu query si hash pastrate
+       (conteaza pentru video.html?p=... si collections.html?g=...). */
+    function counterpartUrl(lang) {
+        var path = location.pathname;
+        var rest = location.search + location.hash;
+        var bare = path.replace(/^\/en(?=\/|$)/, '') || '/';
+        if (bare === '/index.html') bare = '/';
+        return (lang === 'en' ? '/en' + (bare === '/' ? '/' : bare) : bare) + rest;
     }
 
     var currentLang = detectLang();
@@ -411,14 +423,23 @@
         get lang() { return currentLang; },
         t: t,
         dataName: dataName,
-        setLang: setLang
+        setLang: setLang,
+        counterpartUrl: counterpartUrl,
+        strings: STRINGS,
+        dataNamesEn: DATA_NAMES_EN
     };
 
     document.addEventListener('DOMContentLoaded', function () {
         applyStatic();
         document.querySelectorAll('[data-lang-option]').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                setLang(btn.getAttribute('data-lang-option'));
+            var lang = btn.getAttribute('data-lang-option');
+            // Ancore reale, nu doar butoane: crawlerul vede legatura dintre
+            // cele doua variante si utilizatorul poate deschide in tab nou.
+            if (btn.tagName === 'A') btn.setAttribute('href', counterpartUrl(lang));
+            btn.addEventListener('click', function (ev) {
+                if (lang === currentLang) { ev.preventDefault(); return; }
+                ev.preventDefault();
+                location.href = counterpartUrl(lang);
             });
         });
     });

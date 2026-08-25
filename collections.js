@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Bustam cache-ul o data la 5 minute, nu la fiecare incarcare — la fel
         // ca in script.js / fetchManifest.
         const cacheBucket = Math.floor(Date.now() / 300000);
-        const res = await fetch(`./assets/manifest.json?v=${cacheBucket}`);
+        const res = await fetch(`/assets/manifest.json?v=${cacheBucket}`);
         if (res.ok) manifest = await res.json();
     } catch (e) {
         console.warn('Could not load collections manifest:', e);
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             tile.href = `collections.html?g=${encodeURIComponent(g.name)}`;
 
             const img = document.createElement('img');
-            img.src = `./assets/${g.cover}`;
+            img.src = `/assets/${g.cover}`;
             img.loading = 'lazy';
             img.alt = DISPLAY(g.name);
             tile.appendChild(img);
@@ -116,12 +116,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         lastGalleryCount = gallery.photos.length;
         applyGalleryCols(grid, lastGalleryCount);
 
-        const images = gallery.photos.map(file => `./assets/${file}`);
+        const images = gallery.photos.map(file => `/assets/${file}`);
 
         gallery.photos.forEach((file, i) => {
             const photoData = photoLookup.get(file) || {};
-            const largeSrc = `./assets/${file}`;
-            const smallSrc = `./assets/${file.replace(/\.webp$/, '_sm.webp')}`;
+            const largeSrc = `/assets/${file}`;
+            const smallSrc = `/assets/${file.replace(/\.webp$/, '_sm.webp')}`;
 
             const item = document.createElement('div');
             item.className = 'gallery-item fade-in hover-zoom';

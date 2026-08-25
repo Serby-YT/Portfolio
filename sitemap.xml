@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://serban-photo.com/</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/hero.webp</image:loc>
+      <image:title>Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_270.webp</image:loc>
+      <image:title>Fotografie de eveniment de Anița Șerban</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/"/>
     <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -17,6 +38,30 @@
   </url>
   <url>
     <loc>https://serban-photo.com/portfolio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/portfolio.html"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_13.webp</image:loc>
+      <image:title>Evenimente — Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_229.webp</image:loc>
+      <image:title>Portrete — Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_29.webp</image:loc>
+      <image:title>Produs — Anița Șerban Photography</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/portfolio.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/portfolio.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/portfolio.html"/>
     <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -35,6 +80,38 @@
   </url>
   <url>
     <loc>https://serban-photo.com/collections.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/collections.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/collections.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/collections.html"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_163.webp</image:loc>
+      <image:title>Marea Britanie — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_199.webp</image:loc>
+      <image:title>Ungaria — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_204.webp</image:loc>
+      <image:title>România — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_48.webp</image:loc>
+      <image:title>Călătorii — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://serban-photo.com/assets/Serban_64.webp</image:loc>
+      <image:title>Natură — Colecții Anița Șerban Photography</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/collections.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/collections.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/collections.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/collections.html"/>
     <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -61,18 +138,54 @@
   </url>
   <url>
     <loc>https://serban-photo.com/video.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html"/>
     <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://serban-photo.com/video.html?p=a-slow-dance</loc>
-    <lastmod>2026-08-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=a-slow-dance"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=a-slow-dance"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=a-slow-dance"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html?p=a-slow-dance</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=a-slow-dance"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=a-slow-dance"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=a-slow-dance"/>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://serban-photo.com/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/privacy.html"/>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/privacy.html</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/privacy.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/privacy.html"/>
     <lastmod>2026-08-25</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>

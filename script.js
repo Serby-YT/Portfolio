@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Bustam cache-ul o data la 5 minute, nu la fiecare incarcare de pagina —
                 // altfel browserul nu poate refolosi niciodata manifestul din cache.
                 const cacheBucket = Math.floor(Date.now() / 300000);
-                promise = fetch(`./assets/manifest.json?v=${cacheBucket}`)
+                promise = fetch(`/assets/manifest.json?v=${cacheBucket}`)
                     .then(r => r.ok ? r.json() : {})
                     .catch(() => ({}));
             }
@@ -230,8 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // au mereu o varianta "_sm" (verificat); fallback-ul static hero.webp nu are,
         // deci ii dam srcset doar celor din manifest.
         const files = (heroGallery && heroGallery.photos && heroGallery.photos.length)
-            ? heroGallery.photos.map(f => ({ src: `./assets/${f}`, hasSmall: true }))
-            : [{ src: './assets/hero.webp', hasSmall: false }];
+            ? heroGallery.photos.map(f => ({ src: `/assets/${f}`, hasSmall: true }))
+            : [{ src: '/assets/hero.webp', hasSmall: false }];
 
         const existingSlide = wrap.querySelector('.hero-slide');
         const slides = existingSlide ? [existingSlide] : [];
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
             img.loading = 'lazy';
             img.decoding = 'async';
             img.alt = '';
-            img.src = `./assets/${file.replace(/\.webp$/, '_sm.webp')}`;
+            img.src = `/assets/${file.replace(/\.webp$/, '_sm.webp')}`;
             strip.appendChild(img);
         });
     };
@@ -337,14 +337,14 @@ document.addEventListener('DOMContentLoaded', () => {
             v.loop = true;
             v.playsInline = true;
             v.preload = 'none';
-            if (reel.poster) v.poster = `./assets/${reel.poster}`;
+            if (reel.poster) v.poster = `/assets/${reel.poster}`;
 
             // Sursa se pune abia cand banda ajunge pe ecran — altfel bucla se
             // descarca odata cu pagina, inaintea fotografiilor care conteaza.
             const io = new IntersectionObserver((entries, obs) => {
                 entries.forEach(e => {
                     if (!e.isIntersecting) return;
-                    v.src = `./assets/${reel.file}`;
+                    v.src = `/assets/${reel.file}`;
                     v.play().catch(() => { });
                     obs.disconnect();
                 });
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         img.loading = 'lazy';
         img.decoding = 'async';
         img.alt = '';
-        img.src = `./assets/${poster}`;
+        img.src = `/assets/${poster}`;
         strip.appendChild(img);
     };
     loadVideoBand();
@@ -424,8 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const img = document.createElement('img');
                 img.loading = i < 2 ? 'eager' : 'lazy';
-                img.src = `./assets/${cover.file}`;
-                img.srcset = `./assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, ./assets/${cover.file} 2000w`;
+                img.src = `/assets/${cover.file}`;
+                img.srcset = `/assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${cover.file} 2000w`;
                 img.sizes = '(max-width: 900px) 100vw, 50vw';
                 img.alt = label;
                 tile.appendChild(img);
@@ -501,8 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
             applyGalleryCols(container, lastCount);
 
             filtered.forEach((p, i) => {
-                const largeSrc = `./assets/${p.file}`;
-                const smallSrc = `./assets/${p.file.replace(/\.webp$/, '_sm.webp')}`;
+                const largeSrc = `/assets/${p.file}`;
+                const smallSrc = `/assets/${p.file.replace(/\.webp$/, '_sm.webp')}`;
                 galleryImages.push(largeSrc);
 
                 const item = document.createElement('div');
