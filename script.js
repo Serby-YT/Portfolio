@@ -319,28 +319,44 @@ document.addEventListener('DOMContentLoaded', () => {
             startIndex = 1; // primul fisier e mereu acoperit de slide-ul static, corectat sau nu
         }
 
-        for (let i = startIndex; i < files.length; i++) {
-            const { src, hasSmall } = files[i];
-            const slide = document.createElement('div');
-            slide.className = 'hero-slide';
-            const img = document.createElement('img');
-            img.src = src;
-            if (hasSmall) {
-                // Varianta redusa pe mobil — la fel ca la placile de categorie,
-                // ca fotografia din hero (LCP) sa nu descarce inutil originalul.
-                img.srcset = `${src.replace(/\.webp$/, '_sm.webp')} 1000w, ${src} 2000w`;
-                img.sizes = '100vw';
+        /* Restul fotografiilor din hero se construiesc DUPA load.
+           loading="lazy" nu ajuta aici: caruselul acopera tot ecranul, deci
+           toate cadrele sunt "in viewport" si browserul le descarca imediat —
+           ~270 KB care se bateau pe banda cu chiar imaginea LCP. Primul cadru
+           e deja in HTML, asa ca nu se vede nicio diferenta la incarcare. */
+        const buildRestOfSlides = () => {
+            for (let i = startIndex; i < files.length; i++) {
+                const { src, hasSmall } = files[i];
+                const slide = document.createElement('div');
+                slide.className = 'hero-slide';
+                const img = document.createElement('img');
+                img.src = src;
+                if (hasSmall) {
+                    // Varianta redusa pe mobil — la fel ca la placile de categorie,
+                    // ca fotografia din hero (LCP) sa nu descarce inutil originalul.
+                    img.srcset = `${src.replace(/\.webp$/, '_sm.webp')} 1000w, ${src} 2000w`;
+                    img.sizes = '100vw';
+                }
+                img.alt = '';
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                slide.appendChild(img);
+                wrap.appendChild(slide);
+                slides.push(slide);
             }
-            img.alt = '';
-            img.loading = 'lazy';
-            slide.appendChild(img);
-            wrap.appendChild(slide);
-            slides.push(slide);
-        }
+        };
 
         // Cu reduced-motion activat sau o singura fotografie, nu rotim
         const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (slides.length < 2 || reduced) return;
+        if (files.length < 2 || reduced) return;
+
+        const whenIdle = (fn) => {
+            const go = () => (window.requestIdleCallback
+                ? requestIdleCallback(fn, { timeout: 2000 })
+                : setTimeout(fn, 200));
+            if (document.readyState === 'complete') go();
+            else window.addEventListener('load', go, { once: true });
+        };
 
         let current = 0;
 
@@ -351,13 +367,23 @@ document.addEventListener('DOMContentLoaded', () => {
             current = next;
         };
 
-        let timer = setInterval(advance, 5000);
+        let timer = null;
+        const startRotation = () => {
+            if (timer === null) timer = setInterval(advance, 5000);
+        };
+
+        whenIdle(() => {
+            buildRestOfSlides();
+            if (slides.length < 2) return;
+            startRotation();
+        });
 
         /* Un tab ascuns care tot schimba fotografii pe tot ecranul consuma
            decodare degeaba si te intampina la revenire in mijlocul unui fade. */
         document.addEventListener('visibilitychange', () => {
             clearInterval(timer);
-            if (!document.hidden) timer = setInterval(advance, 5000);
+            timer = null;
+            if (!document.hidden && slides.length > 1) startRotation();
         });
     };
     loadHeroCarousel();
