@@ -173,7 +173,7 @@
         mount.innerHTML =
             '<div class="av-wrap">' +
               '<div class="av-head">' +
-                '<h2 class="massive-text" id="availability-title">' + t('availability.title') + '</h2>' +
+                '<h2 class="av-title" id="availability-title">' + t('availability.title') + '</h2>' +
                 '<p class="av-sub">' + t('availability.sub') + '</p>' +
               '</div>' +
               '<div class="av-notice"' + (state === 'ok' ? ' hidden' : '') + '>' +

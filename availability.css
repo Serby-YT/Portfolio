@@ -24,6 +24,18 @@
     margin-bottom: 3.5rem;
 }
 
+/* Nu folosim .massive-text aici: aceea e o litera decorativa, doar contur,
+   cu umplere transparenta. Merge pentru cuvantul "CONTACT", dar o intrebare
+   adresata clientului trebuie sa fie efectiv lizibila. */
+.av-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+}
+
 .av-sub {
     color: var(--color-text-secondary);
     font-family: var(--font-body);
