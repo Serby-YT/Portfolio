@@ -144,15 +144,26 @@
     background: var(--glass-bg);
 }
 
-.av-free .av-dot { background: var(--color-accent-light); }
+.av-free .av-dot { background: var(--color-accent-light); width: 7px; height: 7px; }
 .av-free:hover { background: var(--glass-bg-hover); transform: translateY(-2px); }
 
+/* Ocupat trebuie sa se vada dintr-o privire, nu dupa ce compari doua puncte
+   colorate. Ziua se stinge si primeste o bara — semnal de forma, nu doar de
+   culoare, deci functioneaza si pentru daltonisti si la contrast redus. */
 .av-busy {
     color: var(--color-text-secondary);
     border-color: var(--stroke-faint);
+    opacity: 0.75;
 }
 
-.av-busy .av-dot { background: var(--star-off); }
+.av-busy span { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+.av-busy .av-dot {
+    background: var(--star-off);
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+}
 
 /* Necunoscut: gri, niciodata verde, si nu se poate apasa. */
 .av-unknown {
@@ -195,7 +206,7 @@
 }
 
 .av-legend .l-free { background: var(--color-accent-light); }
-.av-legend .l-busy { background: var(--star-off); }
+.av-legend .l-busy { background: var(--star-off); width: 14px; height: 2px; border-radius: 1px; }
 .av-legend .l-unknown { background: transparent; border: 1px dashed var(--hairline-strong); }
 
 /* ---- raspunsul de sub calendar ---- */
