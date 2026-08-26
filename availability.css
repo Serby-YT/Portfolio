@@ -1,0 +1,250 @@
+/* ==========================================================================
+   availability — verificator de disponibilitate
+   --------------------------------------------------------------------------
+   NU e un sistem de rezervari. Clientul alege o zi, vede daca e libera si
+   primeste datele de contact. Fara preturi, fara avans, fara plati.
+
+   Regula de siguranta care se vede aici in CSS: starea `av-unknown` NU are
+   culoare de "liber". Cand feed-ul e vechi sau lipseste, toate zilele devin
+   av-unknown, iar widgetul nu are cum sa arate verde din greseala.
+   ========================================================================== */
+
+#availability {
+    padding: 10vh 6vw;
+    background: var(--color-bg-primary);
+}
+
+.av-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.av-head {
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.av-sub {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+    margin-top: 0.9rem;
+    line-height: 1.6;
+}
+
+/* ---- bara cu luna si sagetile ---- */
+.av-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.av-month {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+    color: var(--color-text-primary);
+    letter-spacing: 0.01em;
+}
+
+.av-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.av-arrow {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: var(--transition-fast);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+}
+
+.av-arrow:hover:not(:disabled) { background: var(--glass-bg-hover); }
+.av-arrow:disabled { opacity: 0.3; cursor: default; }
+.av-arrow:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 3px; }
+
+/* ---- grila ---- */
+.av-dow,
+.av-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.av-dow {
+    margin-bottom: 8px;
+}
+
+.av-dow span {
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.av-day {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 12px;
+    border: 1px solid var(--stroke-faint);
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    cursor: default;
+    transition: var(--transition-fast);
+}
+
+.av-day.av-empty { border-color: transparent; }
+
+/* Punctul de stare. Fara text-doar-culoare: fiecare zi are si aria-label. */
+.av-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.av-past {
+    opacity: 0.28;
+}
+
+.av-free {
+    cursor: pointer;
+    border-color: var(--hairline-strong);
+    background: var(--glass-bg);
+}
+
+.av-free .av-dot { background: var(--color-accent-light); }
+.av-free:hover { background: var(--glass-bg-hover); transform: translateY(-2px); }
+
+.av-busy {
+    color: var(--color-text-secondary);
+    border-color: var(--stroke-faint);
+}
+
+.av-busy .av-dot { background: var(--star-off); }
+
+/* Necunoscut: gri, niciodata verde, si nu se poate apasa. */
+.av-unknown {
+    color: var(--color-text-secondary);
+    border-style: dashed;
+    border-color: var(--stroke-faint);
+    cursor: default;
+}
+
+.av-day.av-selected {
+    border-color: var(--color-accent-light);
+    background: var(--glass-bg-hover);
+}
+
+.av-day:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 2px; }
+
+/* ---- legenda ---- */
+.av-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.4rem;
+    margin-top: 1.6rem;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+}
+
+.av-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.av-legend i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.av-legend .l-free { background: var(--color-accent-light); }
+.av-legend .l-busy { background: var(--star-off); }
+.av-legend .l-unknown { background: transparent; border: 1px dashed var(--hairline-strong); }
+
+/* ---- raspunsul de sub calendar ---- */
+.av-result {
+    margin-top: 2rem;
+    padding: 1.6rem;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    text-align: center;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+.av-result[hidden] { display: none; }
+
+.av-result-actions {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.av-result-actions a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.av-result-actions a:hover { background: var(--glass-bg-hover); }
+
+/* Banda de avertizare cand feed-ul e vechi sau lipseste. */
+.av-notice {
+    margin-bottom: 1.4rem;
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    border: 1px dashed var(--hairline-strong);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    text-align: center;
+}
+
+.av-notice[hidden] { display: none; }
+
+@media (max-width: 560px) {
+    .av-day { font-size: 0.82rem; border-radius: 10px; }
+    .av-dow span { font-size: 0.62rem; letter-spacing: 0.08em; }
+    .av-dow, .av-grid { gap: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .av-free:hover { transform: none; }
+}
