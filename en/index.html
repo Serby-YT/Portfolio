@@ -141,6 +141,7 @@
     </script>
 
     <link rel="stylesheet" href="/styles.css?v=63">
+    <link rel="stylesheet" href="/availability.css?v=3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- CSS-ul de fonturi incarcat neblocant: nu opreste primul randare cat
@@ -479,6 +480,11 @@
         </section>
 
         <!-- Contact -->
+        <!-- Verificator de disponibilitate. Continutul e randat de availability.js;
+             sectiunea goala e doar punctul de montare, deci pagina nu se strica
+             daca scriptul lipseste. -->
+        <section id="availability" aria-labelledby="availability-title"></section>
+
         <section id="contact" class="contact-section">
             <div class="contact-content fade-in">
                 <h2 class="massive-text" data-i18n="contact.title">Contact</h2>
@@ -543,7 +549,8 @@
         </div>
     </div>
 
-    <script src="/i18n.js?v=18" defer></script>
+    <script src="/i18n.js?v=19" defer></script>
+    <script src="/availability.js?v=3" defer></script>
     <script src="/script.js?v=49" defer></script>
 </body>
 
