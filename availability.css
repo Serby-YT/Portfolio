@@ -180,6 +180,48 @@
 
 .av-day:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 2px; }
 
+/* Zi neverificata: se poate apasa, dar nu afirma nimic. Starea implicita de
+   cand serverul raspunde o zi pe rand in loc sa publice lista intreaga. */
+.av-unchecked {
+    cursor: pointer;
+    border-color: var(--stroke-faint);
+    background: transparent;
+}
+
+.av-unchecked:hover {
+    border-color: var(--hairline-strong);
+    background: var(--glass-bg);
+}
+
+.av-unchecked .av-dot { background: var(--hairline-strong); width: 3px; height: 3px; }
+
+.av-checking {
+    border-color: var(--hairline-strong);
+    cursor: progress;
+}
+
+.av-checking .av-dot {
+    background: var(--color-text-secondary);
+    animation: av-pulse 900ms ease-in-out infinite;
+}
+
+@keyframes av-pulse {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 1; }
+}
+
+.av-hint {
+    margin-top: 1.2rem;
+    text-align: center;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .av-checking .av-dot { animation: none; opacity: 0.6; }
+}
+
 /* ---- legenda ---- */
 .av-legend {
     display: flex;
