@@ -1,18 +1,25 @@
 /* ==========================================================================
    availability — verificator de disponibilitate (NU sistem de rezervari)
    --------------------------------------------------------------------------
-   Clientul alege o zi, vede daca e libera si primeste datele de contact.
+   Clientul alege o zi, vede daca sunt liber si primeste datele de contact.
    Fara preturi, fara avans, fara plati — asta a fost cerinta explicita.
 
    Se incarca DUPA i18n.js (citeste window.SiteI18n).
    Se monteaza in #availability; daca elementul lipseste, nu face nimic.
 
+   DE CE O ZI PE RAND: pana la 27.08.2026 site-ul servea availability.json, care
+   dadea oricui lista completa de zile ocupate. Acum intreaba
+   /api/availability/<data>.json, deci se afla doar ce s-a cerut.
+   ATENTIE: asta nu face programul secret — cine vrea poate parcurge datele una
+   cate una. Limitarea de rata din nginx doar incetineste treaba. Nu prezenta
+   asta ca pe o masura de confidentialitate.
+
    REGULA DE SIGURANTA — nu o slabi:
-   daca availability.json e mai vechi de 6 ore sau nu poate fi citit, widgetul
-   NU are voie sa spuna despre nicio zi ca e libera. Toate zilele devin
-   `av-unknown` si se afiseaza invitatia de a scrie direct. A-i spune unui
-   client ca esti liber intr-o zi in care filmezi deja o nunta e mult mai rau
-   decat a nu raspunde deloc.
+   nicio ramura de eroare nu are voie sa spuna despre o zi ca e libera.
+   - meta.json lipsa, stricat sau mai vechi de 6 ore  -> nu verificam nimic
+   - o interogare care da 404 / 429 / eroare de retea -> ziua ramane neconfirmata
+   A-i spune unui client ca sunt liber intr-o zi in care filmez deja o nunta e
+   mult mai rau decat a nu raspunde deloc.
    ========================================================================== */
 (function () {
     'use strict';
@@ -25,8 +32,9 @@
         whatsapp: ''
     };
 
-    var FEED_URL = '/availability.json';
-    var STALE_MS = 6 * 60 * 60 * 1000;   /* 6 ore */
+    var META_URL = '/api/availability/meta.json';
+    var DAY_URL = '/api/availability/';           /* + YYYY-MM-DD.json */
+    var STALE_MS = 6 * 60 * 60 * 1000;            /* 6 ore */
     var TZ = 'Europe/Bucharest';
     var MONTHS_AHEAD = 18;
 
@@ -41,20 +49,20 @@
     var mount = document.getElementById('availability');
     if (!mount) return;
 
-    /* state: 'loading' | 'ok' | 'unknown' */
+    /* state: 'loading' | 'ok' | 'unknown'  (unknown = nu avem voie sa afirmam nimic) */
     var state = 'loading';
-    var busy = Object.create(null);
     var windowFrom = null, windowTo = null;
+
+    /* Raspunsurile primite in sesiunea asta: data -> 'free'|'busy'|'error'|'checking'.
+       Tine si de politete fata de server: nu reinterogam aceeasi zi la fiecare click. */
+    var answers = Object.create(null);
+
     var cursor = null;      /* prima zi a lunii afisate */
     var selected = null;
 
     /* ---------- helpers de limba ---------- */
-    function lang() {
-        return (window.SiteI18n && window.SiteI18n.lang) || 'ro';
-    }
-    function loc() {
-        return LOCALES[lang()] || LOCALES.ro;
-    }
+    function lang() { return (window.SiteI18n && window.SiteI18n.lang) || 'ro'; }
+    function loc() { return LOCALES[lang()] || LOCALES.ro; }
     function t(key) {
         return (window.SiteI18n && window.SiteI18n.t) ? window.SiteI18n.t(key) : key;
     }
@@ -91,16 +99,12 @@
     }
 
     /* Luni = 0. Calendarul romanesc incepe luni, nu duminica. */
-    function firstWeekday(y, m) {
-        return (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7;
-    }
-    function daysInMonth(y, m) {
-        return new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
-    }
+    function firstWeekday(y, m) { return (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7; }
+    function daysInMonth(y, m) { return new Date(Date.UTC(y, m + 1, 0)).getUTCDate(); }
 
-    /* ---------- feed ---------- */
-    function load() {
-        return fetch(FEED_URL, { cache: 'no-store' })
+    /* ---------- meta (prospetimea datelor) ---------- */
+    function loadMeta() {
+        return fetch(META_URL, { cache: 'no-store' })
             .then(function (r) {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 return r.json();
@@ -108,43 +112,68 @@
             .then(function (data) {
                 var gen = Date.parse(data.generated_at);
                 if (!gen || (Date.now() - gen) > STALE_MS) {
-                    /* Feed vechi = necunoscut. Nu ne bazam pe date invechite. */
-                    state = 'unknown';
+                    state = 'unknown';           /* date invechite = nu afirmam nimic */
                     return;
                 }
-                busy = Object.create(null);
-                (data.busy || []).forEach(function (d) { busy[d] = true; });
                 windowFrom = (data.window && data.window.from) || null;
                 windowTo = (data.window && data.window.to) || null;
                 state = 'ok';
             })
             .catch(function () {
-                /* Retea cazuta, 404, JSON stricat — toate duc in acelasi loc. */
-                state = 'unknown';
+                state = 'unknown';               /* retea cazuta, 404, JSON stricat */
             });
+    }
+
+    /* ---------- interogarea unei zile ---------- */
+    function askDay(isoStr) {
+        answers[isoStr] = 'checking';
+        render();
+        return fetch(DAY_URL + isoStr + '.json', { cache: 'no-store' })
+            .then(function (r) {
+                /* 429 = limita de rata. NU e "liber" — e "nu stiu acum". */
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(function (d) {
+                answers[isoStr] = (d && d.status === 'busy') ? 'busy'
+                                : (d && d.status === 'free') ? 'free'
+                                : 'error';
+            })
+            .catch(function () {
+                answers[isoStr] = 'error';
+            })
+            .then(function () { render(); });
     }
 
     /* ---------- clasificarea unei zile ---------- */
     function classify(isoStr, today) {
         if (isoStr < today) return 'past';
         if (state !== 'ok') return 'unknown';
-        /* In afara ferestrei acoperite de calendar nu avem ce sti. */
         if (windowFrom && isoStr < windowFrom) return 'unknown';
         if (windowTo && isoStr > windowTo) return 'unknown';
-        return busy[isoStr] ? 'busy' : 'free';
+        var a = answers[isoStr];
+        if (a === 'checking') return 'checking';
+        if (a === 'free') return 'free';
+        if (a === 'busy') return 'busy';
+        if (a === 'error') return 'unknown';
+        return 'unchecked';                      /* inca nu am intrebat */
+    }
+
+    /* Ce zile se pot apasa: cele neverificate (ca sa le intrebam) si cele deja
+       aflate libere (ca sa reafisam raspunsul). */
+    function isClickable(kind) {
+        return kind === 'unchecked' || kind === 'free' || kind === 'busy';
     }
 
     /* ---------- randare ---------- */
     function render() {
         var today = todayISO();
         var ty = +today.slice(0, 4), tm = +today.slice(5, 7) - 1;
-
         if (!cursor) cursor = { y: ty, m: tm };
 
         var y = cursor.y, m = cursor.m;
         var atStart = (y === ty && m === tm);
-        var maxAbs = ty * 12 + tm + MONTHS_AHEAD;
-        var atEnd = (y * 12 + m) >= maxAbs;
+        var atEnd = (y * 12 + m) >= (ty * 12 + tm + MONTHS_AHEAD);
 
         var dow = ['1', '2', '3', '4', '5', '6', '7'].map(function (n) {
             return '<span>' + t('availability.dow.' + n) + '</span>';
@@ -158,7 +187,7 @@
         for (var d = 1; d <= total; d++) {
             var isoStr = iso(y, m, d);
             var kind = classify(isoStr, today);
-            var clickable = (kind === 'free');
+            var clickable = isClickable(kind);
             var aria = t('availability.aria.' + (kind === 'past' ? 'past' : kind));
             cells +=
                 '<' + (clickable ? 'button type="button"' : 'div') +
@@ -190,6 +219,7 @@
               '</div>' +
               '<div class="av-dow" aria-hidden="true">' + dow + '</div>' +
               '<div class="av-grid" role="group" aria-label="' + t('availability.title') + '">' + cells + '</div>' +
+              (state === 'ok' ? '<p class="av-hint">' + t('availability.hint') + '</p>' : '') +
               '<div class="av-legend">' +
                 '<span><i class="l-free"></i>' + t('availability.legend.free') + '</span>' +
                 '<span><i class="l-busy"></i>' + t('availability.legend.busy') + '</span>' +
@@ -205,16 +235,17 @@
     function wire() {
         mount.querySelectorAll('.av-arrow').forEach(function (b) {
             b.addEventListener('click', function () {
-                var step = +b.getAttribute('data-step');
-                var abs = cursor.y * 12 + cursor.m + step;
+                var abs = cursor.y * 12 + cursor.m + (+b.getAttribute('data-step'));
                 cursor = { y: Math.floor(abs / 12), m: abs % 12 };
                 render();
             });
         });
         mount.querySelectorAll('button.av-day').forEach(function (b) {
             b.addEventListener('click', function () {
-                selected = b.getAttribute('data-date');
-                render();
+                var date = b.getAttribute('data-date');
+                selected = date;
+                if (answers[date] === undefined) askDay(date);   /* intreabam o singura data */
+                else render();
             });
         });
     }
@@ -223,6 +254,25 @@
         var box = mount.querySelector('.av-result');
         if (!box) return;
         var kind = classify(isoStr, todayISO());
+
+        if (kind === 'checking') {
+            box.innerHTML = t('availability.checking');
+            box.hidden = false;
+            return;
+        }
+        if (kind === 'unknown') {
+            /* Include 429 si erorile de retea. Niciodata "liber". */
+            box.innerHTML = '<strong>' + t('availability.error.title') + '</strong><br>' +
+                            t('availability.error.body');
+            box.hidden = false;
+            return;
+        }
+        if (kind === 'busy') {
+            box.innerHTML = '<strong>' + t('availability.busy.title').replace('{date}', longDate(isoStr)) +
+                            '</strong><br>' + t('availability.busy.body');
+            box.hidden = false;
+            return;
+        }
         if (kind !== 'free') { box.hidden = true; return; }
 
         var links = '<a href="#contact" data-av-contact>' + t('availability.cta.contact') + '</a>';
@@ -251,14 +301,13 @@
                 var ta = document.getElementById('message');
                 if (ta) {
                     ta.value = t('availability.prefill').replace('{date}', longDate(isoStr));
-                    /* label-ul flotant asculta 'input', nu setarea directa a valorii */
                     ta.dispatchEvent(new Event('input', { bubbles: true }));
                 }
             });
         }
     }
 
-    load().then(render);
+    loadMeta().then(render);
 
     /* Limba traieste in URL, deci in practica pagina se reincarca la schimbare.
        Ascultam totusi evenimentul: e ieftin si acopera cazul in care s-ar
