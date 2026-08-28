@@ -305,14 +305,15 @@ h3 {
     color: var(--color-text-primary);
 }
 
-/* Pe landing, cat timp NU s-a derulat, bara sta peste fotografia hero (fara
-   banda in spate), deci textul si pictogramele trebuie sa fie deschise — in
-   ambele teme — ca sa se vada pe fotografie. La scroll, sticla apare in spate
-   si totul revine la culorile temei. */
-body.landing #main-navigation:not(.scrolled) .nav-links a,
-body.landing #main-navigation:not(.scrolled) .lang-option,
-body.landing #main-navigation:not(.scrolled) .lang-sep,
-body.landing #main-navigation:not(.scrolled) .theme-toggle {
+/* Paginile care incep cu o imagine pe tot ecranul (prima pagina si pagina unui
+   proiect video) primesc pe <body> clasa .over-hero. Cat timp NU s-a derulat,
+   bara sta direct peste imagine, fara banda in spate, deci textul si
+   pictogramele trebuie sa fie deschise — in ambele teme — altfel comenzile nu
+   se vad deloc. La scroll apare sticla si totul revine la culorile temei. */
+body.over-hero #main-navigation:not(.scrolled) .nav-links a,
+body.over-hero #main-navigation:not(.scrolled) .lang-option,
+body.over-hero #main-navigation:not(.scrolled) .lang-sep,
+body.over-hero #main-navigation:not(.scrolled) .theme-toggle {
     color: var(--on-image);
     /* Aici bara e transparenta, deci textul alb sta direct pe fotografie.
        Umbra e stransa (lucreaza ca un contur) + una difuza, ca literele sa
@@ -324,37 +325,37 @@ body.landing #main-navigation:not(.scrolled) .theme-toggle {
         0 0 16px rgba(0, 0, 0, 0.45);
 }
 
-body.landing #main-navigation:not(.scrolled) .nav-links a:hover,
-body.landing #main-navigation:not(.scrolled) .nav-links a.active,
-body.landing #main-navigation:not(.scrolled) .lang-option.active,
-body.landing #main-navigation:not(.scrolled) .theme-toggle:hover {
+body.over-hero #main-navigation:not(.scrolled) .nav-links a:hover,
+body.over-hero #main-navigation:not(.scrolled) .nav-links a.active,
+body.over-hero #main-navigation:not(.scrolled) .lang-option.active,
+body.over-hero #main-navigation:not(.scrolled) .theme-toggle:hover {
     color: var(--on-image);
 }
 
 /* Peste fotografie, pastila (hover / pagina activa) e o sticla deschisa,
    ca sa se vada pe fundalul intunecat — indiferent de tema. */
-body.landing #main-navigation:not(.scrolled) .nav-links a:hover,
-body.landing #main-navigation:not(.scrolled) .nav-links a.active {
+body.over-hero #main-navigation:not(.scrolled) .nav-links a:hover,
+body.over-hero #main-navigation:not(.scrolled) .nav-links a.active {
     background: rgba(247, 245, 241, 0.14);
 }
 
-body.landing #main-navigation:not(.scrolled) .nav-links a.active {
+body.over-hero #main-navigation:not(.scrolled) .nav-links a.active {
     border-color: rgba(247, 245, 241, 0.26);
 }
 
 /* comutatorul de limba, ca pastila, tot pe sticla deschisa peste fotografie */
-body.landing #main-navigation:not(.scrolled) .lang-switch {
+body.over-hero #main-navigation:not(.scrolled) .lang-switch {
     background: rgba(247, 245, 241, 0.10);
     border-color: rgba(247, 245, 241, 0.24);
 }
 
 /* Watermark-ul si iconita temei sunt tot albe peste fotografie — aceeasi
    umbra discreta ca textul, ca sa nu dispara pe o fotografie deschisa. */
-body.landing #main-navigation:not(.scrolled) .site-watermark {
+body.over-hero #main-navigation:not(.scrolled) .site-watermark {
     filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
 
-body.landing #main-navigation:not(.scrolled) .theme-toggle svg {
+body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8)) drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
 

@@ -338,6 +338,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         lead.classList.remove('is-empty');
         lead.hidden = false;
 
+        /* Bara de navigatie e transparenta sus si sta direct peste clip. Fara
+           .over-hero pe <body>, textul si pictogramele raman in culorile temei
+           si dispar in imagine — exact ca pe prima pagina, care foloseste
+           aceeasi clasa. */
+        document.body.classList.toggle('over-hero', !!(project && (project.hero || project.cover)));
+
         if (!project) {
             // Fara proiect nu avem clip: antetul ramane doar cu titlul, pe fundal.
             lead.classList.add('is-empty');
