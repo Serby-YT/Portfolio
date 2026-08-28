@@ -3019,7 +3019,12 @@ button:disabled {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: var(--on-image-scrim);
+    /* Doua straturi, ca la .hero-scrim de pe prima pagina: cel radial tine
+       bara de navigatie lizibila si peste un cadru luminos, cel de jos tine
+       titlul. Doar cel de jos ar lasa navigatia sa dispara in alb. */
+    background:
+        radial-gradient(ellipse at center 42%, rgba(8, 9, 10, 0.42) 0%, rgba(8, 9, 10, 0.18) 55%, rgba(8, 9, 10, 0.34) 100%),
+        var(--on-image-scrim);
     pointer-events: none;
 }
 
