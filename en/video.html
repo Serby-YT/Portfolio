@@ -89,7 +89,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="/styles.css?v=68">
+    <link rel="stylesheet" href="/styles.css?v=69">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style"
@@ -209,6 +209,12 @@
                 <div class="video-lead-copy">
                     <div class="video-lead-eyebrow" id="videoLeadMeta"></div>
                     <h1 class="video-lead-title" id="videoTitle"></h1>
+                </div>
+                <!-- Clipul umple tot ecranul, deci nu se vede ca urmeaza o poveste
+                     dedesubt. Indiciul foloseste componenta .scroll-indicator care
+                     exista deja in styles.css. Decorativ: aria-hidden. -->
+                <div class="scroll-indicator" aria-hidden="true">
+                    <div class="line"></div>
                 </div>
             </header>
 
