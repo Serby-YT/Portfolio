@@ -212,9 +212,24 @@
     cursor: default;
 }
 
+/* Ziua aleasa isi pastreaza culoarea starii — un contur verde peste o zi
+   ocupata spune exact pe dos. Selectia se vede din inelul din jur. */
 .av-day.av-selected {
-    border-color: var(--color-accent-light);
+    border-color: var(--hairline-strong);
     background: var(--glass-bg-hover);
+    box-shadow: 0 0 0 2px var(--hairline-strong);
+}
+
+.av-free.av-selected {
+    border-color: var(--av-free);
+    background: var(--av-free-hover);
+    box-shadow: 0 0 0 2px var(--av-free-line);
+}
+
+.av-busy.av-selected {
+    border-color: var(--av-busy);
+    background: var(--av-busy-bg);
+    box-shadow: 0 0 0 2px var(--av-busy-line);
 }
 
 .av-day:focus-visible { outline: 2px solid var(--color-accent-light); outline-offset: 2px; }
