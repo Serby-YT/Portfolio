@@ -2975,38 +2975,106 @@ button:disabled {
 }
 
 /* ---- Pagina unui proiect ---- */
+/* Sectiunea nu mai are spatiu sus: clipul de deschidere trebuie sa inceapa
+   exact de sub bara de navigatie, ca hero-ul de pe prima pagina. */
+.video-detail-section {
+    padding-top: 0;
+}
+
+.video-lead {
+    position: relative;
+    /* Iese din coloana pe toata latimea ferestrei. Marginile negative, nu
+       position/left — vezi si .video-clip. */
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-bottom: 5rem;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 10rem 5% 6rem;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-lead-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.video-lead-media video,
+.video-lead-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.video-lead-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--on-image-scrim);
+    pointer-events: none;
+}
+
+.video-lead-copy {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+}
+
+.video-lead-eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--on-image-dim);
+    margin-bottom: 1rem;
+}
+
+.video-lead-title {
+    font-size: clamp(2.3rem, 5.5vw, 4.4rem);
+    line-height: 1.05;
+    color: var(--on-image);
+    margin: 0;
+}
+
+/* Proiect inexistent: nu avem clip, deci antetul se poarta ca un titlu normal. */
+.video-lead.is-empty {
+    min-height: 0;
+    margin-bottom: 3rem;
+    padding: 12rem 5% 0;
+    background: transparent;
+}
+
+.video-lead.is-empty .video-lead-title {
+    color: var(--color-text-primary);
+}
+
 .video-meta {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin: -6rem 0 6rem;
+    margin: 0 0 5rem;
 }
 
-.video-meta-line {
+/* Rolurile scrise ca o propozitie, cu numele la capat: se citeste dintr-o
+   data cine a facut filmul, nu e o insiruire de etichete. */
+.video-credit {
     font-family: var(--font-body);
-    font-size: 0.78rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
     color: var(--color-text-secondary);
-}
-
-.video-roles {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.video-role-chip {
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-text-secondary);
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--hairline);
-    border-radius: 999px;
+    text-align: center;
+    margin: 0;
 }
 
 /* O singura coloana ingusta: povestea se citeste, nu se scaneaza */
@@ -3017,26 +3085,6 @@ button:disabled {
     display: flex;
     flex-direction: column;
     gap: 3.5rem;
-}
-
-.video-hero {
-    /* Clipul de deschidere iese din coloana — e imagine, nu text.
-       Marginile negative sunt singura metoda care tine si intr-un container
-       flex: left/transform s-ar raporta la pozitia elementului din flex, nu
-       la pagina, si clipul ar fugi in dreapta. */
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    flex-shrink: 0;
-    background: #000;
-}
-
-.video-hero video {
-    width: 100%;
-    max-height: 82vh;
-    object-fit: cover;
-    display: block;
 }
 
 .video-intro,
@@ -3085,7 +3133,7 @@ button:disabled {
 
 /* Clipurile si cadrele ies din coloana de text si ocupa tot ecranul.
    Marginile negative (nu position/left) sunt singurele care tin intr-un
-   container flex — vezi si .video-hero. */
+   container flex — vezi si .video-lead. */
 .video-clip,
 .video-stills {
     width: 100vw;
@@ -3282,8 +3330,20 @@ button:disabled {
         font-size: 1.5rem;
     }
 
+    /* Pe telefon, un clip 16:9 intins pe tot ecranul inalt s-ar taia pana
+       nu mai ramane nimic din cadru, deci antetul e mai scund. */
+    .video-lead {
+        min-height: 68svh;
+        padding: 8rem 5% 3rem;
+        margin-bottom: 3rem;
+    }
+
+    .video-lead.is-empty {
+        padding: 9rem 5% 0;
+    }
+
     .video-meta {
-        margin: -4rem 0 4rem;
+        margin: 0 0 3rem;
     }
 
     .video-detail {

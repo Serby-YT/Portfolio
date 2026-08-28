@@ -20,6 +20,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         return field[LANG()] || field.ro || field.en || '';
     };
 
+    /* Rolurile stau in manifest ca etichete ("Filmare", "Color"). Pe pagina
+       proiectului le scriem ca propozitie, deci avem nevoie de forma din
+       mijlocul frazei — "Color" nu devine "color", ci "colorizare". */
+    const ROLE_WORDS = {
+        ro: {
+            'Regie': 'regie', 'Filmare': 'filmare', 'Montaj': 'montaj',
+            'Color': 'colorizare', 'Sunet': 'sunet', 'Dronă': 'filmare cu drona',
+            'Tehnic': 'partea tehnică'
+        },
+        en: {
+            'Regie': 'directing', 'Filmare': 'cinematography', 'Montaj': 'editing',
+            'Color': 'color grading', 'Sunet': 'sound', 'Dronă': 'drone work',
+            'Tehnic': 'the technical side'
+        }
+    };
+    const CREDIT_NAME = 'Anița Șerban';
+
+    /* "Filmare, montaj și colorizare — Anița Șerban" */
+    function creditLine(roles) {
+        const lang = LANG();
+        const words = (roles || [])
+            .map(r => (ROLE_WORDS[lang] || ROLE_WORDS.ro)[r] || DISPLAY(r).toLowerCase())
+            .filter(Boolean);
+        if (!words.length) return '';
+        const and = lang === 'en' ? ' and ' : ' și ';
+        const list = words.length === 1
+            ? words[0]
+            : words.slice(0, -1).join(', ') + and + words[words.length - 1];
+        return list.charAt(0).toUpperCase() + list.slice(1) + ' — ' + CREDIT_NAME;
+    }
+
     /* Utilizatorii care au cerut mai putina miscare primesc doar postere:
        nicio bucla nu porneste singura. */
     const REDUCED_MOTION = window.matchMedia
@@ -297,10 +328,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const title = document.getElementById('videoTitle');
         const meta = document.getElementById('videoMeta');
         const body = document.getElementById('videoDetail');
+        const lead = document.getElementById('videoLead');
+        const leadMedia = document.getElementById('videoLeadMedia');
+        const leadMeta = document.getElementById('videoLeadMeta');
         body.innerHTML = '';
         meta.innerHTML = '';
+        leadMedia.innerHTML = '';
+        leadMeta.textContent = '';
+        lead.classList.remove('is-empty');
+        lead.hidden = false;
 
         if (!project) {
+            // Fara proiect nu avem clip: antetul ramane doar cu titlul, pe fundal.
+            lead.classList.add('is-empty');
             title.textContent = T('video.notfound');
             document.title = `${T('video.notfound')} | Anița Șerban Photography`;
             setVideoSchema(null);
@@ -322,24 +362,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (ogImg) setMeta('meta[property="og:image"]', 'content', `${SITE}/assets/${ogImg}`);
         setVideoSchema(project);
 
-        // Rand de context: unde, cand, si ce am facut la proiect.
-        const bits = [project.location, project.year].filter(Boolean).join(' · ');
-        if (bits) {
-            const line = document.createElement('div');
-            line.className = 'video-meta-line';
-            line.textContent = bits;
+        // Peste clip, deasupra titlului: ce fel de proiect, unde si cand.
+        leadMeta.textContent = [DISPLAY(project.kind), project.location, project.year]
+            .filter(Boolean).join(' · ');
+
+        // Sub clip: ce am facut la film, scris ca propozitie, cu numele la capat.
+        const credit = creditLine(project.role);
+        if (credit) {
+            const line = document.createElement('p');
+            line.className = 'video-credit';
+            line.textContent = credit;
             meta.appendChild(line);
-        }
-        if (project.role && project.role.length) {
-            const roles = document.createElement('div');
-            roles.className = 'video-roles';
-            project.role.forEach(r => {
-                const chip = document.createElement('span');
-                chip.className = 'video-role-chip';
-                chip.textContent = DISPLAY(r);
-                roles.appendChild(chip);
-            });
-            meta.appendChild(roles);
         }
 
         // Cadrele din proiect alimenteaza acelasi lightbox ca in restul site-ului.
@@ -348,13 +381,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (b.type === 'stills') (b.files || []).forEach(f => stillsForLightbox.push(`/assets/${f}`));
         });
 
-        // Clipul de deschidere: cel mai bun cadru, latime completa.
+        /* Clipul de deschidere umple antetul. Trece prin acelasi observator
+           ca restul clipurilor, dar fiind in capul paginii porneste imediat. */
         if (project.hero) {
-            const stage = document.createElement('div');
-            stage.className = 'video-hero fade-in';
-            stage.appendChild(makeVideo(project.hero.file, project.hero.poster));
-            body.appendChild(stage);
-            if (window.observer) window.observer.observe(stage);
+            leadMedia.appendChild(makeVideo(project.hero.file, project.hero.poster));
+        } else if (project.cover) {
+            const img = document.createElement('img');
+            img.src = `/assets/${project.cover}`;
+            img.alt = '';
+            leadMedia.appendChild(img);
         }
 
         // Paragraful de intrare — de ce exista filmul.

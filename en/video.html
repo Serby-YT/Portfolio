@@ -89,7 +89,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="/styles.css?v=63">
+    <link rel="stylesheet" href="/styles.css?v=64">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style"
@@ -199,12 +199,21 @@
         </section>
 
         <!-- DETALIU: un proiect, cu povestea lui -->
-        <section class="portfolio-section" id="videoDetailView" style="display:none">
+        <section class="portfolio-section video-detail-section" id="videoDetailView" style="display:none">
+            <!-- Deschiderea: clipul pe tot ecranul, cu titlul peste el — acelasi
+                 tipar ca hero-ul de pe prima pagina. Bara de navigatie e fixed
+                 si transparenta sus, deci pluteste peste clip fara ajutor. -->
+            <header class="video-lead" id="videoLead" hidden>
+                <div class="video-lead-media" id="videoLeadMedia"></div>
+                <div class="video-lead-scrim" aria-hidden="true"></div>
+                <div class="video-lead-copy">
+                    <div class="video-lead-eyebrow" id="videoLeadMeta"></div>
+                    <h1 class="video-lead-title" id="videoTitle"></h1>
+                </div>
+            </header>
+
             <div class="section-intro">
                 <a href="/en/video.html" class="back-link magnetic" data-i18n="video.back">← All projects</a>
-                <div class="section-header fade-in delay-1">
-                    <h2 id="videoTitle"></h2>
-                </div>
                 <div class="video-meta" id="videoMeta"></div>
             </div>
 
@@ -240,7 +249,7 @@
 
     <script src="/i18n.js?v=22" defer></script>
     <script src="/script.js?v=49" defer></script>
-    <script src="/video.js?v=4" defer></script>
+    <script src="/video.js?v=5" defer></script>
 </body>
 
 </html>
