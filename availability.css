@@ -9,6 +9,31 @@
    av-unknown, iar widgetul nu are cum sa arate verde din greseala.
    ========================================================================== */
 
+/* Culorile de stare sunt ale widgetului, nu ale temei. Inainte, "liber"
+   folosea --glass-bg si --color-accent-light, iar "ocupat" doar --star-off:
+   pe tema deschisa cele doua ieseau aproape identice si nu se intelegea nimic.
+   Verde si rosu, cu valori diferite pe fiecare tema ca sa aiba contrast si pe
+   fundal inchis, si pe off-white. */
+:root {
+    --av-free: #7fae7a;
+    --av-free-bg: rgba(127, 174, 122, 0.12);
+    --av-free-line: rgba(127, 174, 122, 0.40);
+    --av-free-hover: rgba(127, 174, 122, 0.22);
+    --av-busy: #c9736b;
+    --av-busy-bg: rgba(201, 115, 107, 0.10);
+    --av-busy-line: rgba(201, 115, 107, 0.34);
+}
+
+[data-theme="light"] {
+    --av-free: #3f7145;
+    --av-free-bg: rgba(63, 113, 69, 0.10);
+    --av-free-line: rgba(63, 113, 69, 0.34);
+    --av-free-hover: rgba(63, 113, 69, 0.18);
+    --av-busy: #a5453c;
+    --av-busy-bg: rgba(165, 69, 60, 0.09);
+    --av-busy-line: rgba(165, 69, 60, 0.30);
+}
+
 #availability {
     padding: 10vh 6vw;
     background: var(--color-bg-primary);
@@ -138,28 +163,42 @@
     opacity: 0.28;
 }
 
+/* Libera: fond si contur verzi, plus punctul verde sub data. */
 .av-free {
     cursor: pointer;
-    border-color: var(--hairline-strong);
-    background: var(--glass-bg);
+    border-color: var(--av-free-line);
+    background: var(--av-free-bg);
 }
 
-.av-free .av-dot { background: var(--color-accent-light); width: 7px; height: 7px; }
-.av-free:hover { background: var(--glass-bg-hover); transform: translateY(-2px); }
+.av-free .av-dot {
+    background: var(--av-free);
+    width: 7px;
+    height: 7px;
+}
 
-/* Ocupat trebuie sa se vada dintr-o privire, nu dupa ce compari doua puncte
-   colorate. Ziua se stinge si primeste o bara — semnal de forma, nu doar de
-   culoare, deci functioneaza si pentru daltonisti si la contrast redus. */
+.av-free:hover {
+    border-color: var(--av-free);
+    background: var(--av-free-hover);
+    transform: translateY(-2px);
+}
+
+/* Ocupat: rosu, dar pastram si taietura peste cifra si bara in loc de punct.
+   Culoarea singura nu ajunge — vreo 8% dintre barbati nu disting rosu de verde,
+   iar forma se vede si la contrast redus. Deci si culoare, si forma. */
 .av-busy {
-    color: var(--color-text-secondary);
-    border-color: var(--stroke-faint);
-    opacity: 0.75;
+    color: var(--av-busy);
+    border-color: var(--av-busy-line);
+    background: var(--av-busy-bg);
 }
 
-.av-busy span { text-decoration: line-through; text-decoration-thickness: 1px; }
+.av-busy span {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--av-busy);
+}
 
 .av-busy .av-dot {
-    background: var(--star-off);
+    background: var(--av-busy);
     width: 14px;
     height: 2px;
     border-radius: 1px;
@@ -247,8 +286,8 @@
     display: inline-block;
 }
 
-.av-legend .l-free { background: var(--color-accent-light); }
-.av-legend .l-busy { background: var(--star-off); width: 14px; height: 2px; border-radius: 1px; }
+.av-legend .l-free { background: var(--av-free); }
+.av-legend .l-busy { background: var(--av-busy); width: 14px; height: 2px; border-radius: 1px; }
 .av-legend .l-unknown { background: transparent; border: 1px dashed var(--hairline-strong); }
 
 /* ---- raspunsul de sub calendar ---- */
