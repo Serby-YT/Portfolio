@@ -3067,6 +3067,14 @@ button:disabled {
     color: var(--color-text-primary);
 }
 
+/* Sub clip totul sta pe axa: legatura de intoarcere era aliniata la stanga
+   deasupra unui credit centrat, si randul iesea strambe. */
+.video-detail-section .section-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .video-meta {
     display: flex;
     flex-direction: column;
@@ -3095,6 +3103,62 @@ button:disabled {
     display: flex;
     flex-direction: column;
     gap: 3.5rem;
+}
+
+/* Capatul unei povesti e locul cel mai bun ca sa o incepi pe urmatoarea.
+   Pana acum pagina unui proiect se termina direct in subsol. */
+.video-next {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "label thumb"
+        "name  thumb";
+    align-items: center;
+    column-gap: 1.6rem;
+    row-gap: 0.3rem;
+    padding: 1.5rem 1.7rem;
+    border: 1px solid var(--hairline);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: var(--transition-fast);
+}
+
+.video-next:hover {
+    border-color: var(--hairline-strong);
+    background: var(--glass-bg-hover);
+    transform: translateY(-2px);
+}
+
+.video-next-label {
+    grid-area: label;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.video-next-name {
+    grid-area: name;
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.video-next-name::after {
+    content: ' \2192';
+    color: var(--color-text-secondary);
+}
+
+.video-next-thumb {
+    grid-area: thumb;
+    width: 104px;
+    height: 68px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
 }
 
 .video-intro,
@@ -3367,6 +3431,14 @@ button:disabled {
     .video-stills {
         grid-template-columns: 1fr;
     }
+
+    .video-next {
+        padding: 1.2rem 1.3rem;
+        column-gap: 1.1rem;
+    }
+
+    .video-next-name { font-size: 1.25rem; }
+    .video-next-thumb { width: 76px; height: 52px; }
 
     .video-clip figcaption {
         left: 1.4rem;

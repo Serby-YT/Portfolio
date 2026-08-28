@@ -387,10 +387,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (b.type === 'stills') (b.files || []).forEach(f => stillsForLightbox.push(`/assets/${f}`));
         });
 
-        /* Clipul de deschidere umple antetul. Trece prin acelasi observator
-           ca restul clipurilor, dar fiind in capul paginii porneste imediat. */
+        /* Clipul de deschidere umple antetul. Spre deosebire de restul
+           clipurilor, NU asteapta observatorul: e primul lucru de pe pagina,
+           deci sursa se pune direct. Altfel incarcarea lui atarna de un
+           IntersectionObserver care, intr-un tab inca nevizibil, nu se
+           declanseaza — si omul ramane cu posterul. */
         if (project.hero) {
-            leadMedia.appendChild(makeVideo(project.hero.file, project.hero.poster));
+            const heroVideo = makeVideo(project.hero.file, project.hero.poster);
+            heroVideo.preload = 'metadata';
+            heroVideo.src = heroVideo.dataset.src;
+            leadMedia.appendChild(heroVideo);
         } else if (project.cover) {
             const img = document.createElement('img');
             img.src = `/assets/${project.cover}`;
@@ -512,6 +518,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             wrap.appendChild(facade);
             body.appendChild(wrap);
             if (window.observer) window.observer.observe(wrap);
+        }
+
+        /* Pana acum pagina unui proiect se termina in subsol. Intr-un
+           portofoliu, capatul unei povesti e locul cel mai bun ca sa o incepi
+           pe urmatoarea — asa ca punem aici proiectul care urmeaza in lista,
+           cu coperta lui. Se intoarce la primul dupa ultimul. */
+        const idx = projects.findIndex(p => p.slug === project.slug);
+        if (projects.length > 1 && idx !== -1) {
+            const next = projects[(idx + 1) % projects.length];
+
+            const link = document.createElement('a');
+            link.className = 'video-next fade-in';
+            link.href = `video.html?p=${encodeURIComponent(next.slug)}`;
+
+            const label = document.createElement('span');
+            label.className = 'video-next-label';
+            label.textContent = T('video.next');
+            link.appendChild(label);
+
+            const name = document.createElement('span');
+            name.className = 'video-next-name';
+            name.textContent = DISPLAY(next.name);
+            link.appendChild(name);
+
+            if (next.cover) {
+                const thumb = document.createElement('img');
+                thumb.className = 'video-next-thumb';
+                thumb.loading = 'lazy';
+                thumb.alt = '';
+                thumb.src = `/assets/${next.cover}`;
+                // Miniatura are 104px pe ecran: fara srcset browserul ar trage
+                // coperta la 1920px, adica de zeci de ori mai mult decat afiseaza.
+                thumb.srcset = `/assets/${next.cover.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${next.cover} 2000w`;
+                thumb.sizes = '110px';
+                link.appendChild(thumb);
+            }
+
+            body.appendChild(link);
+            if (window.observer) window.observer.observe(link);
         }
     }
 
