@@ -400,7 +400,12 @@
         'Color': 'Color grade',
         'Sunet': 'Sound',
         'Dronă': 'Drone',
-        'Tehnic': 'Technical'
+        'Tehnic': 'Technical',
+        /* Video: numele proiectelor de majorat — pe /en/ nu au sens in romana */
+        'Majoratul lui Luca': "Luca's 18th",
+        'Majoratul Iasminei': "Iasmina's 18th",
+        'Majoratul lui Adelin': "Adelin's 18th",
+        'Majoratul lui Sebastian': "Sebastian's 18th"
     };
 
     /* -----------------------------------------------------------------
