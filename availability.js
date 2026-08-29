@@ -7,12 +7,13 @@
    Se incarca DUPA i18n.js (citeste window.SiteI18n).
    Se monteaza in #availability; daca elementul lipseste, nu face nimic.
 
-   DE CE O ZI PE RAND: pana la 27.08.2026 site-ul servea availability.json, care
-   dadea oricui lista completa de zile ocupate. Acum intreaba
-   /api/availability/<data>.json, deci se afla doar ce s-a cerut.
-   ATENTIE: asta nu face programul secret — cine vrea poate parcurge datele una
-   cate una. Limitarea de rata din nginx doar incetineste treaba. Nu prezenta
-   asta ca pe o masura de confidentialitate.
+   DE CE O LUNA PE RAND: pana la 27.08.2026 site-ul servea availability.json, cu
+   toate cele 731 de zile deodata. Apoi a intrebat o zi pe click — dar clientul
+   trebuia sa apese pe fiecare data ca sa afle ceva, ceea ce nu mergea. Acum cere
+   /api/availability/<AAAA-LL>.json: exact luna afisata, o singura cerere in loc
+   de 31, si tot nu exista un fisier cu programul intreg.
+   ATENTIE: asta nu face programul secret — cine vrea poate cere luna dupa luna.
+   Nu prezenta asta ca pe o masura de confidentialitate.
 
    REGULA DE SIGURANTA — nu o slabi:
    nicio ramura de eroare nu are voie sa spuna despre o zi ca e libera.
@@ -33,7 +34,7 @@
     };
 
     var META_URL = '/api/availability/meta.json';
-    var DAY_URL = '/api/availability/';           /* + YYYY-MM-DD.json */
+    var MONTH_URL = '/api/availability/';         /* + YYYY-MM.json */
     var STALE_MS = 6 * 60 * 60 * 1000;            /* 6 ore */
     var TZ = 'Europe/Bucharest';
     var MONTHS_AHEAD = 18;
@@ -53,9 +54,12 @@
     var state = 'loading';
     var windowFrom = null, windowTo = null;
 
-    /* Raspunsurile primite in sesiunea asta: data -> 'free'|'busy'|'error'|'checking'.
-       Tine si de politete fata de server: nu reinterogam aceeasi zi la fiecare click. */
+    /* Raspunsurile primite in sesiunea asta: data -> 'free'|'busy'. */
     var answers = Object.create(null);
+
+    /* Ce luni am cerut deja: 'AAAA-LL' -> 'loading'|'ok'|'error'. O luna se cere
+       o singura data pe sesiune, oricat te-ai plimba inainte si inapoi. */
+    var months = Object.create(null);
 
     var cursor = null;      /* prima zi a lunii afisate */
     var selected = null;
@@ -124,25 +128,32 @@
             });
     }
 
-    /* ---------- interogarea unei zile ---------- */
-    function askDay(isoStr) {
-        answers[isoStr] = 'checking';
-        render();
-        return fetch(DAY_URL + isoStr + '.json', { cache: 'no-store' })
+    /* ---------- interogarea unei luni ---------- */
+    function ensureMonth(y, m) {
+        var key = y + '-' + String(m + 1).padStart(2, '0');
+        if (months[key]) return;                 /* deja ceruta in sesiunea asta */
+        months[key] = 'loading';
+
+        fetch(MONTH_URL + key + '.json', { cache: 'no-store' })
             .then(function (r) {
-                /* 429 = limita de rata. NU e "liber" — e "nu stiu acum". */
+                /* 429 = limita de rata. NU inseamna "liber" — inseamna "nu stiu". */
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 return r.json();
             })
             .then(function (d) {
-                answers[isoStr] = (d && d.status === 'busy') ? 'busy'
-                                : (d && d.status === 'free') ? 'free'
-                                : 'error';
+                var days = d && d.days;
+                if (!days || typeof days !== 'object') throw new Error('raspuns fara zile');
+                /* Doar valorile pe care le recunoastem ajung in answers. Orice
+                   altceva ramane negasit, adica "nu pot confirma". */
+                Object.keys(days).forEach(function (k) {
+                    if (days[k] === 'free' || days[k] === 'busy') answers[k] = days[k];
+                });
+                months[key] = 'ok';
             })
             .catch(function () {
-                answers[isoStr] = 'error';
+                months[key] = 'error';
             })
-            .then(function () { render(); });
+            .then(render);
     }
 
     /* ---------- clasificarea unei zile ---------- */
@@ -151,18 +162,22 @@
         if (state !== 'ok') return 'unknown';
         if (windowFrom && isoStr < windowFrom) return 'unknown';
         if (windowTo && isoStr > windowTo) return 'unknown';
+        /* Cat timp luna e pe drum aratam "verific", nu "nu pot confirma":
+           altfel calendarul clipeste din liniute in puncte la fiecare incarcare. */
+        var st = months[isoStr.slice(0, 7)];
+        if (!st || st === 'loading') return 'checking';
+        if (st !== 'ok') return 'unknown';        /* 429, 404, retea cazuta */
+
         var a = answers[isoStr];
-        if (a === 'checking') return 'checking';
         if (a === 'free') return 'free';
         if (a === 'busy') return 'busy';
-        if (a === 'error') return 'unknown';
-        return 'unchecked';                      /* inca nu am intrebat */
+        return 'unknown';                         /* zi in afara ferestrei */
     }
 
-    /* Ce zile se pot apasa: cele neverificate (ca sa le intrebam) si cele deja
-       aflate libere (ca sa reafisam raspunsul). */
+    /* Se pot apasa doar zilele despre care avem un raspuns — clicul nu mai
+       interogheaza nimic, doar deschide caseta cu datele de contact. */
     function isClickable(kind) {
-        return kind === 'unchecked' || kind === 'free' || kind === 'busy';
+        return kind === 'free' || kind === 'busy';
     }
 
     /* ---------- randare ---------- */
@@ -172,6 +187,7 @@
         if (!cursor) cursor = { y: ty, m: tm };
 
         var y = cursor.y, m = cursor.m;
+        if (state === 'ok') ensureMonth(y, m);
         var atStart = (y === ty && m === tm);
         var atEnd = (y * 12 + m) >= (ty * 12 + tm + MONTHS_AHEAD);
 
@@ -242,10 +258,8 @@
         });
         mount.querySelectorAll('button.av-day').forEach(function (b) {
             b.addEventListener('click', function () {
-                var date = b.getAttribute('data-date');
-                selected = date;
-                if (answers[date] === undefined) askDay(date);   /* intreabam o singura data */
-                else render();
+                selected = b.getAttribute('data-date');
+                render();
             });
         });
     }
