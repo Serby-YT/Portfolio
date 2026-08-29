@@ -90,9 +90,11 @@
     gap: 0.5rem;
 }
 
+/* 44px e pragul sub care degetul incepe sa rateze. Se aplica si pe desktop —
+   un buton rotund de 44 nu deranjeaza acolo, iar unul de 42 rateaza pe telefon. */
 .av-arrow {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
     border-radius: 50%;
@@ -331,7 +333,9 @@
 }
 
 .av-result-actions a {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     padding: 0.75rem 1.5rem;
     border-radius: 999px;
     border: 1px solid var(--glass-border);

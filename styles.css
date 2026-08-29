@@ -3394,6 +3394,14 @@ button:disabled {
         height: 2.6rem;
     }
 
+    /* Taburile de filtrare aveau 33px inaltime: prea mici pentru un deget.
+       Doar pe telefon — pe desktop mouse-ul nu are problema asta. */
+    .portfolio-tab {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+
     .video-card-label {
         left: 1.4rem;
         right: 1.4rem;
