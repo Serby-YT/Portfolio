@@ -3055,41 +3055,6 @@ button:disabled {
     margin: 0;
 }
 
-/* Indiciul de derulare din coltul din dreapta-jos al clipului. Componenta
-   .scroll-indicator exista de mult in fisier, dar nu era folosita nicaieri;
-   aici ii dam pozitia si culorile potrivite peste imagine. */
-.video-lead .scroll-indicator {
-    left: auto;
-    right: 5%;
-    bottom: 3rem;
-    z-index: 2;
-    opacity: 0.7;
-}
-
-.video-lead .scroll-indicator .line {
-    background: rgba(247, 245, 241, 0.25);
-}
-
-/* Peste clip, culorile temei nu au ce cauta — segmentul e mereu deschis. */
-.video-lead .scroll-indicator .line::after {
-    background: var(--on-image);
-}
-
-/* Fara clip nu e nimic de indicat. */
-.video-lead.is-empty .scroll-indicator {
-    display: none;
-}
-
-/* Un segment care cade la nesfarsit e exact ce cere cineva care a cerut mai
-   putina miscare sa nu vada. Linia ramane, ca semn static. */
-@media (prefers-reduced-motion: reduce) {
-    .video-lead .scroll-indicator .line::after {
-        animation: none;
-        height: 100%;
-        opacity: 0.5;
-    }
-}
-
 /* Proiect inexistent: nu avem clip, deci antetul se poarta ca un titlu normal. */
 .video-lead.is-empty {
     min-height: 0;
@@ -3449,15 +3414,6 @@ button:disabled {
 
     .video-lead.is-empty {
         padding: 9rem 5% 0;
-    }
-
-    /* Pe telefon antetul e mai scund, deci si indiciul */
-    .video-lead .scroll-indicator {
-        bottom: 1.6rem;
-    }
-
-    .video-lead .scroll-indicator .line {
-        height: 46px;
     }
 
     .video-meta {
