@@ -245,6 +245,24 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://serban-photo.com/video.html?p=majorat-casian</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=majorat-casian"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=majorat-casian"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=majorat-casian"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html?p=majorat-casian</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=majorat-casian"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=majorat-casian"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=majorat-casian"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://serban-photo.com/privacy.html</loc>
     <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/privacy.html"/>

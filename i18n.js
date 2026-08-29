@@ -407,7 +407,8 @@
         'Majoratul lui Luca': "Luca's 18th",
         'Majoratul Iasminei': "Iasmina's 18th",
         'Majoratul lui Adelin': "Adelin's 18th",
-        'Majoratul lui Sebastian': "Sebastian's 18th"
+        'Majoratul lui Sebastian': "Sebastian's 18th",
+        'Majoratul lui Casian': "Casian's 18th"
     };
 
     /* -----------------------------------------------------------------
