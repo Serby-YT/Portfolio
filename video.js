@@ -376,7 +376,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             .filter(Boolean).join(' · ');
 
         // Sub clip: ce am facut la film, scris ca propozitie, cu numele la capat.
-        const credit = creditLine(project.role, project.credit);
+        // L() ca sa mearga si {ro,en}: "si Alex Marian" n-are ce cauta pe /en/.
+        const credit = creditLine(project.role, L(project.credit));
         if (credit) {
             const line = document.createElement('p');
             line.className = 'video-credit';
