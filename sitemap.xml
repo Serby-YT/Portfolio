@@ -263,6 +263,60 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://serban-photo.com/video.html?p=primul-scurtmetraj</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=primul-scurtmetraj"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=primul-scurtmetraj"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=primul-scurtmetraj"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html?p=primul-scurtmetraj</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=primul-scurtmetraj"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=primul-scurtmetraj"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=primul-scurtmetraj"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/video.html?p=generosity</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=generosity"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=generosity"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=generosity"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html?p=generosity</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=generosity"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=generosity"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=generosity"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/video.html?p=boovie-2026</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=boovie-2026"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=boovie-2026"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=boovie-2026"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://serban-photo.com/en/video.html?p=boovie-2026</loc>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/video.html?p=boovie-2026"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/video.html?p=boovie-2026"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://serban-photo.com/video.html?p=boovie-2026"/>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://serban-photo.com/privacy.html</loc>
     <xhtml:link rel="alternate" hreflang="ro" href="https://serban-photo.com/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://serban-photo.com/en/privacy.html"/>

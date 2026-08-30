@@ -25,20 +25,23 @@ document.addEventListener('DOMContentLoaded', async () => {
        mijlocul frazei — "Color" nu devine "color", ci "colorizare". */
     const ROLE_WORDS = {
         ro: {
-            'Regie': 'regie', 'Filmare': 'filmare', 'Montaj': 'montaj',
+            'Regie': 'regie', 'Scenariu': 'scenariu', 'Filmare': 'filmare', 'Montaj': 'montaj',
             'Color': 'colorizare', 'Sunet': 'sunet', 'Dronă': 'filmare cu drona',
             'Tehnic': 'partea tehnică'
         },
         en: {
-            'Regie': 'directing', 'Filmare': 'cinematography', 'Montaj': 'editing',
+            'Regie': 'directing', 'Scenariu': 'screenplay', 'Filmare': 'cinematography', 'Montaj': 'editing',
             'Color': 'color grading', 'Sunet': 'sound', 'Dronă': 'drone work',
             'Tehnic': 'the technical side'
         }
     };
     const CREDIT_NAME = 'Anița Șerban';
 
-    /* "Filmare, montaj și colorizare — Anița Șerban" */
-    function creditLine(roles) {
+    /* "Filmare, montaj și colorizare — Anița Șerban".
+       `who` exista pentru filmele facute in doi: la BOOVIE regia, imaginea si
+       montajul sunt impartite cu Alex Marian, iar un credit care spune doar un
+       nume ar fi pur si simplu gresit. */
+    function creditLine(roles, who) {
         const lang = LANG();
         const words = (roles || [])
             .map(r => (ROLE_WORDS[lang] || ROLE_WORDS.ro)[r] || DISPLAY(r).toLowerCase())
@@ -48,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const list = words.length === 1
             ? words[0]
             : words.slice(0, -1).join(', ') + and + words[words.length - 1];
-        return list.charAt(0).toUpperCase() + list.slice(1) + ' — ' + CREDIT_NAME;
+        return list.charAt(0).toUpperCase() + list.slice(1) + ' — ' + (who || CREDIT_NAME);
     }
 
     /* Utilizatorii care au cerut mai putina miscare primesc doar postere:
@@ -373,7 +376,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             .filter(Boolean).join(' · ');
 
         // Sub clip: ce am facut la film, scris ca propozitie, cu numele la capat.
-        const credit = creditLine(project.role);
+        const credit = creditLine(project.role, project.credit);
         if (credit) {
             const line = document.createElement('p');
             line.className = 'video-credit';
@@ -396,6 +399,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             const heroVideo = makeVideo(project.hero.file, project.hero.poster);
             heroVideo.preload = 'metadata';
             heroVideo.src = heroVideo.dataset.src;
+
+            /* Un film in format lat (BOOVIE e 2.39:1) intins pe inaltimea
+               ecranului si taiat cu object-fit: cover pierde jumatate din
+               cadru — exact partea pentru care a fost filmat asa. Dam
+               antetului proportia filmului, cu o limita jos ca sa ramana loc
+               de titlu pe telefon. */
+            heroVideo.addEventListener('loadedmetadata', function () {
+                const ratio = heroVideo.videoWidth / heroVideo.videoHeight;
+                if (ratio > 2) {
+                    lead.style.minHeight =
+                        `min(100svh, max(56svh, ${(100 / ratio).toFixed(2)}vw))`;
+                }
+            }, { once: true });
+
             leadMedia.appendChild(heroVideo);
         } else if (project.cover) {
             const img = document.createElement('img');
