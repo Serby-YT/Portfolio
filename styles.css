@@ -3055,6 +3055,22 @@ button:disabled {
     margin: 0;
 }
 
+/* Film in format lat: bara de navigatie nu mai sta peste imagine. Banda de
+   sus e fundalul paginii, iar clipul incepe sub bara. Altfel bara acopera o
+   felie mare dintr-un cadru care oricum e scund — la 2.39:1 sunt vreo 25% din
+   inaltimea filmului. Inaltimile vin din video.js, in --lead-top si
+   --lead-film, fiindca depind de bara si de raportul filmului. */
+.video-lead.is-wide {
+    min-height: calc(var(--lead-top, 0px) + var(--lead-film, 56svh));
+    padding-top: calc(var(--lead-top, 0px) + 1.5rem);
+    background: var(--color-bg-primary);
+}
+
+.video-lead.is-wide .video-lead-media,
+.video-lead.is-wide .video-lead-scrim {
+    top: var(--lead-top, 0px);
+}
+
 /* Proiect inexistent: nu avem clip, deci antetul se poarta ca un titlu normal. */
 .video-lead.is-empty {
     min-height: 0;

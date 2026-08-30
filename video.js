@@ -341,11 +341,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         lead.classList.remove('is-empty');
         lead.hidden = false;
 
-        /* Bara de navigatie e transparenta sus si sta direct peste clip. Fara
-           .over-hero pe <body>, textul si pictogramele raman in culorile temei
-           si dispar in imagine — exact ca pe prima pagina, care foloseste
-           aceeasi clasa. */
-        document.body.classList.toggle('over-hero', !!(project && (project.hero || project.cover)));
+        /* Un film in format lat (BOOVIE e 2.39:1) da o banda scunda. Daca bara
+           de navigatie sta peste ea, acopera o felie mare exact din cadrul
+           pentru care a fost filmat asa. La proiectele cu `aspect` peste 2
+           clipul coboara sub bara, iar bara isi recapata culorile temei —
+           deci NU mai primeste .over-hero. Raportul vine din manifest, nu de
+           la `loadedmetadata`: altfel bara ar fi alba o clipa peste fundalul
+           deschis, pana se incarca metadatele. */
+        const wide = !!(project && project.aspect > 2);
+        const hasMedia = !!(project && (project.hero || project.cover));
+        document.body.classList.toggle('over-hero', hasMedia && !wide);
+        lead.classList.toggle('is-wide', wide);
+
+        if (wide) {
+            // Inaltimea barei o masuram, nu o ghicim: difera intre telefon si desktop.
+            const nav = document.getElementById('main-navigation');
+            const navH = nav ? Math.round(nav.getBoundingClientRect().height) : 0;
+            lead.style.setProperty('--lead-top', navH + 'px');
+            lead.style.setProperty('--lead-film',
+                `max(52svh, ${(100 / project.aspect).toFixed(2)}vw)`);
+        } else {
+            lead.style.removeProperty('--lead-top');
+            lead.style.removeProperty('--lead-film');
+            lead.style.removeProperty('min-height');
+        }
 
         if (!project) {
             // Fara proiect nu avem clip: antetul ramane doar cu titlul, pe fundal.
@@ -400,19 +419,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const heroVideo = makeVideo(project.hero.file, project.hero.poster);
             heroVideo.preload = 'metadata';
             heroVideo.src = heroVideo.dataset.src;
-
-            /* Un film in format lat (BOOVIE e 2.39:1) intins pe inaltimea
-               ecranului si taiat cu object-fit: cover pierde jumatate din
-               cadru — exact partea pentru care a fost filmat asa. Dam
-               antetului proportia filmului, cu o limita jos ca sa ramana loc
-               de titlu pe telefon. */
-            heroVideo.addEventListener('loadedmetadata', function () {
-                const ratio = heroVideo.videoWidth / heroVideo.videoHeight;
-                if (ratio > 2) {
-                    lead.style.minHeight =
-                        `min(100svh, max(56svh, ${(100 / ratio).toFixed(2)}vw))`;
-                }
-            }, { once: true });
 
             leadMedia.appendChild(heroVideo);
         } else if (project.cover) {
