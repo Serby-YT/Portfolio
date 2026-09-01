@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
            link. Un gest intentionat citeste ca premium; totul care se misca sub
            cursor citeste ca zgomot. Forta e mai mica, iar revenirea are o mica
            amortizare, ca sa para "greu" / lichid, nu smucit. */
-        document.querySelectorAll('.magnetic-btn, .magnetic').forEach(el => {
+        document.querySelectorAll('.magnetic').forEach(el => {
             const strength = 0.2;
             const prev = el.style.transition;
             el.style.transition = (prev ? prev + ', ' : '') + 'transform 0.45s var(--ease-out-expo)';

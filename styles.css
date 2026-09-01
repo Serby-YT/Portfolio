@@ -7,15 +7,12 @@
     --color-bg-secondary: #111214;
     --color-text-primary: #f0eee9;
     --color-text-secondary: #8a8c8f;
-    --color-accent: #2e382d;
     --color-accent-light: #6f7f6c;
 
     --hairline: rgba(240, 238, 233, 0.08);
     --hairline-strong: rgba(240, 238, 233, 0.18);
     --star-on: #d9a441;
     --star-off: rgba(240, 238, 233, 0.20);
-    --nav-scrim-top: rgba(10, 11, 12, 0.8);
-    --nav-scrim: rgba(10, 11, 12, 0.45);
     --nav-glass: linear-gradient(to bottom, rgba(12, 13, 15, 0.44) 0%, rgba(12, 13, 15, 0.18) 100%);
     --lightbox-bg: rgba(10, 11, 12, 0.98);
     --stroke-faint: rgba(240, 238, 233, 0.05);
@@ -41,7 +38,6 @@
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
     /* Imagini din placi: zoom + desaturare la hover. Doar proprietatile care
        se schimba efectiv — niciodata 'all'. */
     --transition-smooth: transform 450ms var(--ease-out),
@@ -60,15 +56,12 @@
     --color-bg-secondary: #e9e6df;
     --color-text-primary: #15161a;
     --color-text-secondary: #6c6e73;
-    --color-accent: #c7ccc2;
     --color-accent-light: #5d6a5a;
 
     --hairline: rgba(21, 22, 26, 0.10);
     --hairline-strong: rgba(21, 22, 26, 0.22);
     --star-on: #b8862b;
     --star-off: rgba(21, 22, 26, 0.20);
-    --nav-scrim-top: rgba(244, 242, 237, 0.85);
-    --nav-scrim: rgba(244, 242, 237, 0.6);
     --nav-glass: linear-gradient(to bottom, rgba(246, 244, 240, 0.48) 0%, rgba(246, 244, 240, 0.22) 100%);
     --lightbox-bg: rgba(244, 242, 237, 0.98);
     --stroke-faint: rgba(21, 22, 26, 0.07);
@@ -109,7 +102,6 @@ html {
     overflow-x: hidden;
     font-size: 20px; /* Scales whole document layout dynamically */
 }
-
 
 body {
     background-color: var(--color-bg-primary);
@@ -462,275 +454,6 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 }
 
 /* ==========================================================================
-   Hero Section
-   ========================================================================== */
-.hero-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1; /* Creat stacking context sigur */
-}
-
-.hero-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('./assets/hero.webp');
-    background-size: cover;
-    background-position: center;
-    z-index: 1;
-    filter: grayscale(20%) brightness(0.4);
-    transform: scale(1.1);
-    animation: zoomPan 30s infinite alternate ease-in-out;
-}
-
-.hero-vignette {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, transparent 30%, var(--color-bg-primary) 100%);
-    z-index: 2;
-}
-
-.marquee-bg {
-    position: absolute;
-    top: 45%;
-    left: 0;
-    width: 200%;
-    transform: translateY(-50%) rotate(-5deg);
-    pointer-events: none;
-    z-index: 3;
-    opacity: 0.03;
-    display: flex;
-    white-space: nowrap;
-}
-
-.marquee-text {
-    font-family: var(--font-heading);
-    font-size: 15rem;
-    font-weight: 700;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-text-primary);
-    text-transform: uppercase;
-    padding-right: 2rem;
-    animation: driftLeft 40s linear infinite;
-}
-
-@keyframes driftLeft {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-@keyframes zoomPan {
-    0% {
-        transform: scale(1.1) translate(0, 0);
-    }
-
-    100% {
-        transform: scale(1.15) translate(2%, 2%);
-    }
-}
-
-.hero-content {
-    position: relative;
-    z-index: 10; /* Plasat deasupra bg, vignette si marquee */
-    text-align: center;
-    max-width: 90%;
-    padding: 0 2rem;
-}
-
-.hero-bottom-gradient {
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 25vh;
-    background: linear-gradient(to bottom, transparent, var(--color-bg-primary));
-    z-index: 15;
-    pointer-events: none;
-}
-
-#hero-title {
-    font-size: 6rem;
-    letter-spacing: -1px;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-#hero-title .word {
-    display: inline-block;
-    font-style: italic;
-}
-
-#hero-title .accent {
-    font-style: normal;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-text-primary);
-    margin-left: 1rem;
-}
-
-#hero-subtitle {
-    font-size: 1.1rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    margin-bottom: 4rem;
-    opacity: 0;
-    /* Intrare, deci ease-out (rapid la inceput). Intarzierea e o cascada
-       fata de titlu, nu o pauza: 0.15s, nu 1s. */
-    animation: fadeUpText 0.6s 0.15s var(--ease-out) forwards;
-}
-
-@keyframes fadeUpText {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    #hero-subtitle {
-        animation: none;
-        opacity: 1;
-        transform: none;
-    }
-}
-
-.hero-cta-row {
-    display: flex;
-    gap: 1.25rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* Magnetic Buttons */
-.magnetic-btn {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.2rem 3.5rem;
-    border: 1px solid var(--glass-border);
-    border-radius: 40px;
-    color: var(--color-text-primary);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    overflow: hidden;
-    z-index: 1;
-    transition: border-color 220ms var(--ease-out);
-    backdrop-filter: blur(5px);
-}
-
-.btn-text {
-    position: relative;
-    z-index: 2;
-    transition: color 220ms var(--ease-out);
-}
-
-.btn-fill {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color-text-primary);
-    border-radius: 50%;
-    transition: top 0.4s var(--ease-in-out), border-radius 0.4s var(--ease-in-out);
-    z-index: 1;
-}
-
-.magnetic-btn:hover {
-    border-color: transparent;
-}
-
-.magnetic-btn:hover .btn-text {
-    color: var(--color-bg-primary);
-    font-weight: 600;
-}
-
-.magnetic-btn:hover .btn-fill {
-    top: 0;
-    border-radius: 0;
-}
-
-.scroll-indicator {
-    position: absolute;
-    bottom: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    opacity: 0.5;
-}
-
-.scroll-indicator p {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    transform: rotate(-90deg) translateX(30px);
-    margin-bottom: 2rem;
-}
-
-.scroll-indicator .line {
-    width: 1px;
-    height: 80px;
-    background: var(--hairline-strong);
-    position: relative;
-    overflow: hidden;
-}
-
-.scroll-indicator .line::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background: var(--color-text-primary);
-    animation: scrollDrop 2s infinite linear;
-}
-
-/* Miscare constanta => linear. Opacitatea la 0% si 100% ascunde cusatura
-   buclei: segmentul nu "sare" niciodata vizibil de jos inapoi sus. */
-@keyframes scrollDrop {
-    0% {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    20% {
-        opacity: 1;
-    }
-
-    80% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateY(200%);
-        opacity: 0;
-    }
-}
-
-/* ==========================================================================
    Portfolio Staggered Parallax Setup
    ========================================================================== */
 .portfolio-section {
@@ -754,10 +477,6 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 .section-header {
     text-align: center;
     margin-bottom: 8rem;
-}
-
-#portfolio-title {
-    font-size: 4rem;
 }
 
 .portfolio-tabs {
@@ -1074,15 +793,8 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 }
 
 /* ==========================================================================
-   About Section (Ambient Glow & Deep Layout)
+   Ambient Glow (fundal difuz in spatele sectiunilor)
    ========================================================================== */
-.about-section {
-    padding: 12rem 5%;
-    position: relative;
-    background: var(--color-bg-secondary);
-    overflow: hidden;
-}
-
 .ambient-glow {
     position: absolute;
     top: 50%;
@@ -1092,77 +804,6 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     background: radial-gradient(circle at 10% 50%, rgba(46, 56, 45, 0.4), transparent 50%);
     z-index: 0;
     transform: translateY(-50%);
-}
-
-.about-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 8rem;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-}
-
-.about-image-wrapper {
-    position: relative;
-    border-radius: 4px;
-}
-
-.about-image-wrapper .image-reveal {
-    position: relative;
-    aspect-ratio: 3/4;
-    overflow: hidden;
-}
-
-.about-image-wrapper img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    filter: brightness(0.8) contrast(1.1);
-}
-
-.image-backdrop {
-    position: absolute;
-    top: -2rem;
-    left: -2rem;
-    width: 100%;
-    height: 100%;
-    border: 1px solid var(--color-accent-light);
-    z-index: -1;
-    opacity: 0.4;
-}
-
-.about-text h2 {
-    font-size: 5rem;
-    font-style: italic;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-text-secondary);
-    margin-bottom: 2.5rem;
-}
-
-.lead-text {
-    font-family: var(--font-heading);
-    font-size: 2.2rem;
-    line-height: 1.3;
-    margin-bottom: 2rem;
-}
-
-.body-text {
-    font-size: 1.1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 3rem;
-    font-weight: 300;
-}
-
-.sign-off {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    border-bottom: 1px solid var(--color-accent-light);
-    padding-bottom: 1rem;
-    display: inline-block;
 }
 
 /* ==========================================================================
@@ -1298,12 +939,6 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 .input-group input:focus~.underline::after,
 .input-group textarea:focus~.underline::after {
     transform: scaleX(1);
-}
-
-.submit-btn {
-    align-self: flex-start;
-    margin-top: 2rem;
-    background: transparent;
 }
 
 /* ==========================================================================
@@ -1753,11 +1388,6 @@ footer {
 /* responsive tweaks */
 @media (max-width: 900px) {
     html { font-size: 14px; }
-    
-    #hero-title {
-        font-size: 14vw;
-        line-height: 1.1;
-    }
 
     .site-icon {
         width: 2.5rem; /* Micsoram vizual cercul pt telefon ca sa faca loc cuvintelor */
@@ -1781,19 +1411,6 @@ footer {
         left: 1.5rem;
         right: 1.5rem;
         bottom: 1.4rem;
-    }
-
-    #hero-title .accent {
-        margin-left: 0; /* Anuleaza spatierea in plus care il impingea spre dreapta! */
-    }
-
-    .item-right {
-        margin-top: 0;
-    }
-
-    .about-container {
-        grid-template-columns: 1fr;
-        gap: 4rem;
     }
 
     .form-row {
@@ -1906,7 +1523,6 @@ footer {
         gap: 3rem;
     }
 
-
 }
 /* ==========================================================================
    Adaptari pentru tema deschisa
@@ -1993,12 +1609,6 @@ footer {
     .glass-btn:hover::before {
         transform: translateX(130%);
     }
-}
-
-.glass-btn.on-image {
-    color: var(--on-image);
-    border-color: rgba(247, 245, 241, 0.28);
-    background: rgba(247, 245, 241, 0.08);
 }
 
 /* ==========================================================================
@@ -2149,10 +1759,6 @@ footer {
     font-size: clamp(2rem, 4.2vw, 3.4rem);
     line-height: 1.15;
     margin-bottom: 2rem;
-}
-
-.category-intro h2 .accent {
-    font-style: italic;
 }
 
 .intro-rule {
@@ -2538,8 +2144,7 @@ button,
    O scadere mica de scara, rapida la ducere si la intoarcere, e suficienta.
    160ms: sub atat pare o eroare de randare, peste pare o animatie.
 
-   NOTA: .magnetic-btn nu primeste :active — clasa nu exista in markup. Iar
-   elementele .magnetic (multe .glass-btn) primesc transform inline din
+   NOTA: elementele .magnetic (multe .glass-btn) primesc transform inline din
    script.js la mousemove, care bate orice regula din foaia de stil: acolo
    raspunsul la apasare se vede doar pe touch, unde efectul magnetic e oprit. */
 button,
@@ -2768,7 +2373,6 @@ button:active,
 button:disabled {
     cursor: default;
 }
-
 
 /* ==========================================================================
    Pagina Video — reel, carduri de proiect, pagina de proiect
@@ -3505,7 +3109,6 @@ button:disabled {
        panoul de sticla ramane subiectul. */
     filter: brightness(0.6) saturate(0.85);
 }
-
 
 /* [hidden] trebuie sa invinga display-urile puse pe componente (banda Video e
    flex, deci fara asta atributul hidden n-ar avea niciun efect asupra ei). */

@@ -78,14 +78,6 @@
             'nav.contact': 'Contact',
             'nav.lang.label': 'Schimbă limba',
 
-            'hero.marquee': 'ATMOSFERE &middot; PEISAJE &middot; MOMENTE &middot; ',
-            'hero.title.line1': 'În căutarea',
-            'hero.title.line2': 'Atmosferei',
-            'hero.subtitle': 'Peisaje atmosferice & evenimente autentice',
-            'hero.cta.work': 'Vezi portofoliul',
-            'hero.cta.collections': 'Colecții',
-            'hero.scroll': 'Explorează',
-
             'portfolio.badge': 'Lucrări selectate',
             'portfolio.title': 'Portofoliu',
             'portfolio.tab.all': 'Toate',
@@ -193,8 +185,6 @@
             'videoband.title': 'Și când cadrul se mișcă.',
             'videoband.body': 'Filme de eveniment și proiecte personale — fiecare cu povestea, scenariul și cadrele din spate.',
             'videoband.cta': 'Vezi proiectele video',
-            'split.photo': 'Fotografie',
-            'split.video': 'Video',
             'collections.count.one': 'fotografie',
             'collections.count.many': 'fotografii'
         },
@@ -257,14 +247,6 @@
             'nav.about': 'About',
             'nav.contact': 'Contact',
             'nav.lang.label': 'Change language',
-
-            'hero.marquee': 'ATMOSPHERES &middot; LANDSCAPES &middot; MOMENTS &middot; ',
-            'hero.title.line1': 'Chasing',
-            'hero.title.line2': 'Atmospheres',
-            'hero.subtitle': 'Moody Landscapes & Authentic Events',
-            'hero.cta.work': 'Discover Work',
-            'hero.cta.collections': 'Collections',
-            'hero.scroll': 'Explore',
 
             'portfolio.badge': 'Selected Works',
             'portfolio.title': 'Portfolio',
@@ -373,8 +355,6 @@
             'videoband.title': 'And when the frame moves.',
             'videoband.body': 'Event films and personal projects — each with the story, the script and the frames behind it.',
             'videoband.cta': 'See the video projects',
-            'split.photo': 'Photography',
-            'split.video': 'Video',
             'collections.count.one': 'photo',
             'collections.count.many': 'photos'
         }
