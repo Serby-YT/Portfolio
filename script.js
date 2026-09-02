@@ -580,6 +580,63 @@ document.addEventListener('DOMContentLoaded', () => {
         const wantedCat = new URLSearchParams(window.location.search).get('cat');
         let activeFilter = (wantedCat && sections.includes(wantedCat)) ? wantedCat : 'All';
 
+        /* Antetul de categorie: o banda cu coperta sectiunii, intre tab-uri si
+           grila. 'Toate' nu primeste antet — nicio imagine singura nu poate
+           reprezenta tot portofoliul. */
+        const sectionCovers = manifest.section_covers || {};
+        const leadSlot = document.getElementById('categoryLead');
+
+        const renderLead = () => {
+            if (!leadSlot) return;
+            leadSlot.innerHTML = '';
+            if (activeFilter === 'All') return;
+
+            const inSection = photos.filter(p => p.section === activeFilter);
+            if (!inSection.length) return;
+
+            // Coperta aleasa din admin (steluta); daca nu e setata sau nu mai e
+            // valabila, cadem pe prima poza din sectiune — ca la placile de pe landing.
+            const chosen = sectionCovers[activeFilter];
+            const cover = inSection.find(p => p.file === chosen) || inSection[0];
+            const label = window.SiteI18n ? window.SiteI18n.dataName(activeFilter) : activeFilter;
+            const word = window.SiteI18n
+                ? window.SiteI18n.t(inSection.length === 1 ? 'collections.count.one' : 'collections.count.many')
+                : (inSection.length === 1 ? 'fotografie' : 'fotografii');
+
+            const lead = document.createElement('div');
+            lead.className = 'category-lead fade-in';
+
+            const img = document.createElement('img');
+            img.className = 'category-lead-img';
+            // Antetul e deasupra pliului: se incarca imediat, nu lazy.
+            img.loading = 'eager';
+            img.decoding = 'async';
+            img.src = `/assets/${cover.file}`;
+            img.srcset = `/assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${cover.file} 2000w`;
+            img.sizes = '100vw';
+            img.alt = label;
+            lead.appendChild(img);
+
+            const scrim = document.createElement('div');
+            scrim.className = 'category-lead-scrim';
+            lead.appendChild(scrim);
+
+            const copy = document.createElement('div');
+            copy.className = 'category-lead-copy';
+            const count = document.createElement('div');
+            count.className = 'category-lead-count';
+            count.textContent = `${inSection.length} ${word}`;
+            const name = document.createElement('h2');
+            name.className = 'category-lead-name';
+            name.textContent = label;
+            copy.appendChild(count);
+            copy.appendChild(name);
+            lead.appendChild(copy);
+
+            leadSlot.appendChild(lead);
+            if (window.observer) window.observer.observe(lead);
+        };
+
         let lastCount = 0;
         let resizeTimer = null;
         window.addEventListener('resize', () => {
@@ -591,6 +648,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const renderGrid = () => {
+            // Antetul si grila arata mereu aceeasi categorie — un singur loc de apel.
+            renderLead();
             container.innerHTML = '';
             galleryImages = [];
             const filtered = activeFilter === 'All'
