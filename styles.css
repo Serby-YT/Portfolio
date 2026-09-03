@@ -520,10 +520,11 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 .category-lead {
     position: relative;
     width: 100%;
-    /* Cat jumatate de ecran: destul cat sa se citeasca imaginea, destul de
-       putin cat primele fotografii sa fie la o singura derulare. */
-    min-height: 60vh;
-    min-height: 60svh;
+    /* Aproape cat ecranul, ca hero-ul de pe prima pagina. Nu 100%: fasia
+       ramasa lasa sa se vada ca urmeaza tab-urile, deci se vede ca pagina
+       continua fara sa fie nevoie de o sageata. */
+    min-height: 88vh;
+    min-height: 88svh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -541,6 +542,14 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+/* 'Toate' primeste un carusel, nu o singura coperta. Cadrele sunt .hero-slide,
+   exact ca pe prima pagina — acelasi fade cu blur, o singura definitie. */
+.category-lead-carousel {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
 }
 
 .category-lead-scrim {
@@ -598,8 +607,8 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 
 @media (max-width: 900px) {
     .category-lead {
-        min-height: 46vh;
-        min-height: 46svh;
+        min-height: 80vh;
+        min-height: 80svh;
         padding: 7rem 5% 2.5rem;
         margin-bottom: 2.5rem;
     }
@@ -622,6 +631,17 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     margin-bottom: 6px;
     overflow: hidden;
     background: #000;
+}
+
+/* Grila de fotografii NU se misca pe verticala la intrare. Decalajul in
+   cascada (0.08s intre vecine) plus un slide de 26px inseamna ca, timp de
+   ~1.6s, doua fotografii de pe acelasi rand stau la inaltimi diferite — pe o
+   grila masonry, unde marginile de sus ar trebui sa fie la fir, asta se
+   citeste ca "pozele nu sunt aliniate". Estomparea singura spune acelasi
+   lucru ("a aparut ceva nou") fara sa strambe randul. */
+.gallery-item.fade-in {
+    transform: none;
+    transition: opacity 0.8s var(--ease-out-expo);
 }
 
 .gallery-item .image-wrapper {

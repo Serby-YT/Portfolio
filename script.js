@@ -592,19 +592,60 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pageSection) pageSection.classList.toggle('has-lead', on);
         };
 
+        const reducedMotion = window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* Caruselul antetului de la 'Toate' se roteste singur. Tinem
+           intervalul aici, in afara lui renderLead, ca sa-l putem opri de
+           fiecare data cand se reconstruieste antetul (schimbare de tab sau
+           de limba) — altfel ar ramane cate un interval pentru fiecare
+           antet construit vreodata, toate lucrand pe noduri sterse. */
+        let leadTimer = null;
+        const stopLeadRotation = () => {
+            if (leadTimer !== null) { clearInterval(leadTimer); leadTimer = null; }
+        };
+
+        const buildSlide = (file, eager) => {
+            const slide = document.createElement('div');
+            slide.className = 'hero-slide';
+            const img = document.createElement('img');
+            img.src = `/assets/${file}`;
+            img.srcset = `/assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${file} 2000w`;
+            img.sizes = '100vw';
+            img.alt = '';
+            img.loading = eager ? 'eager' : 'lazy';
+            img.decoding = 'async';
+            slide.appendChild(img);
+            return slide;
+        };
+
         const renderLead = () => {
             if (!leadSlot) return;
+            stopLeadRotation();
             leadSlot.innerHTML = '';
-            if (activeFilter === 'All') { setHasLead(false); return; }
 
-            const inSection = photos.filter(p => p.section === activeFilter);
+            const isAll = activeFilter === 'All';
+            const inSection = isAll
+                ? photos.filter(p => !(!p.section && filesInGalleries.has(p.file)))
+                : photos.filter(p => p.section === activeFilter);
             if (!inSection.length) { setHasLead(false); return; }
+
+            // 'Toate' foloseste colectia "Hero" din admin — aceleasi fotografii
+            // ca pe prima pagina, deci se schimba tot de acolo, fara cod.
+            const heroGallery = isAll
+                ? (manifest.galleries || []).find(g => g.name === 'Hero')
+                : null;
+            const heroFiles = (heroGallery && heroGallery.photos || []).filter(Boolean);
+            if (isAll && !heroFiles.length) { setHasLead(false); return; }
 
             // Coperta aleasa din admin (steluta); daca nu e setata sau nu mai e
             // valabila, cadem pe prima poza din sectiune — ca la placile de pe landing.
             const chosen = sectionCovers[activeFilter];
             const cover = inSection.find(p => p.file === chosen) || inSection[0];
-            const label = window.SiteI18n ? window.SiteI18n.dataName(activeFilter) : activeFilter;
+
+            const label = isAll
+                ? (window.SiteI18n ? window.SiteI18n.t('portfolio.title') : 'Portofoliu')
+                : (window.SiteI18n ? window.SiteI18n.dataName(activeFilter) : activeFilter);
             const word = window.SiteI18n
                 ? window.SiteI18n.t(inSection.length === 1 ? 'collections.count.one' : 'collections.count.many')
                 : (inSection.length === 1 ? 'fotografie' : 'fotografii');
@@ -612,16 +653,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const lead = document.createElement('div');
             lead.className = 'category-lead fade-in';
 
-            const img = document.createElement('img');
-            img.className = 'category-lead-img';
-            // Antetul e deasupra pliului: se incarca imediat, nu lazy.
-            img.loading = 'eager';
-            img.decoding = 'async';
-            img.src = `/assets/${cover.file}`;
-            img.srcset = `/assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${cover.file} 2000w`;
-            img.sizes = '100vw';
-            img.alt = label;
-            lead.appendChild(img);
+            let slides = [];
+            if (isAll) {
+                const carousel = document.createElement('div');
+                carousel.className = 'category-lead-carousel';
+                const first = buildSlide(heroFiles[0], true);
+                first.classList.add('active');
+                carousel.appendChild(first);
+                slides.push(first);
+                lead.appendChild(carousel);
+
+                /* Restul cadrelor abia dupa ce pagina s-a asezat: caruselul
+                   acopera tot ecranul, deci 'lazy' nu le-ar amana oricum — le-ar
+                   descarca pe toate deodata, in concurenta cu primul cadru. */
+                if (heroFiles.length > 1 && !reducedMotion) {
+                    const build = () => {
+                        // Intre timp s-a putut schimba tab-ul: nu mai popula un antet scos din pagina.
+                        if (!carousel.isConnected) return;
+                        heroFiles.slice(1).forEach(f => {
+                            const sl = buildSlide(f, false);
+                            carousel.appendChild(sl);
+                            slides.push(sl);
+                        });
+                        if (slides.length < 2) return;
+                        let current = 0;
+                        const advance = () => {
+                            const next = (current + 1) % slides.length;
+                            slides[current].classList.remove('active');
+                            slides[next].classList.add('active');
+                            current = next;
+                        };
+                        stopLeadRotation();
+                        leadTimer = setInterval(advance, 5000);
+                    };
+                    if (window.requestIdleCallback) requestIdleCallback(build, { timeout: 2000 });
+                    else setTimeout(build, 300);
+                }
+            } else {
+                const img = document.createElement('img');
+                img.className = 'category-lead-img';
+                // Antetul e deasupra pliului: se incarca imediat, nu lazy.
+                img.loading = 'eager';
+                img.decoding = 'async';
+                img.src = `/assets/${cover.file}`;
+                img.srcset = `/assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${cover.file} 2000w`;
+                img.sizes = '100vw';
+                img.alt = label;
+                lead.appendChild(img);
+            }
 
             const scrim = document.createElement('div');
             scrim.className = 'category-lead-scrim';
@@ -643,6 +722,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setHasLead(true);
             if (window.observer) window.observer.observe(lead);
         };
+
+        /* Un tab ascuns care tot schimba fotografii pe tot ecranul consuma
+           decodare degeaba si te intampina la revenire in mijlocul unui fade. */
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopLeadRotation();
+        });
 
         let lastCount = 0;
         let resizeTimer = null;
