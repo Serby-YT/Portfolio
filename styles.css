@@ -605,6 +605,17 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     margin-top: 0;
 }
 
+/* Pagina unei colectii: numele e deja scris pe coperta, deci titlul centrat
+   dispare. Spatiul pana la grila il tinea marginea lui — il preia linkul de
+   intoarcere, singurul lucru ramas intre coperta si fotografii. */
+.portfolio-section.has-lead .section-header {
+    display: none;
+}
+
+.portfolio-section.has-lead .back-link {
+    margin-bottom: 4rem;
+}
+
 @media (max-width: 900px) {
     .category-lead {
         min-height: 80vh;

@@ -37,6 +37,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     const T = (key) => (window.SiteI18n ? window.SiteI18n.t(key) : key);
     const DISPLAY = (name) => (window.SiteI18n ? window.SiteI18n.dataName(name) : name);
 
+    /* Antetul mare al paginii — aceeasi constructie ca la portofoliu
+       (window.buildGalleryLead din script.js, incarcat inainte). Tinem
+       referinta ca sa putem opri caruselul cand reconstruim la schimbarea
+       limbii; altfel ar ramane un interval pe noduri sterse. */
+    let currentLead = null;
+
+    function setLead(slotId, section, opts) {
+        const slot = document.getElementById(slotId);
+        if (!slot) return;
+        if (currentLead) { currentLead.stop(); currentLead = null; }
+        slot.innerHTML = '';
+        if (!opts || !opts.files.length || !window.buildGalleryLead) {
+            section.classList.remove('has-lead');
+            return;
+        }
+        currentLead = window.buildGalleryLead(opts);
+        slot.appendChild(currentLead.el);
+        section.classList.add('has-lead');
+        if (window.observer) window.observer.observe(currentLead.el);
+    }
+
+    const countText = (n) =>
+        `${n} ${T(n === 1 ? 'collections.count.one' : 'collections.count.many')}`;
+
     // Re-randam la schimbarea limbii
     document.addEventListener('sitelanguagechange', () => {
         if (galleryName) renderDetail(galleries.find(g => g.name === galleryName));
@@ -58,12 +82,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         list.innerHTML = '';
 
         if (!galleries.length) {
+            setLead('collectionsIndexLead', indexView, null);
             const empty = document.createElement('p');
             empty.className = 'collections-empty';
             empty.textContent = T('collections.empty');
             list.appendChild(empty);
             return;
         }
+
+        // Acelasi carusel ca pe prima pagina si ca la 'Toate' din portofoliu:
+        // colectia "Hero" din admin. Numarul e totalul din colectiile publice.
+        const heroGallery = (manifest.galleries || []).find(g => g.name === 'Hero');
+        const heroFiles = ((heroGallery && heroGallery.photos) || []).filter(Boolean);
+        const totalPhotos = galleries.reduce((n, g) => n + g.photos.length, 0);
+        setLead('collectionsIndexLead', indexView, heroFiles.length ? {
+            files: heroFiles,
+            label: T('collections.title'),
+            countText: countText(totalPhotos),
+            rotate: true
+        } : null);
 
         galleries.forEach(g => {
             const tile = document.createElement('a');
@@ -103,10 +140,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         grid.innerHTML = '';
 
         if (!gallery) {
+            setLead('collectionLead', detailView, null);
             title.textContent = T('collections.notfound');
             document.title = `${T('collections.notfound')} | Anița Șerban Photography`;
             return;
         }
+
+        setLead('collectionLead', detailView, {
+            files: [gallery.cover],
+            label: DISPLAY(gallery.name),
+            countText: countText(gallery.photos.length),
+            rotate: false
+        });
 
         title.textContent = DISPLAY(gallery.name);
         document.title = `${DISPLAY(gallery.name)} | Anița Șerban Photography`;

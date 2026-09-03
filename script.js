@@ -256,6 +256,120 @@ document.addEventListener('DOMContentLoaded', () => {
         container.style.setProperty('--gallery-cols', Math.min(targetCols, count));
     };
 
+    /* Antetul mare de deasupra unei galerii — coperta pe aproape tot ecranul,
+       cu numarul de fotografii si numele scrise jos. Il folosesc si
+       portofoliul, si colectiile, deci sta aici, intr-un singur loc: logica
+       de carusel (si oprirea intervalului) e partea usor de gresit daca ar
+       exista in doua copii.
+
+       Intoarce { el, stop }. Apelantul TREBUIE sa cheme stop() inainte sa
+       arunce elementul, altfel ramane un interval care lucreaza pe noduri
+       scoase din pagina. */
+    window.buildGalleryLead = ({ files, label, countText, rotate }) => {
+        const lead = document.createElement('div');
+        lead.className = 'category-lead fade-in';
+
+        let timer = null;
+        let advance = null;
+        const pause = () => { if (timer !== null) { clearInterval(timer); timer = null; } };
+        const resume = () => { if (timer === null && advance) timer = setInterval(advance, 5000); };
+        /* Un tab ascuns care tot schimba fotografii pe tot ecranul consuma
+           decodare degeaba si te intampina la revenire in mijlocul unui fade. */
+        const onVisibility = () => { if (document.hidden) pause(); else resume(); };
+        document.addEventListener('visibilitychange', onVisibility);
+        const stop = () => {
+            pause();
+            advance = null;
+            document.removeEventListener('visibilitychange', onVisibility);
+        };
+
+        const reduced = window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const srcsetFor = (file) =>
+            `/assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${file} 2000w`;
+
+        if (rotate && files.length > 1 && !reduced) {
+            const carousel = document.createElement('div');
+            carousel.className = 'category-lead-carousel';
+
+            const slides = [];
+            const mkSlide = (file, eager) => {
+                const slide = document.createElement('div');
+                slide.className = 'hero-slide';
+                const img = document.createElement('img');
+                img.src = `/assets/${file}`;
+                img.srcset = srcsetFor(file);
+                img.sizes = '100vw';
+                img.alt = '';
+                img.loading = eager ? 'eager' : 'lazy';
+                img.decoding = 'async';
+                slide.appendChild(img);
+                return slide;
+            };
+
+            const first = mkSlide(files[0], true);
+            first.classList.add('active');
+            carousel.appendChild(first);
+            slides.push(first);
+            lead.appendChild(carousel);
+
+            /* Restul cadrelor abia dupa ce pagina s-a asezat: caruselul acopera
+               tot ecranul, deci 'lazy' nu le-ar amana — le-ar descarca pe toate
+               deodata, in concurenta cu primul cadru. */
+            const build = () => {
+                // Intre timp s-a putut schimba tab-ul: nu popula un antet scos din pagina.
+                if (!carousel.isConnected) return;
+                files.slice(1).forEach(f => {
+                    const sl = mkSlide(f, false);
+                    carousel.appendChild(sl);
+                    slides.push(sl);
+                });
+                if (slides.length < 2) return;
+                let current = 0;
+                advance = () => {
+                    const next = (current + 1) % slides.length;
+                    slides[current].classList.remove('active');
+                    slides[next].classList.add('active');
+                    current = next;
+                };
+                pause();
+                if (!document.hidden) resume();
+            };
+            if (window.requestIdleCallback) requestIdleCallback(build, { timeout: 2000 });
+            else setTimeout(build, 300);
+        } else {
+            const img = document.createElement('img');
+            img.className = 'category-lead-img';
+            // Antetul e deasupra pliului: se incarca imediat, nu lazy.
+            img.loading = 'eager';
+            img.decoding = 'async';
+            img.src = `/assets/${files[0]}`;
+            img.srcset = srcsetFor(files[0]);
+            img.sizes = '100vw';
+            img.alt = label;
+            lead.appendChild(img);
+        }
+
+        const scrim = document.createElement('div');
+        scrim.className = 'category-lead-scrim';
+        lead.appendChild(scrim);
+
+        const copy = document.createElement('div');
+        copy.className = 'category-lead-copy';
+        const count = document.createElement('div');
+        count.className = 'category-lead-count';
+        count.textContent = countText;
+        const name = document.createElement('h2');
+        name.className = 'category-lead-name';
+        name.textContent = label;
+        copy.appendChild(count);
+        copy.appendChild(name);
+        lead.appendChild(copy);
+
+        return { el: lead, stop };
+    };
+
     /* 3d0. Un singur fetch de manifest pe pagina, refolosit de carusel si placi */
     const fetchManifest = (() => {
         let promise = null;
@@ -592,37 +706,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (pageSection) pageSection.classList.toggle('has-lead', on);
         };
 
-        const reducedMotion = window.matchMedia
-            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        /* Caruselul antetului de la 'Toate' se roteste singur. Tinem
-           intervalul aici, in afara lui renderLead, ca sa-l putem opri de
-           fiecare data cand se reconstruieste antetul (schimbare de tab sau
-           de limba) — altfel ar ramane cate un interval pentru fiecare
-           antet construit vreodata, toate lucrand pe noduri sterse. */
-        let leadTimer = null;
-        const stopLeadRotation = () => {
-            if (leadTimer !== null) { clearInterval(leadTimer); leadTimer = null; }
-        };
-
-        const buildSlide = (file, eager) => {
-            const slide = document.createElement('div');
-            slide.className = 'hero-slide';
-            const img = document.createElement('img');
-            img.src = `/assets/${file}`;
-            img.srcset = `/assets/${file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${file} 2000w`;
-            img.sizes = '100vw';
-            img.alt = '';
-            img.loading = eager ? 'eager' : 'lazy';
-            img.decoding = 'async';
-            slide.appendChild(img);
-            return slide;
+        let currentLead = null;
+        const dropLead = () => {
+            if (currentLead) { currentLead.stop(); currentLead = null; }
+            if (leadSlot) leadSlot.innerHTML = '';
         };
 
         const renderLead = () => {
             if (!leadSlot) return;
-            stopLeadRotation();
-            leadSlot.innerHTML = '';
+            dropLead();
 
             const isAll = activeFilter === 'All';
             const inSection = isAll
@@ -635,7 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const heroGallery = isAll
                 ? (manifest.galleries || []).find(g => g.name === 'Hero')
                 : null;
-            const heroFiles = (heroGallery && heroGallery.photos || []).filter(Boolean);
+            const heroFiles = ((heroGallery && heroGallery.photos) || []).filter(Boolean);
             if (isAll && !heroFiles.length) { setHasLead(false); return; }
 
             // Coperta aleasa din admin (steluta); daca nu e setata sau nu mai e
@@ -650,84 +742,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? window.SiteI18n.t(inSection.length === 1 ? 'collections.count.one' : 'collections.count.many')
                 : (inSection.length === 1 ? 'fotografie' : 'fotografii');
 
-            const lead = document.createElement('div');
-            lead.className = 'category-lead fade-in';
+            currentLead = window.buildGalleryLead({
+                files: isAll ? heroFiles : [cover.file],
+                label: label,
+                countText: `${inSection.length} ${word}`,
+                rotate: isAll
+            });
 
-            let slides = [];
-            if (isAll) {
-                const carousel = document.createElement('div');
-                carousel.className = 'category-lead-carousel';
-                const first = buildSlide(heroFiles[0], true);
-                first.classList.add('active');
-                carousel.appendChild(first);
-                slides.push(first);
-                lead.appendChild(carousel);
-
-                /* Restul cadrelor abia dupa ce pagina s-a asezat: caruselul
-                   acopera tot ecranul, deci 'lazy' nu le-ar amana oricum — le-ar
-                   descarca pe toate deodata, in concurenta cu primul cadru. */
-                if (heroFiles.length > 1 && !reducedMotion) {
-                    const build = () => {
-                        // Intre timp s-a putut schimba tab-ul: nu mai popula un antet scos din pagina.
-                        if (!carousel.isConnected) return;
-                        heroFiles.slice(1).forEach(f => {
-                            const sl = buildSlide(f, false);
-                            carousel.appendChild(sl);
-                            slides.push(sl);
-                        });
-                        if (slides.length < 2) return;
-                        let current = 0;
-                        const advance = () => {
-                            const next = (current + 1) % slides.length;
-                            slides[current].classList.remove('active');
-                            slides[next].classList.add('active');
-                            current = next;
-                        };
-                        stopLeadRotation();
-                        leadTimer = setInterval(advance, 5000);
-                    };
-                    if (window.requestIdleCallback) requestIdleCallback(build, { timeout: 2000 });
-                    else setTimeout(build, 300);
-                }
-            } else {
-                const img = document.createElement('img');
-                img.className = 'category-lead-img';
-                // Antetul e deasupra pliului: se incarca imediat, nu lazy.
-                img.loading = 'eager';
-                img.decoding = 'async';
-                img.src = `/assets/${cover.file}`;
-                img.srcset = `/assets/${cover.file.replace(/\.webp$/, '_sm.webp')} 1000w, /assets/${cover.file} 2000w`;
-                img.sizes = '100vw';
-                img.alt = label;
-                lead.appendChild(img);
-            }
-
-            const scrim = document.createElement('div');
-            scrim.className = 'category-lead-scrim';
-            lead.appendChild(scrim);
-
-            const copy = document.createElement('div');
-            copy.className = 'category-lead-copy';
-            const count = document.createElement('div');
-            count.className = 'category-lead-count';
-            count.textContent = `${inSection.length} ${word}`;
-            const name = document.createElement('h2');
-            name.className = 'category-lead-name';
-            name.textContent = label;
-            copy.appendChild(count);
-            copy.appendChild(name);
-            lead.appendChild(copy);
-
-            leadSlot.appendChild(lead);
+            leadSlot.appendChild(currentLead.el);
             setHasLead(true);
-            if (window.observer) window.observer.observe(lead);
+            if (window.observer) window.observer.observe(currentLead.el);
         };
-
-        /* Un tab ascuns care tot schimba fotografii pe tot ecranul consuma
-           decodare degeaba si te intampina la revenire in mijlocul unui fade. */
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopLeadRotation();
-        });
 
         let lastCount = 0;
         let resizeTimer = null;
