@@ -260,21 +260,23 @@ h3 {
        portiune din pagina ca inainte. */
     bottom: -47px;
     background: var(--nav-glass);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     box-shadow: inset 0 1px 0 var(--glass-inner);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 82%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 82%);
 }
 
-/* Al doilea strat: blur usor care coboara mai jos, ca trecerea sharp -> blur
-   sa fie treptata (progressive), nu un prag brusc */
+/* Al doilea strat nu mai are blur PROPRIU, doar o tenta care coboara mai jos.
+   Bara e position:fixed, deci fiecare backdrop-filter de pe ea inseamna ca
+   placa video re-esantioneaza si re-blureaza tot ce trece prin spate la
+   FIECARE cadru de derulare — peste o grila de fotografii, de doua ori. Un
+   singur blur, cu masca lui, da practic aceeasi trecere treptata. */
 #main-navigation::after {
     bottom: -55px;
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+    background: var(--nav-glass);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
 }
 
 #main-navigation.scrolled::before,
@@ -642,6 +644,11 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     margin-bottom: 6px;
     overflow: hidden;
     background: #000;
+    /* Nimic nu deseneaza in afara placii (overflow: hidden o garanteaza deja),
+       deci ii spunem asta explicit browserului: la derulare poate sari peste
+       desenarea placilor iesite din ecran in loc sa le reevalueze. Doar
+       desenarea — nu atinge asezarea, deci coloanele raman echilibrate la fel. */
+    contain: paint;
 }
 
 /* Grila de fotografii NU se misca pe verticala la intrare. Decalajul in
@@ -669,12 +676,12 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     object-fit: cover;
     display: block;
     opacity: 0.9;
-    filter: grayscale(10%);
-    /* Transform mai lung si mai lin decat opacity/filter = zoom "greu", cinematic,
-       nu un salt. Animam explicit, nu 'all'. */
+    /* Fara filter in starea de repaus: 10% grayscale nu se vedea, dar orice
+       filter != none trimite imaginea pe propria suprafata de randare, si
+       asta inmultit cu 65 de fotografii se simte la derulare. Estomparea
+       (opacity) da acelasi efect de "se aprinde la hover" si e ieftina. */
     transition: transform 1.3s var(--ease-out-expo),
-                opacity 0.7s var(--ease-out-expo),
-                filter 0.7s var(--ease-out-expo);
+                opacity 0.7s var(--ease-out-expo);
     transform: scale(1);
 }
 
@@ -691,7 +698,6 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 
 .gallery-item:hover img {
     opacity: 1;
-    filter: grayscale(0%);
 }
 
 @media (hover: hover) and (pointer: fine) {
