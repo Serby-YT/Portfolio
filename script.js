@@ -585,14 +585,20 @@ document.addEventListener('DOMContentLoaded', () => {
            reprezenta tot portofoliul. */
         const sectionCovers = manifest.section_covers || {};
         const leadSlot = document.getElementById('categoryLead');
+        // Cu antet, sectiunea isi pierde spatiul de sus si titlul 'Portofoliu':
+        // coperta deschide pagina. Clasa o pune/scoate renderLead.
+        const pageSection = leadSlot && leadSlot.closest('.portfolio-section');
+        const setHasLead = (on) => {
+            if (pageSection) pageSection.classList.toggle('has-lead', on);
+        };
 
         const renderLead = () => {
             if (!leadSlot) return;
             leadSlot.innerHTML = '';
-            if (activeFilter === 'All') return;
+            if (activeFilter === 'All') { setHasLead(false); return; }
 
             const inSection = photos.filter(p => p.section === activeFilter);
-            if (!inSection.length) return;
+            if (!inSection.length) { setHasLead(false); return; }
 
             // Coperta aleasa din admin (steluta); daca nu e setata sau nu mai e
             // valabila, cadem pe prima poza din sectiune — ca la placile de pe landing.
@@ -634,6 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lead.appendChild(copy);
 
             leadSlot.appendChild(lead);
+            setHasLead(true);
             if (window.observer) window.observer.observe(lead);
         };
 

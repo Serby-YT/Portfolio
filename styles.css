@@ -527,8 +527,8 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 6rem 5% 3.5rem;
-    margin-bottom: 5rem;
+    padding: 9rem 5% 3.5rem;
+    margin-bottom: 3rem;
     overflow: hidden;
     background: #000;
 }
@@ -547,7 +547,12 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: var(--on-image-scrim);
+    /* Doua straturi, ca la .video-lead-scrim: banda de sus tine bara de
+       navigatie lizibila si peste un cadru luminos (se stinge repede, ca sa
+       nu intunece imaginea degeaba), cea de jos tine numele categoriei. */
+    background:
+        linear-gradient(to bottom, rgba(8, 9, 10, 0.55) 0%, rgba(8, 9, 10, 0.24) 11%, transparent 26%),
+        var(--on-image-scrim);
     pointer-events: none;
 }
 
@@ -573,12 +578,30 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
     margin: 0;
 }
 
+/* Cu antet, coperta e primul lucru din pagina: sectiunea isi pierde spatiul
+   de sus (imaginea urca sub bara de navigatie), titlul 'Portofoliu' dispare
+   — numele categoriei e deja scris pe imagine — iar tab-urile vin imediat
+   sub ea. Fara antet ('Toate'), pagina ramane exact cum era. */
+.portfolio-section.has-lead {
+    padding-top: 0;
+}
+
+.portfolio-section.has-lead .page-head {
+    display: none;
+}
+
+.portfolio-section.has-lead .portfolio-tabs {
+    /* Marginea negativa exista ca sa traga tab-urile sub titlu; fara titlu
+       le-ar trage peste imagine. */
+    margin-top: 0;
+}
+
 @media (max-width: 900px) {
     .category-lead {
         min-height: 46vh;
         min-height: 46svh;
-        padding: 4rem 5% 2.5rem;
-        margin-bottom: 3.5rem;
+        padding: 7rem 5% 2.5rem;
+        margin-bottom: 2.5rem;
     }
 }
 
