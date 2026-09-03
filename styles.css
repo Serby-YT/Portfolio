@@ -653,6 +653,8 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
 .gallery-item.fade-in {
     transform: none;
     transition: opacity 0.8s var(--ease-out-expo);
+    /* Nu se mai misca nimic pe transform, deci nu cerem un strat pentru el. */
+    will-change: opacity;
 }
 
 .gallery-item .image-wrapper {
@@ -674,7 +676,17 @@ body.over-hero #main-navigation:not(.scrolled) .theme-toggle svg {
                 opacity 0.7s var(--ease-out-expo),
                 filter 0.7s var(--ease-out-expo);
     transform: scale(1);
-    backface-visibility: hidden;
+}
+
+/* Stratul de compozitie se cere DOAR cat tine zoom-ul de la hover. Cerut
+   permanent (cum era, prin backface-visibility: hidden pe fiecare imagine),
+   grila urca zeci de texturi pe placa video si le tine acolo cat stai in
+   pagina — la 65 de fotografii asta se simte ca lag la derulare. */
+@media (hover: hover) and (pointer: fine) {
+    .gallery-item:hover img {
+        will-change: transform;
+        backface-visibility: hidden;
+    }
 }
 
 .gallery-item:hover img {

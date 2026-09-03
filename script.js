@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
            link. Un gest intentionat citeste ca premium; totul care se misca sub
            cursor citeste ca zgomot. Forta e mai mica, iar revenirea are o mica
            amortizare, ca sa para "greu" / lichid, nu smucit. */
+        /* Geometria memorata se invalideaza dintr-un SINGUR ascultator, nu
+           din cate unul pentru fiecare element magnetic: pe prima pagina sunt
+           21 de astfel de elemente, adica 21 de handlere chemate la fiecare
+           eveniment de derulare, toate ca sa faca acelasi lucru. */
+        const invalidators = [];
+        const invalidateAll = () => { for (const fn of invalidators) fn(); };
+        window.addEventListener('scroll', invalidateAll, { passive: true });
+        window.addEventListener('resize', invalidateAll);
+
         document.querySelectorAll('.magnetic').forEach(el => {
             const strength = 0.2;
             const prev = el.style.transition;
@@ -57,8 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             /* Daca pagina se deruleaza sau se redimensioneaza, geometria
                memorata nu mai e valabila — o recalculam la urmatorul mousemove. */
-            window.addEventListener('scroll', () => { rect = null; }, { passive: true });
-            window.addEventListener('resize', () => { rect = null; });
+            invalidators.push(() => { rect = null; });
         });
     }
 
@@ -308,30 +316,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 return slide;
             };
 
-            const first = mkSlide(files[0], true);
-            first.classList.add('active');
-            carousel.appendChild(first);
-            slides.push(first);
+            /* DOUA straturi, nu cate unul pentru fiecare fotografie. Cadrele
+               sunt pe tot ecranul, deci fiecare se decodeaza la ~23 MB de
+               bitmap; cu 7 fotografii tinute simultan in pagina inseamna ~160
+               MB de textura care stau acolo degeaba, plus un strat de
+               compozitie in plus pentru fiecare (au filtru). Rotim doua
+               straturi si le schimbam sursa — 2 fotografii vii in loc de 7. */
+            const front = mkSlide(files[0], true);
+            front.classList.add('active');
+            const back = mkSlide(files[1], false);
+            carousel.appendChild(front);
+            carousel.appendChild(back);
+            slides.push(front, back);
             lead.appendChild(carousel);
 
-            /* Restul cadrelor abia dupa ce pagina s-a asezat: caruselul acopera
-               tot ecranul, deci 'lazy' nu le-ar amana — le-ar descarca pe toate
-               deodata, in concurenta cu primul cadru. */
+            const setSlideFile = (slide, file) => {
+                const img = slide.querySelector('img');
+                if (img.dataset.file === file) return;
+                img.dataset.file = file;
+                img.src = `/assets/${file}`;
+                img.srcset = srcsetFor(file);
+            };
+            front.querySelector('img').dataset.file = files[0];
+            back.querySelector('img').dataset.file = files[1];
+
+            /* Rotatia porneste abia dupa ce pagina s-a asezat: al doilea cadru
+               nu trebuie sa se bata pe banda cu primul, care e vizibil. */
             const build = () => {
-                // Intre timp s-a putut schimba tab-ul: nu popula un antet scos din pagina.
+                // Intre timp s-a putut schimba tab-ul: nu porni pe un antet scos din pagina.
                 if (!carousel.isConnected) return;
-                files.slice(1).forEach(f => {
-                    const sl = mkSlide(f, false);
-                    carousel.appendChild(sl);
-                    slides.push(sl);
-                });
-                if (slides.length < 2) return;
-                let current = 0;
+                let shown = 0;      // indicele fotografiei vizibile in `files`
+                let cur = 0;        // care dintre cele doua straturi e in fata
                 advance = () => {
-                    const next = (current + 1) % slides.length;
-                    slides[current].classList.remove('active');
-                    slides[next].classList.add('active');
-                    current = next;
+                    const nextIdx = (shown + 1) % files.length;
+                    const incoming = slides[1 - cur];
+                    // Stratul din spate e invizibil de 5s: putem sa-i schimbam
+                    // sursa fara sa se vada nimic.
+                    setSlideFile(incoming, files[nextIdx]);
+                    incoming.classList.add('active');
+                    slides[cur].classList.remove('active');
+                    cur = 1 - cur;
+                    shown = nextIdx;
                 };
                 pause();
                 if (!document.hidden) resume();
@@ -438,25 +463,42 @@ document.addEventListener('DOMContentLoaded', () => {
            toate cadrele sunt "in viewport" si browserul le descarca imediat —
            ~270 KB care se bateau pe banda cu chiar imaginea LCP. Primul cadru
            e deja in HTML, asa ca nu se vede nicio diferenta la incarcare. */
+        /* Un SINGUR strat in plus, nu cate unul pentru fiecare fotografie.
+           Caruselul e pe tot ecranul, deci fiecare cadru se decodeaza la ~23 MB
+           de bitmap; tinute toate odata inseamna sute de MB de textura si cate
+           un strat de compozitie pentru fiecare. Alternam doua straturi si le
+           schimbam sursa. */
+        const applyFile = (slide, file) => {
+            const img = slide.querySelector('img');
+            if (img.dataset.file === file.src) return;
+            img.dataset.file = file.src;
+            img.src = file.src;
+            if (file.hasSmall) {
+                // Varianta redusa pe mobil — la fel ca la placile de categorie,
+                // ca fotografia din hero (LCP) sa nu descarce inutil originalul.
+                img.srcset = `${file.src.replace(/\.webp$/, '_sm.webp')} 1000w, ${file.src} 2000w`;
+                img.sizes = '100vw';
+            } else {
+                img.removeAttribute('srcset');
+                img.removeAttribute('sizes');
+            }
+        };
+
         const buildRestOfSlides = () => {
-            for (let i = startIndex; i < files.length; i++) {
-                const { src, hasSmall } = files[i];
-                const slide = document.createElement('div');
-                slide.className = 'hero-slide';
-                const img = document.createElement('img');
-                img.src = src;
-                if (hasSmall) {
-                    // Varianta redusa pe mobil — la fel ca la placile de categorie,
-                    // ca fotografia din hero (LCP) sa nu descarce inutil originalul.
-                    img.srcset = `${src.replace(/\.webp$/, '_sm.webp')} 1000w, ${src} 2000w`;
-                    img.sizes = '100vw';
-                }
-                img.alt = '';
-                img.loading = 'lazy';
-                img.decoding = 'async';
-                slide.appendChild(img);
-                wrap.appendChild(slide);
-                slides.push(slide);
+            if (slides.length > 1) return;
+            const slide = document.createElement('div');
+            slide.className = 'hero-slide';
+            const img = document.createElement('img');
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            slide.appendChild(img);
+            applyFile(slide, files[startIndex % files.length]);
+            wrap.appendChild(slide);
+            slides.push(slide);
+            if (existingSlide) {
+                const firstImg = existingSlide.querySelector('img');
+                if (firstImg) firstImg.dataset.file = files[0].src;
             }
         };
 
@@ -472,13 +514,19 @@ document.addEventListener('DOMContentLoaded', () => {
             else window.addEventListener('load', go, { once: true });
         };
 
-        let current = 0;
+        let shown = 0;   // indicele fotografiei vizibile in `files`
+        let cur = 0;     // care dintre cele doua straturi e in fata
 
         const advance = () => {
-            const next = (current + 1) % slides.length;
-            slides[current].classList.remove('active');
-            slides[next].classList.add('active');
-            current = next;
+            const nextIdx = (shown + 1) % files.length;
+            const incoming = slides[1 - cur];
+            // Stratul din spate e invizibil de 5s: ii putem schimba sursa
+            // fara sa se vada nimic.
+            applyFile(incoming, files[nextIdx]);
+            incoming.classList.add('active');
+            slides[cur].classList.remove('active');
+            cur = 1 - cur;
+            shown = nextIdx;
         };
 
         let timer = null;
