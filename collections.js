@@ -50,11 +50,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         slot.innerHTML = '';
         if (!opts || !opts.files.length || !window.buildGalleryLead) {
             section.classList.remove('has-lead');
+            document.body.classList.remove('over-hero');
             return;
         }
         currentLead = window.buildGalleryLead(opts);
         slot.appendChild(currentLead.el);
         section.classList.add('has-lead');
+        /* Bara transparenta peste coperta trebuie sa fie alba, nu pe culorile
+           temei — vezi setHasLead din script.js. */
+        document.body.classList.add('over-hero');
         if (window.observer) window.observer.observe(currentLead.el);
     }
 

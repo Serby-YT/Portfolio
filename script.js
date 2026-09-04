@@ -752,6 +752,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const pageSection = leadSlot && leadSlot.closest('.portfolio-section');
         const setHasLead = (on) => {
             if (pageSection) pageSection.classList.toggle('has-lead', on);
+            /* Bara de navigatie sta transparenta peste coperta, iar culorile ei
+               vin din tema: pe tema deschisa inseamna text inchis peste o
+               fotografie inchisa, adica invizibil. .over-hero o trece pe alb cu
+               umbra, in ambele teme — la fel ca pe prima pagina si ca la
+               proiectele video. */
+            document.body.classList.toggle('over-hero', on);
         };
 
         let currentLead = null;
