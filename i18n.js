@@ -376,6 +376,7 @@
         'România': 'Romania',
         /* Video: categorii de proiect si roluri */
         'Proiecte': 'Projects',
+        'Nunți': 'Weddings',
         'Regie': 'Directing',
         'Filmare': 'Cinematography',
         'Montaj': 'Editing',
@@ -390,7 +391,10 @@
         'Majoratul lui Adelin': "Adelin's 18th",
         'Majoratul lui Sebastian': "Sebastian's 18th",
         'Majoratul lui Casian': "Casian's 18th",
-        'Primul scurtmetraj': 'The First Short Film'
+        'Primul scurtmetraj': 'The First Short Film',
+        /* Video: numele nuntilor */
+        'Laura și Patrick': 'Laura and Patrick',
+        'Norbert și Alexandra': 'Norbert and Alexandra'
     };
 
     /* -----------------------------------------------------------------
