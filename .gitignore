@@ -21,3 +21,8 @@ optimizare.log
 # deci nu trebuie sa ajunga niciodata in el.
 plans/
 .claude/
+
+# Skill-uri agent (mattpocock-skills) — doar note locale, nu continut de site.
+CLAUDE.md
+docs/
+.scratch/
