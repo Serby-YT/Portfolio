@@ -2354,6 +2354,49 @@ button:active,
     opacity: 1;
 }
 
+/* ==========================================================================
+   Zone de atingere de 44px
+   ==========================================================================
+   Apple cere minim 44x44 pt pentru orice comanda atinsa cu degetul. Comenzile
+   din bara de sus sunt desenate mai mic: comutatorul de tema 35px, iconita de
+   Instagram ~31x34, iar RO/EN doar 15x12. Marim DOAR zona de atingere, cu un
+   ::after invizibil centrat pe element — desenul rimine exact cum era.
+   Pseudo-elementul depaseste conturul vizibil, si asta e intentionat: evenimentul
+   ajunge oricum la elementul-parinte, nu la pseudo-element. */
+
+.theme-toggle,
+.nav-social,
+.lang-option {
+    position: relative;
+}
+
+.theme-toggle::after,
+.nav-social::after,
+.lang-option::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
+
+/* RO si EN au centrele la 29.9px unul de altul in bara compacta (masurat pe
+   site, nu estimat): doua zone de 44px s-ar suprapune, si atingerea de pe
+   marginea dreapta a lui RO ar cadea pe EN. 28px e maximul care NU se
+   suprapune. Pe verticala luam toti cei 44px — acolo era problema reala,
+   butoanele au doar 12px inaltime. */
+.lang-option::after {
+    width: 28px;
+}
+
+/* Separatorul "/" e decorativ (aria-hidden) dar, fiind element-frate de dupa
+   RO, statea deasupra zonei lui de atingere si ii fura marginea dreapta. */
+.lang-sep {
+    pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
     button:active,
