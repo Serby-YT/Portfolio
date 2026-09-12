@@ -1665,6 +1665,19 @@ footer {
     }
 
 }
+
+/* Ecrane late dar joase — telefoane pliabile deschise (iPhone Duo: 890x626),
+   telefoane in landscape, tablete mici. Regula de mai sus le trece pe o
+   singura coloana, ceea ce intinde textul pe ~790px. Doua coloane e corect. */
+@media (min-width: 700px) and (max-width: 900px) {
+
+    .why-grid,
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2.5rem;
+    }
+
+}
 /* ==========================================================================
    Adaptari pentru tema deschisa
    ========================================================================== */
