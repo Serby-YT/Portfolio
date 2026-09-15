@@ -28,7 +28,7 @@
     /* ---- date de contact (completeaza ce vrei sa apara) ---- */
     var CONTACT = {
         instagram: 'serby.photo',
-        email: '',
+        email: 'contact@serban-photo.com',
         phone: '',
         whatsapp: ''
     };
