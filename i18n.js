@@ -394,7 +394,9 @@
         'Primul scurtmetraj': 'The First Short Film',
         /* Video: numele nuntilor */
         'Laura și Patrick': 'Laura and Patrick',
-        'Norbert și Alexandra': 'Norbert and Alexandra'
+        'Norbert și Alexandra': 'Norbert and Alexandra',
+        /* Video: botez */
+        'Botez': 'Christening'
     };
 
     /* -----------------------------------------------------------------
