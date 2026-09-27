@@ -108,6 +108,7 @@
             'why.2.body': 'Nu aștepți luni de zile. Primești o galerie completă, editată și ușor de descărcat sau de trimis mai departe familiei, la scurt timp după eveniment.',
             'why.3.head': 'Experiență în evenimente reale',
             'why.3.body': 'Peste 70 de evenimente — majorate, nunți, botezuri și concerte. Știu unde să stau, când să apăs și cum să nu fiu în calea momentului tău.',
+            'why.majorat': 'Organizezi un majorat în Satu Mare? Vezi filmele și prețurile →',
 
             'contact.title': 'Contact',
             'contact.sub': 'Disponibil pentru colaborări oricând.',
@@ -278,6 +279,7 @@
             'why.2.body': 'No waiting for months. You get a complete, edited gallery that is easy to download or pass on to family, shortly after the event.',
             'why.3.head': 'Real event experience',
             'why.3.body': 'Over 70 events — birthdays, weddings, christenings and concerts. I know where to stand, when to press the shutter, and how to stay out of your moment.',
+            'why.majorat': 'Planning an 18th birthday in Satu Mare? See the films and prices (in Romanian) →',
 
             'contact.title': 'Contact',
             'contact.sub': 'Available for commissions anytime.',
