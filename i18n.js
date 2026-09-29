@@ -20,9 +20,9 @@
 
     var STRINGS = {
         ro: {
-            'meta.title.home': 'Anița Șerban Photography | Fotograf de evenimente',
+            'meta.title.home': 'Fotograf evenimente Satu Mare — nunți, botezuri, majorate | Anița Șerban',
             'meta.title.collections': 'Colecții | Anița Șerban Photography',
-            'meta.description.home': 'Fotograf de evenimente și momente speciale — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
+            'meta.description.home': 'Fotograf de evenimente în Satu Mare — nunți, botezuri, majorate și concerte. Galerii complete, livrate rapid, care spun povestea zilei tale.',
             'meta.description.collections': 'Colecții de fotografie semnate de Anița Șerban — călătorii, natură și proiecte personale din România, Ungaria și Marea Britanie.',
             'meta.title.video': 'Video | Anița Șerban Photography',
             'meta.description.video': 'Proiecte video de Anița Șerban — filmări de eveniment și proiecte personale, fiecare cu povestea din spatele cadrelor.',
@@ -32,7 +32,7 @@
 
             'nav.theme.label': 'Schimbă tema',
 
-            'landing.eyebrow': 'Anița Șerban — Fotografie de eveniment · România',
+            'landing.eyebrow': 'Anița Șerban — Fotografie de eveniment · Satu Mare',
             'landing.headline': 'Emoția, surprinsă la timp.',
             'landing.bio': 'Nu caut zâmbete perfect aranjate — caut emoția, atmosfera și detaliile pe care le vei ține minte ani întregi.',
             'landing.cta.portfolio': 'Portofoliu',
@@ -191,9 +191,9 @@
         },
 
         en: {
-            'meta.title.home': 'Anița Șerban Photography | Event Photographer',
+            'meta.title.home': 'Event Photographer in Satu Mare — weddings, christenings, birthdays | Anița Șerban',
             'meta.title.collections': 'Collections | Anița Șerban Photography',
-            'meta.description.home': 'Photographing events and special moments — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
+            'meta.description.home': 'Event photographer in Satu Mare, Romania — weddings, christenings, birthdays and concerts. Complete galleries, delivered fast, telling the story of your day.',
             'meta.description.collections': 'Photography collections by Anița Șerban — travel, nature and personal projects from Romania, Hungary and the United Kingdom.',
             'meta.title.video': 'Video | Anița Șerban Photography',
             'meta.description.video': 'Video projects by Anița Șerban — event films and personal work, each with the story behind the frames.',
@@ -203,7 +203,7 @@
 
             'nav.theme.label': 'Change theme',
 
-            'landing.eyebrow': 'Anița Șerban — Event Photography · Romania',
+            'landing.eyebrow': 'Anița Șerban — Event Photography · Satu Mare',
             'landing.headline': 'Emotion, caught in time.',
             'landing.bio': "I'm not after perfectly arranged smiles — I go for the emotion, the atmosphere, and the details you'll remember for years.",
             'landing.cta.portfolio': 'Portfolio',
