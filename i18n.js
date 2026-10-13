@@ -397,6 +397,7 @@
         /* Video: numele nuntilor */
         'Laura și Patrick': 'Laura and Patrick',
         'Norbert și Alexandra': 'Norbert and Alexandra',
+        'Vivi și Robert': 'Vivi and Robert',
         /* Video: botez */
         'Botez': 'Christening'
     };
