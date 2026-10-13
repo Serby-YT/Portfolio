@@ -257,11 +257,49 @@ document.addEventListener('DOMContentLoaded', () => {
        10+ coloane inguste (fotografiile deveneau minuscule). Peste plafon,
        poze in plus inseamna mai multe RANDURI, nu coloane mai inguste. */
     const MAX_GALLERY_COLS = 4;
+
+    /* Ordinea de citire e pe RANDURI, nu pe coloane. CSS `columns` umplea
+       intai toata coloana 1 de sus in jos, apoi coloana 2 — 8 poze adaugate
+       impreuna ajungeau toate una sub alta in prima coloana. Acum fiecare
+       fotografie, in ordinea din manifest, merge in coloana cea mai SCURTA
+       (inaltimea se stie din w/h, fara sa asteptam incarcarea), deci pozele
+       vecine in lista stau una langa alta pe acelasi rand, ca o poveste,
+       si coloanele raman tot echilibrate (masonry).
+
+       Apelantul adauga .gallery-item direct in container, apoi cheama
+       functia; la redimensionare o cheama din nou si refolosim lista
+       pastrata, fiindca atunci copiii directi sunt coloanele, nu pozele. */
     window.applyGalleryCols = (container, count) => {
-        if (!count) { container.style.removeProperty('--gallery-cols'); return; }
+        const direct = [...container.children].filter(el => el.classList.contains('gallery-item'));
+        if (direct.length) container._galleryItems = direct;
+        const items = container._galleryItems || [];
+        if (!count || !items.length) return;
+
         const width = container.getBoundingClientRect().width || window.innerWidth;
         const targetCols = Math.max(1, Math.min(MAX_GALLERY_COLS, Math.round(width / 320)));
-        container.style.setProperty('--gallery-cols', Math.min(targetCols, count));
+        const cols = Math.min(targetCols, count);
+        // Pe telefon bara de adrese declanseaza `resize` la fiecare derulare —
+        // daca numarul de coloane e acelasi, asezarea e deja corecta.
+        if (!direct.length && container._galleryCols === cols) return;
+        container._galleryCols = cols;
+
+        const columns = [];
+        const heights = [];
+        for (let c = 0; c < cols; c++) {
+            const col = document.createElement('div');
+            col.className = 'gallery-col';
+            columns.push(col);
+            heights.push(0);
+        }
+        items.forEach(item => {
+            const ratio = parseFloat(item.dataset.ratio) || 1.25;
+            let c = 0;
+            // Toleranta mica: la inaltimi aproape egale ramane coloana din stanga.
+            for (let k = 1; k < cols; k++) if (heights[k] < heights[c] - 0.02) c = k;
+            columns[c].appendChild(item);
+            heights[c] += ratio + 0.02;
+        });
+        container.replaceChildren(...columns);
     };
 
     /* Antetul mare de deasupra unei galerii — coperta pe aproape tot ecranul,
@@ -828,7 +866,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 : photos.filter(p => p.section === activeFilter);
 
             lastCount = filtered.length;
-            applyGalleryCols(container, lastCount);
 
             filtered.forEach((p, i) => {
                 const largeSrc = `/assets/${p.file}`;
@@ -838,6 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const item = document.createElement('div');
                 item.className = 'gallery-item fade-in hover-zoom';
                 item.dataset.index = i;
+                if (p.w && p.h) item.dataset.ratio = p.h / p.w;
 
                 const speed = (i % 2 === 0) ? "0.06" : "-0.04";
                 const wrapper = document.createElement('div');
@@ -863,6 +901,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 container.appendChild(item);
                 window.observer.observe(item);
             });
+            // Dupa ce exista toate pozele: le asezam pe randuri (vezi applyGalleryCols).
+            applyGalleryCols(container, lastCount);
         };
 
         // Eticheta afisata pentru un tab: 'All' se traduce, restul sunt nume din

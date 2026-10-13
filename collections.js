@@ -160,10 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         title.textContent = DISPLAY(gallery.name);
         document.title = `${DISPLAY(gallery.name)} | Anița Șerban Photography`;
 
-        // Coloane explicite pentru orice galerie — vezi applyGalleryCols in script.js
-        // (incarcat inaintea acestui fisier, deci functia e deja pe window).
         lastGalleryCount = gallery.photos.length;
-        applyGalleryCols(grid, lastGalleryCount);
 
         const images = gallery.photos.map(file => `/assets/${file}`);
 
@@ -174,6 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const item = document.createElement('div');
             item.className = 'gallery-item fade-in hover-zoom';
+            if (photoData.w && photoData.h) item.dataset.ratio = photoData.h / photoData.w;
 
             const wrapper = document.createElement('div');
             wrapper.className = 'image-wrapper';
@@ -197,5 +195,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             grid.appendChild(item);
             if (window.observer) window.observer.observe(item);
         });
+        // Pe randuri, nu pe coloane — vezi applyGalleryCols in script.js
+        // (incarcat inaintea acestui fisier, deci functia e deja pe window).
+        applyGalleryCols(grid, lastGalleryCount);
     }
 });
